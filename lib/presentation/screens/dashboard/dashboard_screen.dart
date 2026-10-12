@@ -116,11 +116,11 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
 
   void _initFromConfig(UniversalConfig config) {
     _autoAccept = config.autoAccept;
-    _minFare = config.minFare.clamp(20.0, 5000.0);
-    _maxFare = config.maxFare.clamp(20.0, 5000.0);
+    _minFare = config.minFare.clamp(20.0, 25000.0);
+    _maxFare = config.maxFare.clamp(20.0, 25000.0);
     if (_minFare > _maxFare) _minFare = _maxFare;
     _pickupDistance = config.pickupDistance.clamp(0.5, 50.0);
-    _tripDistance = config.tripDistance.clamp(0.0, 300.0);
+    _tripDistance = config.tripDistance.clamp(0.0, 3000.0);
     _clickDelayMs = config.clickDelayMs;
     _soundAlert = config.soundAlert;
     _vibrationAlert = config.vibrationAlert;
@@ -1786,10 +1786,10 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
 
           // Range Slider
           RangeSlider(
-            values: RangeValues(_minFare.clamp(20.0, 5000.0), _maxFare.clamp(20.0, 5000.0)),
+            values: RangeValues(_minFare.clamp(20.0, 25000.0), _maxFare.clamp(20.0, 25000.0)),
             min: 20,
-            max: 5000,
-            divisions: 249,
+            max: 25000,
+            divisions: 499,
             activeColor: const Color(0xFF00C853),
             inactiveColor: const Color(0xFFE0E0E0),
             onChanged: (values) {
@@ -1814,7 +1814,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('₹20', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
-                Text('₹5000', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
+                Text('₹25000', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
               ],
             ),
           ),
@@ -1995,10 +1995,10 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
               trackHeight: 3,
             ),
             child: Slider(
-              value: _tripDistance.clamp(0.0, 300.0),
+              value: _tripDistance.clamp(0.0, 3000.0),
               min: 0.0,
-              max: 300.0,
-              divisions: 300,
+              max: 3000.0,
+              divisions: 3000,
               onChanged: (val) => setState(() => _tripDistance = val),
               onChangeEnd: (val) {
                 final saved = context.read<ServiceProvider>().universalConfig;
@@ -2014,7 +2014,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('0 km', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
-                Text('300 km', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
+                Text('3000 km', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
               ],
             ),
           ),

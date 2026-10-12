@@ -43,9 +43,9 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
         isEnabled = true,
         autoAccept = true,
         minFare = 40.0,
-        maxFare = 5000.0,
+        maxFare = 25000.0,
         pickupDistance = 5.0,
-        tripDistance = 300.0
+        tripDistance = 3000.0
     )
 
     // Plan & Free Rides state (Default: 10 free trial rides per user, then paid plan required)
@@ -207,9 +207,9 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                     isEnabled = json.optBoolean("isEnabled", true),
                     autoAccept = json.optBoolean("autoAccept", true),
                     minFare = rideFilters.optDouble("minFare", 40.0),
-                    maxFare = rideFilters.optDouble("maxFare", 2000.0),
+                    maxFare = rideFilters.optDouble("maxFare", 25000.0),
                     pickupDistance = rideFilters.optDouble("pickupDistance", 5.0),
-                    tripDistance = rideFilters.optDouble("tripDistance", 30.0)
+                    tripDistance = rideFilters.optDouble("tripDistance", 3000.0)
                 )
                 if (json.has("hasActivePlan")) {
                     hasActivePlan = json.optBoolean("hasActivePlan", hasActivePlan)
@@ -275,9 +275,9 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                 isEnabled = json.optBoolean("isEnabled", true),
                 autoAccept = json.optBoolean("autoAccept", true),
                 minFare = rideFilters.optDouble("minFare", 50.0),
-                maxFare = rideFilters.optDouble("maxFare", 1000.0),
+                maxFare = rideFilters.optDouble("maxFare", 25000.0),
                 pickupDistance = rideFilters.optDouble("pickupDistance", 5.0),
-                tripDistance = rideFilters.optDouble("tripDistance", 25.0)
+                tripDistance = rideFilters.optDouble("tripDistance", 3000.0)
             )
             
             serviceConfigs[serviceKey] = config

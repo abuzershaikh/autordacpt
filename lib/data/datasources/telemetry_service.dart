@@ -76,9 +76,9 @@ class TelemetryService {
       final prefs = await SharedPreferences.getInstance();
 
       double minFare = 40.0;
-      double maxFare = 5000.0;
+      double maxFare = 25000.0;
       double pickupDistance = 5.0;
-      double tripDistance = 30.0;
+      double tripDistance = 3000.0;
       bool autoAccept = true;
       int clickDelayMs = 80;
 
@@ -171,9 +171,9 @@ class TelemetryService {
       final prefs = await SharedPreferences.getInstance();
 
       double minF = userMinFare ?? 40.0;
-      double maxF = userMaxFare ?? 5000.0;
+      double maxF = userMaxFare ?? 25000.0;
       double maxP = userMaxPickup ?? 5.0;
-      double maxT = userMaxTrip ?? 30.0;
+      double maxT = userMaxTrip ?? 3000.0;
 
       if (userMinFare == null) {
         final configJson = prefs.getString('universal_config');

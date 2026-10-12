@@ -229,10 +229,10 @@ class _ServiceSettingsScreenState extends State<ServiceSettingsScreen> {
                               ],
                             ),
                             Slider(
-                              value: filters.maxFare.toDouble().clamp(100.0, 5000.0),
+                              value: filters.maxFare.toDouble().clamp(100.0, 25000.0),
                               min: 100,
-                              max: 5000,
-                              divisions: 98,
+                              max: 25000,
+                              divisions: 249,
                               label: '₹${filters.maxFare}',
                               activeColor: brandColor,
                               onChanged: (value) {
@@ -317,10 +317,10 @@ class _ServiceSettingsScreenState extends State<ServiceSettingsScreen> {
                               ],
                             ),
                             Slider(
-                              value: filters.tripDistance.clamp(1.0, 300.0),
+                              value: filters.tripDistance.clamp(1.0, 3000.0),
                               min: 1,
-                              max: 300,
-                              divisions: 299,
+                              max: 3000,
+                              divisions: 2999,
                               label: '${filters.tripDistance.toStringAsFixed(1)} km',
                               activeColor: brandColor,
                               onChanged: (value) {
