@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "852867088575",
+    "project_id": "autoride-accept",
+    "storage_bucket": "autoride-accept.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852867088575:android:afef143a91a65f2ff1060a",
+        "android_client_info": {
+          "package_name": "com.ride.accept.autorideacceptor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852867088575-g1ghb8rtmvmfm5m0ns81goskkcibd521.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ride.accept.autorideacceptor",
+            "certificate_hash": "a3dfe1dd89d776f7a9ea4e9d40643dd461858c78"
+          }
+        },
+        {
+          "client_id": "852867088575-qb8anp1tfbmcl02k2n2tbmbapk0rsn7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLC6_GaB5Rw3EVmkjCdQHnjpGtn-q64Vs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852867088575-qb8anp1tfbmcl02k2n2tbmbapk0rsn7s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

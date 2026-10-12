@@ -1,0 +1,1988 @@
+  Class descriptor  : 'Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;'
+  Access flags      : 0x0011 (PUBLIC FINAL)
+  Superclass        : 'Landroidx/appcompat/widget/AppCompatButton;'
+  Interfaces        -
+  Static fields     -
+    #0              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : '$stable'
+      type          : 'I'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      value         : 0
+    #1              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'Companion'
+      type          : 'Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton$a;'
+      access        : 0x0019 (PUBLIC STATIC FINAL)
+      value         : null
+    #2              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'localTag'
+      type          : 'Ljava/lang/String;'
+      access        : 0x001a (PRIVATE STATIC FINAL)
+      value         : "SecureAcceptButton"
+  Instance fields   -
+    #0              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'bookingId'
+      type          : 'Ljava/lang/String;'
+      access        : 0x0002 (PRIVATE)
+    #1              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'isTouchEventInProgress'
+      type          : 'Z'
+      access        : 0x0002 (PRIVATE)
+  Direct methods    -
+    #0              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : '<clinit>'
+      type          : '()V'
+      access        : 0x10008 (STATIC CONSTRUCTOR)
+      code          -
+      registers     : 2
+      ins           : 0
+      outs          : 2
+      insns size    : 13 16-bit code units
+4231d8:                                        |[4231d8] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.<clinit>:()V
+4231e8: 2200 1c22                              |0000: new-instance v0, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton$a; // type@221c
+4231ec: 1201                                   |0002: const/4 v1, #int 0 // #0
+4231ee: 7020 8e8d 1000                         |0003: invoke-direct {v0, v1}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton$a;.<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V // method@8d8e
+4231f4: 6900 6660                              |0006: sput-object v0, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.Companion:Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton$a; // field@6066
+4231f8: 1300 0800                              |0008: const/16 v0, #int 8 // #8
+4231fc: 6700 6560                              |000a: sput v0, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.$stable:I // field@6065
+423200: 0e00                                   |000c: return-void
+      catches       : (none)
+      positions     :
+      locals        :
+
+    #1              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : '<init>'
+      type          : '(Landroid/content/Context;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      code          -
+      registers     : 9
+      ins           : 2
+      outs          : 6
+      insns size    : 15 16-bit code units
+423204:                                        |[423204] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.<init>:(Landroid/content/Context;)V
+423214: 1a00 409e                              |0000: const-string v0, "context" // string@9e40
+423218: 7120 e2e2 0800                         |0002: invoke-static {v8, v0}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e2
+42321e: 1265                                   |0005: const/4 v5, #int 6 // #6
+423220: 1206                                   |0006: const/4 v6, #int 0 // #0
+423222: 1203                                   |0007: const/4 v3, #int 0 // #0
+423224: 1204                                   |0008: const/4 v4, #int 0 // #0
+423226: 0771                                   |0009: move-object v1, v7
+423228: 0782                                   |000a: move-object v2, v8
+42322a: 7606 938d 0100                         |000b: invoke-direct/range {v1, v2, v3, v4, v5, v6}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V // method@8d93
+423230: 0e00                                   |000e: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+      locals        :
+        0x0000 - 0x000f reg=7 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x000f reg=8 (null) Landroid/content/Context;
+
+    #2              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : '<init>'
+      type          : '(Landroid/content/Context;Landroid/util/AttributeSet;)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      code          -
+      registers     : 10
+      ins           : 3
+      outs          : 6
+      insns size    : 15 16-bit code units
+423234:                                        |[423234] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;)V
+423244: 1a00 409e                              |0000: const-string v0, "context" // string@9e40
+423248: 7120 e2e2 0800                         |0002: invoke-static {v8, v0}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e2
+42324e: 1245                                   |0005: const/4 v5, #int 4 // #4
+423250: 1206                                   |0006: const/4 v6, #int 0 // #0
+423252: 1204                                   |0007: const/4 v4, #int 0 // #0
+423254: 0771                                   |0008: move-object v1, v7
+423256: 0782                                   |0009: move-object v2, v8
+423258: 0793                                   |000a: move-object v3, v9
+42325a: 7606 938d 0100                         |000b: invoke-direct/range {v1, v2, v3, v4, v5, v6}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V // method@8d93
+423260: 0e00                                   |000e: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=2
+      locals        :
+        0x0000 - 0x000f reg=7 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x000f reg=8 (null) Landroid/content/Context;
+        0x0000 - 0x000f reg=9 (null) Landroid/util/AttributeSet;
+
+    #3              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : '<init>'
+      type          : '(Landroid/content/Context;Landroid/util/AttributeSet;I)V'
+      access        : 0x10001 (PUBLIC CONSTRUCTOR)
+      code          -
+      registers     : 5
+      ins           : 4
+      outs          : 4
+      insns size    : 13 16-bit code units
+423264:                                        |[423264] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V
+423274: 1a00 409e                              |0000: const-string v0, "context" // string@9e40
+423278: 7120 e2e2 0200                         |0002: invoke-static {v2, v0}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e2
+42327e: 7040 c232 2143                         |0005: invoke-direct {v1, v2, v3, v4}, Landroidx/appcompat/widget/AppCompatButton;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V // method@32c2
+423284: 1202                                   |0008: const/4 v2, #int 0 // #0
+423286: 6e20 0831 2100                         |0009: invoke-virtual {v1, v2}, Landroid/view/View;.setFilterTouchesWhenObscured:(Z)V // method@3108
+42328c: 0e00                                   |000c: return-void
+      catches       : (none)
+      positions     :
+        0x0005 line=5
+        0x0009 line=6
+      locals        :
+        0x0000 - 0x000d reg=1 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x000d reg=2 (null) Landroid/content/Context;
+        0x0000 - 0x000d reg=3 (null) Landroid/util/AttributeSet;
+        0x0000 - 0x000d reg=4 (null) I
+
+    #4              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : '<init>'
+      type          : '(Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V'
+      access        : 0x11001 (PUBLIC SYNTHETIC CONSTRUCTOR)
+      code          -
+      registers     : 6
+      ins           : 6
+      outs          : 4
+      insns size    : 15 16-bit code units
+423290:                                        |[423290] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+4232a0: dd05 0402                              |0000: and-int/lit8 v5, v4, #int 2 // #02
+4232a4: 3805 0300                              |0002: if-eqz v5, 0005 // +0003
+4232a8: 1202                                   |0004: const/4 v2, #int 0 // #0
+4232aa: dd04 0404                              |0005: and-int/lit8 v4, v4, #int 4 // #04
+4232ae: 3804 0400                              |0007: if-eqz v4, 000b // +0004
+4232b2: 6003 b8ab                              |0009: sget v3, Ld/a;.n:I // field@abb8
+4232b6: 7040 928d 1032                         |000b: invoke-direct {v0, v1, v2, v3}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.<init>:(Landroid/content/Context;Landroid/util/AttributeSet;I)V // method@8d92
+4232bc: 0e00                                   |000e: return-void
+      catches       : (none)
+      positions     :
+        0x0009 line=3
+        0x000b line=4
+      locals        :
+        0x0000 - 0x000f reg=0 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x000f reg=1 (null) Landroid/content/Context;
+        0x0000 - 0x000f reg=2 (null) Landroid/util/AttributeSet;
+        0x0000 - 0x000f reg=3 (null) I
+        0x0000 - 0x000f reg=4 (null) I
+        0x0000 - 0x000f reg=5 (null) Lkotlin/jvm/internal/DefaultConstructorMarker;
+
+    #5              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'a'
+      type          : '(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)V'
+      access        : 0x1009 (PUBLIC STATIC SYNTHETIC)
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+4231a8:                                        |[4231a8] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.a:(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)V
+4231b8: 7110 978d 0000                         |0000: invoke-static {v0}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.dispatchTouchEvent$lambda$2:(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)V // method@8d97
+4231be: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+      locals        :
+        0x0000 - 0x0004 reg=0 (null) Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+
+    #6              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'b'
+      type          : '(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;Landroid/view/View$OnClickListener;Landroid/view/View;)V'
+      access        : 0x1009 (PUBLIC STATIC SYNTHETIC)
+      code          -
+      registers     : 3
+      ins           : 3
+      outs          : 3
+      insns size    : 4 16-bit code units
+4231c0:                                        |[4231c0] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.b:(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;Landroid/view/View$OnClickListener;Landroid/view/View;)V
+4231d0: 7130 9f8d 1002                         |0000: invoke-static {v0, v1, v2}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.setOnClickListener$lambda$1:(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;Landroid/view/View$OnClickListener;Landroid/view/View;)V // method@8d9f
+4231d6: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+      locals        :
+        0x0000 - 0x0004 reg=0 (null) Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x0004 reg=1 (null) Landroid/view/View$OnClickListener;
+        0x0000 - 0x0004 reg=2 (null) Landroid/view/View;
+
+    #7              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'dispatchTouchEvent$lambda$2'
+      type          : '(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)V'
+      access        : 0x001a (PRIVATE STATIC FINAL)
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 4 16-bit code units
+4232c0:                                        |[4232c0] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.dispatchTouchEvent$lambda$2:(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)V
+4232d0: 1200                                   |0000: const/4 v0, #int 0 // #0
+4232d2: 5c10 6860                              |0001: iput-boolean v0, v1, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.isTouchEventInProgress:Z // field@6068
+4232d6: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+      locals        :
+        0x0000 - 0x0004 reg=1 (null) Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+
+    #8              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'logFraudTouchAttempt'
+      type          : '(Landroid/view/MotionEvent;)V'
+      access        : 0x0012 (PRIVATE FINAL)
+      code          -
+      registers     : 11
+      ins           : 2
+      outs          : 4
+      insns size    : 214 16-bit code units
+4232d8:                                        |[4232d8] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.logFraudTouchAttempt:(Landroid/view/MotionEvent;)V
+4232e8: 6e10 5d30 0a00                         |0000: invoke-virtual {v10}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+4232ee: 0a00                                   |0003: move-result v0
+4232f0: 1211                                   |0004: const/4 v1, #int 1 // #1
+4232f2: b510                                   |0005: and-int/2addr v0, v1
+4232f4: 1202                                   |0006: const/4 v2, #int 0 // #0
+4232f6: 3800 0400                              |0007: if-eqz v0, 000b // +0004
+4232fa: 0110                                   |0009: move v0, v1
+4232fc: 2802                                   |000a: goto 000c // +0002
+4232fe: 0120                                   |000b: move v0, v2
+423300: 6e10 5d30 0a00                         |000c: invoke-virtual {v10}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+423306: 0a03                                   |000f: move-result v3
+423308: dd03 0302                              |0010: and-int/lit8 v3, v3, #int 2 // #02
+42330c: 3803 0300                              |0012: if-eqz v3, 0015 // +0003
+423310: 2802                                   |0014: goto 0016 // +0002
+423312: 0121                                   |0015: move v1, v2
+423314: 3800 0500                              |0016: if-eqz v0, 001b // +0005
+423318: 1a00 7227                              |0018: const-string v0, "FULLY_OBSCURED" // string@2772
+42331c: 2808                                   |001a: goto 0022 // +0008
+42331e: 3801 0500                              |001b: if-eqz v1, 0020 // +0005
+423322: 1a00 f373                              |001d: const-string v0, "PARTIALLY_OBSCURED" // string@73f3
+423326: 2803                                   |001f: goto 0022 // +0003
+423328: 1a00 8382                              |0020: const-string v0, "UNKNOWN" // string@8283
+42332c: 5491 6760                              |0022: iget-object v1, v9, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.bookingId:Ljava/lang/String; // field@6067
+423330: 3901 0400                              |0024: if-nez v1, 0028 // +0004
+423334: 1a01 27f4                              |0026: const-string v1, "unknown" // string@f427
+423338: 6e10 5830 0a00                         |0028: invoke-virtual {v10}, Landroid/view/MotionEvent;.getAction:()I // method@3058
+42333e: 0a02                                   |002b: move-result v2
+423340: 6e10 6530 0a00                         |002c: invoke-virtual {v10}, Landroid/view/MotionEvent;.getX:()F // method@3065
+423346: 0a03                                   |002f: move-result v3
+423348: 6e10 6730 0a00                         |0030: invoke-virtual {v10}, Landroid/view/MotionEvent;.getY:()F // method@3067
+42334e: 0a04                                   |0033: move-result v4
+423350: 6e10 5c30 0a00                         |0034: invoke-virtual {v10}, Landroid/view/MotionEvent;.getEventTime:()J // method@305c
+423356: 0b05                                   |0037: move-result-wide v5
+423358: 6e10 5d30 0a00                         |0038: invoke-virtual {v10}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+42335e: 0a0a                                   |003b: move-result v10
+423360: 1307 1000                              |003c: const/16 v7, #int 16 // #10
+423364: 7110 62e5 0700                         |003e: invoke-static {v7}, Lkotlin/text/CharsKt;.checkRadix:(I)I // method@e562
+42336a: 0a07                                   |0041: move-result v7
+42336c: 7120 3ed7 7a00                         |0042: invoke-static {v10, v7}, Ljava/lang/Integer;.toString:(II)Ljava/lang/String; // method@d73e
+423372: 0c0a                                   |0045: move-result-object v10
+423374: 1a07 f5f1                              |0046: const-string v7, "toString(...)" // string@f1f5
+423378: 7120 e1e2 7a00                         |0048: invoke-static {v10, v7}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e1
+42337e: 2207 f92b                              |004b: new-instance v7, Ljava/lang/StringBuilder; // type@2bf9
+423382: 7010 d2d7 0700                         |004d: invoke-direct {v7}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+423388: 1a08 b08c                              |0050: const-string v8, "[SecureAcceptButton] Blocked obscured touch on Accept button - bookingId=" // string@8cb0
+42338c: 6e20 dcd7 8700                         |0052: invoke-virtual {v7, v8}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423392: 6e20 dcd7 1700                         |0055: invoke-virtual {v7, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423398: 1a01 eb0f                              |0058: const-string v1, ", obscuredType=" // string@0feb
+42339c: 6e20 dcd7 1700                         |005a: invoke-virtual {v7, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4233a2: 6e20 dcd7 0700                         |005d: invoke-virtual {v7, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4233a8: 1a01 c50c                              |0060: const-string v1, ", action=" // string@0cc5
+4233ac: 6e20 dcd7 1700                         |0062: invoke-virtual {v7, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4233b2: 6e20 d8d7 2700                         |0065: invoke-virtual {v7, v2}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@d7d8
+4233b8: 1a01 0612                              |0068: const-string v1, ", x=" // string@1206
+4233bc: 6e20 dcd7 1700                         |006a: invoke-virtual {v7, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4233c2: 6e20 d7d7 3700                         |006d: invoke-virtual {v7, v3}, Ljava/lang/StringBuilder;.append:(F)Ljava/lang/StringBuilder; // method@d7d7
+4233c8: 1a01 0712                              |0070: const-string v1, ", y=" // string@1207
+4233cc: 6e20 dcd7 1700                         |0072: invoke-virtual {v7, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4233d2: 6e20 d7d7 4700                         |0075: invoke-virtual {v7, v4}, Ljava/lang/StringBuilder;.append:(F)Ljava/lang/StringBuilder; // method@d7d7
+4233d8: 1a01 7e11                              |0078: const-string v1, ", timestamp=" // string@117e
+4233dc: 6e20 dcd7 1700                         |007a: invoke-virtual {v7, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4233e2: 6e30 d9d7 5706                         |007d: invoke-virtual {v7, v5, v6}, Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder; // method@d7d9
+4233e8: 1a01 730e                              |0080: const-string v1, ", flags=0x" // string@0e73
+4233ec: 6e20 dcd7 1700                         |0082: invoke-virtual {v7, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4233f2: 6e20 dcd7 a700                         |0085: invoke-virtual {v7, v10}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4233f8: 6e10 e5d7 0700                         |0088: invoke-virtual {v7}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+4233fe: 0c0a                                   |008b: move-result-object v10
+423400: 1a01 7d28                              |008c: const-string v1, "FraudProtectionHelper" // string@287d
+423404: 7120 2cf0 a100                         |008e: invoke-static {v1, v10}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+42340a: 549a 6760                              |0091: iget-object v10, v9, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.bookingId:Ljava/lang/String; // field@6067
+42340e: 380a 4200                              |0093: if-eqz v10, 00d5 // +0042
+423412: 7110 88e5 0a00                         |0095: invoke-static {v10}, Lkotlin/text/StringsKt;.q0:(Ljava/lang/CharSequence;)Z // method@e588
+423418: 0a02                                   |0098: move-result v2
+42341a: 3802 0300                              |0099: if-eqz v2, 009c // +0003
+42341e: 283a                                   |009b: goto 00d5 // +003a
+423420: 6202 2fb6                              |009c: sget-object v2, Lpc/P;.a:Lpc/P; // field@b62f
+423424: 6e10 a130 0900                         |009e: invoke-virtual {v9}, Landroid/view/View;.getContext:()Landroid/content/Context; // method@30a1
+42342a: 0c03                                   |00a1: move-result-object v3
+42342c: 1a04 c8ac                              |00a2: const-string v4, "getContext(...)" // string@acc8
+423430: 7120 e1e2 4300                         |00a4: invoke-static {v3, v4}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e1
+423436: 2204 f92b                              |00a7: new-instance v4, Ljava/lang/StringBuilder; // type@2bf9
+42343a: 7010 d2d7 0400                         |00a9: invoke-direct {v4}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+423440: 1a05 08d3                              |00ac: const-string v5, "obscured_touch_" // string@d308
+423444: 6e20 dcd7 5400                         |00ae: invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+42344a: 6e20 dcd7 0400                         |00b1: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423450: 6e10 e5d7 0400                         |00b4: invoke-virtual {v4}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+423456: 0c00                                   |00b7: move-result-object v0
+423458: 6e40 c9f0 320a                         |00b8: invoke-virtual {v2, v3, v10, v0}, Lpc/P;.d:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V // method@f0c9
+42345e: 0e00                                   |00bb: return-void
+423460: 0d0a                                   |00bc: move-exception v10
+423462: 6e10 09d8 0a00                         |00bd: invoke-virtual {v10}, Ljava/lang/Throwable;.getMessage:()Ljava/lang/String; // method@d809
+423468: 0c0a                                   |00c0: move-result-object v10
+42346a: 2200 f92b                              |00c1: new-instance v0, Ljava/lang/StringBuilder; // type@2bf9
+42346e: 7010 d2d7 0000                         |00c3: invoke-direct {v0}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+423474: 1a02 b58c                              |00c6: const-string v2, "[SecureAcceptButton] Failed to log packages for obscured touch attempt: " // string@8cb5
+423478: 6e20 dcd7 2000                         |00c8: invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+42347e: 6e20 dcd7 a000                         |00cb: invoke-virtual {v0, v10}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423484: 6e10 e5d7 0000                         |00ce: invoke-virtual {v0}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+42348a: 0c0a                                   |00d1: move-result-object v10
+42348c: 7120 25f0 a100                         |00d2: invoke-static {v1, v10}, Lpc/D;.d:(Ljava/lang/String;Ljava/lang/String;)V // method@f025
+423492: 0e00                                   |00d5: return-void
+      catches       : 1
+        0x009c - 0x00bb
+          Ljava/lang/Exception; -> 0x00bc
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+        0x0014 line=21
+        0x0015 line=22
+        0x0016 line=23
+        0x0017 line=24
+        0x0018 line=25
+        0x0019 line=26
+        0x001a line=27
+        0x001b line=28
+        0x001c line=29
+        0x001d line=30
+        0x001e line=31
+        0x001f line=32
+        0x0020 line=33
+        0x0021 line=34
+        0x0022 line=35
+        0x0023 line=36
+        0x0024 line=37
+        0x0025 line=38
+        0x0026 line=39
+        0x0027 line=40
+        0x0028 line=41
+        0x0029 line=42
+        0x002a line=43
+        0x002b line=44
+        0x002c line=45
+        0x002d line=46
+        0x002e line=47
+        0x002f line=48
+        0x0030 line=49
+        0x0031 line=50
+        0x0032 line=51
+        0x0033 line=52
+        0x0034 line=53
+        0x0035 line=54
+        0x0036 line=55
+        0x0037 line=56
+        0x0038 line=57
+        0x0039 line=58
+        0x003a line=59
+        0x003b line=60
+        0x003c line=61
+        0x003d line=62
+        0x003e line=63
+        0x003f line=64
+        0x0040 line=65
+        0x0041 line=66
+        0x0042 line=67
+        0x0043 line=68
+        0x0044 line=69
+        0x0045 line=70
+        0x0046 line=71
+        0x0047 line=72
+        0x0048 line=73
+        0x0049 line=74
+        0x004a line=75
+        0x004b line=76
+        0x004c line=77
+        0x004d line=78
+        0x004e line=79
+        0x004f line=80
+        0x0050 line=81
+        0x0051 line=82
+        0x0052 line=83
+        0x0053 line=84
+        0x0054 line=85
+        0x0055 line=86
+        0x0056 line=87
+        0x0057 line=88
+        0x0058 line=89
+        0x0059 line=90
+        0x005a line=91
+        0x005b line=92
+        0x005c line=93
+        0x005d line=94
+        0x005e line=95
+        0x005f line=96
+        0x0060 line=97
+        0x0061 line=98
+        0x0062 line=99
+        0x0063 line=100
+        0x0064 line=101
+        0x0065 line=102
+        0x0066 line=103
+        0x0067 line=104
+        0x0068 line=105
+        0x0069 line=106
+        0x006a line=107
+        0x006b line=108
+        0x006c line=109
+        0x006d line=110
+        0x006e line=111
+        0x006f line=112
+        0x0070 line=113
+        0x0071 line=114
+        0x0072 line=115
+        0x0073 line=116
+        0x0074 line=117
+        0x0075 line=118
+        0x0076 line=119
+        0x0077 line=120
+        0x0078 line=121
+        0x0079 line=122
+        0x007a line=123
+        0x007b line=124
+        0x007c line=125
+        0x007d line=126
+        0x007e line=127
+        0x007f line=128
+        0x0080 line=129
+        0x0081 line=130
+        0x0082 line=131
+        0x0083 line=132
+        0x0084 line=133
+        0x0085 line=134
+        0x0086 line=135
+        0x0087 line=136
+        0x0088 line=137
+        0x0089 line=138
+        0x008a line=139
+        0x008b line=140
+        0x008c line=141
+        0x008d line=142
+        0x008e line=143
+        0x008f line=144
+        0x0090 line=145
+        0x0091 line=146
+        0x0092 line=147
+        0x0093 line=148
+        0x0094 line=149
+        0x0095 line=150
+        0x0096 line=151
+        0x0097 line=152
+        0x0098 line=153
+        0x0099 line=154
+        0x009a line=155
+        0x009b line=156
+        0x009c line=157
+        0x009d line=158
+        0x009e line=159
+        0x009f line=160
+        0x00a0 line=161
+        0x00a1 line=162
+        0x00a2 line=163
+        0x00a3 line=164
+        0x00a4 line=165
+        0x00a5 line=166
+        0x00a6 line=167
+        0x00a7 line=168
+        0x00a8 line=169
+        0x00a9 line=170
+        0x00aa line=171
+        0x00ab line=172
+        0x00ac line=173
+        0x00ad line=174
+        0x00ae line=175
+        0x00af line=176
+        0x00b0 line=177
+        0x00b1 line=178
+        0x00b2 line=179
+        0x00b3 line=180
+        0x00b4 line=181
+        0x00b5 line=182
+        0x00b6 line=183
+        0x00b7 line=184
+        0x00b8 line=185
+        0x00b9 line=186
+        0x00ba line=187
+        0x00bb line=188
+        0x00bc line=189
+        0x00bd line=190
+        0x00be line=191
+        0x00bf line=192
+        0x00c0 line=193
+        0x00c1 line=194
+        0x00c2 line=195
+        0x00c3 line=196
+        0x00c4 line=197
+        0x00c5 line=198
+        0x00c6 line=199
+        0x00c7 line=200
+        0x00c8 line=201
+        0x00c9 line=202
+        0x00ca line=203
+        0x00cb line=204
+        0x00cc line=205
+        0x00cd line=206
+        0x00ce line=207
+        0x00cf line=208
+        0x00d0 line=209
+        0x00d1 line=210
+        0x00d2 line=211
+        0x00d3 line=212
+        0x00d4 line=213
+        0x00d5 line=214
+      locals        :
+        0x0000 - 0x00d6 reg=9 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x00d6 reg=10 (null) Landroid/view/MotionEvent;
+
+    #9              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'logProgrammaticClickAttempt'
+      type          : '()V'
+      access        : 0x0012 (PRIVATE FINAL)
+      code          -
+      registers     : 6
+      ins           : 1
+      outs          : 4
+      insns size    : 99 16-bit code units
+4234a4:                                        |[4234a4] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.logProgrammaticClickAttempt:()V
+4234b4: 5450 6760                              |0000: iget-object v0, v5, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.bookingId:Ljava/lang/String; // field@6067
+4234b8: 3900 0400                              |0002: if-nez v0, 0006 // +0004
+4234bc: 1a00 27f4                              |0004: const-string v0, "unknown" // string@f427
+4234c0: 7100 e7d7 0000                         |0006: invoke-static {}, Ljava/lang/System;.currentTimeMillis:()J // method@d7e7
+4234c6: 0b01                                   |0009: move-result-wide v1
+4234c8: 2203 f92b                              |000a: new-instance v3, Ljava/lang/StringBuilder; // type@2bf9
+4234cc: 7010 d2d7 0300                         |000c: invoke-direct {v3}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+4234d2: 1a04 b18c                              |000f: const-string v4, "[SecureAcceptButton] Blocked programmatic click on Accept button - bookingId=" // string@8cb1
+4234d6: 6e20 dcd7 4300                         |0011: invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4234dc: 6e20 dcd7 0300                         |0014: invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4234e2: 1a00 7e11                              |0017: const-string v0, ", timestamp=" // string@117e
+4234e6: 6e20 dcd7 0300                         |0019: invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4234ec: 6e30 d9d7 1302                         |001c: invoke-virtual {v3, v1, v2}, Ljava/lang/StringBuilder;.append:(J)Ljava/lang/StringBuilder; // method@d7d9
+4234f2: 1a00 1611                              |001f: const-string v0, ", source=performClick()" // string@1116
+4234f6: 6e20 dcd7 0300                         |0021: invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4234fc: 6e10 e5d7 0300                         |0024: invoke-virtual {v3}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+423502: 0c00                                   |0027: move-result-object v0
+423504: 1a01 7d28                              |0028: const-string v1, "FraudProtectionHelper" // string@287d
+423508: 7120 2cf0 0100                         |002a: invoke-static {v1, v0}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+42350e: 5450 6760                              |002d: iget-object v0, v5, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.bookingId:Ljava/lang/String; // field@6067
+423512: 3800 3300                              |002f: if-eqz v0, 0062 // +0033
+423516: 7110 88e5 0000                         |0031: invoke-static {v0}, Lkotlin/text/StringsKt;.q0:(Ljava/lang/CharSequence;)Z // method@e588
+42351c: 0a02                                   |0034: move-result v2
+42351e: 3802 0300                              |0035: if-eqz v2, 0038 // +0003
+423522: 282b                                   |0037: goto 0062 // +002b
+423524: 6202 2fb6                              |0038: sget-object v2, Lpc/P;.a:Lpc/P; // field@b62f
+423528: 6e10 a130 0500                         |003a: invoke-virtual {v5}, Landroid/view/View;.getContext:()Landroid/content/Context; // method@30a1
+42352e: 0c03                                   |003d: move-result-object v3
+423530: 1a04 c8ac                              |003e: const-string v4, "getContext(...)" // string@acc8
+423534: 7120 e1e2 4300                         |0040: invoke-static {v3, v4}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e1
+42353a: 1a04 f6da                              |0043: const-string v4, "programmatic_click" // string@daf6
+42353e: 6e40 c9f0 3240                         |0045: invoke-virtual {v2, v3, v0, v4}, Lpc/P;.d:(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V // method@f0c9
+423544: 0e00                                   |0048: return-void
+423546: 0d00                                   |0049: move-exception v0
+423548: 6e10 09d8 0000                         |004a: invoke-virtual {v0}, Ljava/lang/Throwable;.getMessage:()Ljava/lang/String; // method@d809
+42354e: 0c00                                   |004d: move-result-object v0
+423550: 2202 f92b                              |004e: new-instance v2, Ljava/lang/StringBuilder; // type@2bf9
+423554: 7010 d2d7 0200                         |0050: invoke-direct {v2}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+42355a: 1a03 b68c                              |0053: const-string v3, "[SecureAcceptButton] Failed to log packages for programmatic click attempt: " // string@8cb6
+42355e: 6e20 dcd7 3200                         |0055: invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423564: 6e20 dcd7 0200                         |0058: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+42356a: 6e10 e5d7 0200                         |005b: invoke-virtual {v2}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+423570: 0c00                                   |005e: move-result-object v0
+423572: 7120 25f0 0100                         |005f: invoke-static {v1, v0}, Lpc/D;.d:(Ljava/lang/String;Ljava/lang/String;)V // method@f025
+423578: 0e00                                   |0062: return-void
+      catches       : 1
+        0x0038 - 0x0048
+          Ljava/lang/Exception; -> 0x0049
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+        0x0014 line=21
+        0x0015 line=22
+        0x0016 line=23
+        0x0017 line=24
+        0x0018 line=25
+        0x0019 line=26
+        0x001a line=27
+        0x001b line=28
+        0x001c line=29
+        0x001d line=30
+        0x001e line=31
+        0x001f line=32
+        0x0020 line=33
+        0x0021 line=34
+        0x0022 line=35
+        0x0023 line=36
+        0x0024 line=37
+        0x0025 line=38
+        0x0026 line=39
+        0x0027 line=40
+        0x0028 line=41
+        0x0029 line=42
+        0x002a line=43
+        0x002b line=44
+        0x002c line=45
+        0x002d line=46
+        0x002e line=47
+        0x002f line=48
+        0x0030 line=49
+        0x0031 line=50
+        0x0032 line=51
+        0x0033 line=52
+        0x0034 line=53
+        0x0035 line=54
+        0x0036 line=55
+        0x0037 line=56
+        0x0038 line=57
+        0x0039 line=58
+        0x003a line=59
+        0x003b line=60
+        0x003c line=61
+        0x003d line=62
+        0x003e line=63
+        0x003f line=64
+        0x0040 line=65
+        0x0041 line=66
+        0x0042 line=67
+        0x0043 line=68
+        0x0044 line=69
+        0x0045 line=70
+        0x0046 line=71
+        0x0047 line=72
+        0x0048 line=73
+        0x0049 line=74
+        0x004a line=75
+        0x004b line=76
+        0x004c line=77
+        0x004d line=78
+        0x004e line=79
+        0x004f line=80
+        0x0050 line=81
+        0x0051 line=82
+        0x0052 line=83
+        0x0053 line=84
+        0x0054 line=85
+        0x0055 line=86
+        0x0056 line=87
+        0x0057 line=88
+        0x0058 line=89
+        0x0059 line=90
+        0x005a line=91
+        0x005b line=92
+        0x005c line=93
+        0x005d line=94
+        0x005e line=95
+        0x005f line=96
+        0x0060 line=97
+        0x0061 line=98
+        0x0062 line=99
+      locals        :
+        0x0000 - 0x0063 reg=5 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+
+    #10              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'setOnClickListener$lambda$1'
+      type          : '(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;Landroid/view/View$OnClickListener;Landroid/view/View;)V'
+      access        : 0x001a (PRIVATE STATIC FINAL)
+      code          -
+      registers     : 12
+      ins           : 3
+      outs          : 5
+      insns size    : 140 16-bit code units
+4235d0:                                        |[4235d0] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.setOnClickListener$lambda$1:(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;Landroid/view/View$OnClickListener;Landroid/view/View;)V
+4235e0: 5490 6760                              |0000: iget-object v0, v9, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.bookingId:Ljava/lang/String; // field@6067
+4235e4: 3900 0400                              |0002: if-nez v0, 0006 // +0004
+4235e8: 1a00 27f4                              |0004: const-string v0, "unknown" // string@f427
+4235ec: 5591 6860                              |0006: iget-boolean v1, v9, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.isTouchEventInProgress:Z // field@6068
+4235f0: 2202 f92b                              |0008: new-instance v2, Ljava/lang/StringBuilder; // type@2bf9
+4235f4: 7010 d2d7 0200                         |000a: invoke-direct {v2}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+4235fa: 1a03 b48c                              |000d: const-string v3, "[SecureAcceptButton] Click listener invoked! bookingId=" // string@8cb4
+4235fe: 6e20 dcd7 3200                         |000f: invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423604: 6e20 dcd7 0200                         |0012: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+42360a: 1a00 130f                              |0015: const-string v0, ", isTouchEventInProgress=" // string@0f13
+42360e: 6e20 dcd7 0200                         |0017: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423614: 6e20 ddd7 1200                         |001a: invoke-virtual {v2, v1}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+42361a: 6e10 e5d7 0200                         |001d: invoke-virtual {v2}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+423620: 0c00                                   |0020: move-result-object v0
+423622: 1a01 7d28                              |0021: const-string v1, "FraudProtectionHelper" // string@287d
+423626: 7120 2cf0 0100                         |0023: invoke-static {v1, v0}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+42362c: 5590 6860                              |0026: iget-boolean v0, v9, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.isTouchEventInProgress:Z // field@6068
+423630: 3900 6000                              |0028: if-nez v0, 0088 // +0060
+423634: 6200 2fb6                              |002a: sget-object v0, Lpc/P;.a:Lpc/P; // field@b62f
+423638: 6e10 caf0 0000                         |002c: invoke-virtual {v0}, Lpc/P;.e:()Z // method@f0ca
+42363e: 0a00                                   |002f: move-result v0
+423640: 3800 5800                              |0030: if-eqz v0, 0088 // +0058
+423644: 7100 f2d7 0000                         |0032: invoke-static {}, Ljava/lang/Thread;.currentThread:()Ljava/lang/Thread; // method@d7f2
+42364a: 0c0a                                   |0035: move-result-object v10
+42364c: 6e10 f5d7 0a00                         |0036: invoke-virtual {v10}, Ljava/lang/Thread;.getStackTrace:()[Ljava/lang/StackTraceElement; // method@d7f5
+423652: 0c0a                                   |0039: move-result-object v10
+423654: 7110 dfe2 0a00                         |003a: invoke-static {v10}, Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V // method@e2df
+42365a: 21ab                                   |003d: array-length v11, v10
+42365c: 1200                                   |003e: const/4 v0, #int 0 // #0
+42365e: 0102                                   |003f: move v2, v0
+423660: 35b2 2b00                              |0040: if-ge v2, v11, 006b // +002b
+423664: 4603 0a02                              |0042: aget-object v3, v10, v2
+423668: 6e10 92d7 0300                         |0044: invoke-virtual {v3}, Ljava/lang/StackTraceElement;.getClassName:()Ljava/lang/String; // method@d792
+42366e: 0c04                                   |0047: move-result-object v4
+423670: 1a05 61ac                              |0048: const-string v5, "getClassName(...)" // string@ac61
+423674: 7120 e1e2 5400                         |004a: invoke-static {v4, v5}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e1
+42367a: 1a06 0a16                              |004d: const-string v6, "Accessibility" // string@160a
+42367e: 1227                                   |004f: const/4 v7, #int 2 // #2
+423680: 1208                                   |0050: const/4 v8, #int 0 // #0
+423682: 7158 7ae5 6470                         |0051: invoke-static {v4, v6, v0, v7, v8}, Lkotlin/text/StringsKt;.a0:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;ZILjava/lang/Object;)Z // method@e57a
+423688: 0a04                                   |0054: move-result v4
+42368a: 3904 1500                              |0055: if-nez v4, 006a // +0015
+42368e: 6e10 92d7 0300                         |0057: invoke-virtual {v3}, Ljava/lang/StackTraceElement;.getClassName:()Ljava/lang/String; // method@d792
+423694: 0c03                                   |005a: move-result-object v3
+423696: 7120 e1e2 5300                         |005b: invoke-static {v3, v5}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e1
+42369c: 1a04 1490                              |005e: const-string v4, "accessibility" // string@9014
+4236a0: 7158 7ae5 4370                         |0060: invoke-static {v3, v4, v0, v7, v8}, Lkotlin/text/StringsKt;.a0:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;ZILjava/lang/Object;)Z // method@e57a
+4236a6: 0a03                                   |0063: move-result v3
+4236a8: 3803 0300                              |0064: if-eqz v3, 0067 // +0003
+4236ac: 2804                                   |0066: goto 006a // +0004
+4236ae: d802 0201                              |0067: add-int/lit8 v2, v2, #int 1 // #01
+4236b2: 28d7                                   |0069: goto 0040 // -0029
+4236b4: 1210                                   |006a: const/4 v0, #int 1 // #1
+4236b6: 220a f92b                              |006b: new-instance v10, Ljava/lang/StringBuilder; // type@2bf9
+4236ba: 7010 d2d7 0a00                         |006d: invoke-direct {v10}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+4236c0: 1a0b b78c                              |0070: const-string v11, "[SecureAcceptButton] Suspicious click - no touch event, hasAccessibility=" // string@8cb7
+4236c4: 6e20 dcd7 ba00                         |0072: invoke-virtual {v10, v11}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4236ca: 6e20 ddd7 0a00                         |0075: invoke-virtual {v10, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+4236d0: 1a0b 2a0d                              |0078: const-string v11, ", blocking" // string@0d2a
+4236d4: 6e20 dcd7 ba00                         |007a: invoke-virtual {v10, v11}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4236da: 6e10 e5d7 0a00                         |007d: invoke-virtual {v10}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+4236e0: 0c0a                                   |0080: move-result-object v10
+4236e2: 7120 2cf0 a100                         |0081: invoke-static {v1, v10}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+4236e8: 7010 998d 0900                         |0084: invoke-direct {v9}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.logProgrammaticClickAttempt:()V // method@8d99
+4236ee: 0e00                                   |0087: return-void
+4236f0: 7220 8a30 ba00                         |0088: invoke-interface {v10, v11}, Landroid/view/View$OnClickListener;.onClick:(Landroid/view/View;)V // method@308a
+4236f6: 0e00                                   |008b: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+        0x0014 line=21
+        0x0015 line=22
+        0x0016 line=23
+        0x0017 line=24
+        0x0018 line=25
+        0x0019 line=26
+        0x001a line=27
+        0x001b line=28
+        0x001c line=29
+        0x001d line=30
+        0x001e line=31
+        0x001f line=32
+        0x0020 line=33
+        0x0021 line=34
+        0x0022 line=35
+        0x0023 line=36
+        0x0024 line=37
+        0x0025 line=38
+        0x0026 line=39
+        0x0027 line=40
+        0x0028 line=41
+        0x0029 line=42
+        0x002a line=43
+        0x002b line=44
+        0x002c line=45
+        0x002d line=46
+        0x002e line=47
+        0x002f line=48
+        0x0030 line=49
+        0x0031 line=50
+        0x0032 line=51
+        0x0033 line=52
+        0x0034 line=53
+        0x0035 line=54
+        0x0036 line=55
+        0x0037 line=56
+        0x0038 line=57
+        0x0039 line=58
+        0x003a line=59
+        0x003b line=60
+        0x003c line=61
+        0x003d line=62
+        0x003e line=63
+        0x003f line=64
+        0x0040 line=65
+        0x0041 line=66
+        0x0042 line=67
+        0x0043 line=68
+        0x0044 line=69
+        0x0045 line=70
+        0x0046 line=71
+        0x0047 line=72
+        0x0048 line=73
+        0x0049 line=74
+        0x004a line=75
+        0x004b line=76
+        0x004c line=77
+        0x004d line=78
+        0x004e line=79
+        0x004f line=80
+        0x0050 line=81
+        0x0051 line=82
+        0x0052 line=83
+        0x0053 line=84
+        0x0054 line=85
+        0x0055 line=86
+        0x0056 line=87
+        0x0057 line=88
+        0x0058 line=89
+        0x0059 line=90
+        0x005a line=91
+        0x005b line=92
+        0x005c line=93
+        0x005d line=94
+        0x005e line=95
+        0x005f line=96
+        0x0060 line=97
+        0x0061 line=98
+        0x0062 line=99
+        0x0063 line=100
+        0x0064 line=101
+        0x0065 line=102
+        0x0066 line=103
+        0x0067 line=104
+        0x0068 line=105
+        0x0069 line=106
+        0x006a line=107
+        0x006b line=108
+        0x006c line=109
+        0x006d line=110
+        0x006e line=111
+        0x006f line=112
+        0x0070 line=113
+        0x0071 line=114
+        0x0072 line=115
+        0x0073 line=116
+        0x0074 line=117
+        0x0075 line=118
+        0x0076 line=119
+        0x0077 line=120
+        0x0078 line=121
+        0x0079 line=122
+        0x007a line=123
+        0x007b line=124
+        0x007c line=125
+        0x007d line=126
+        0x007e line=127
+        0x007f line=128
+        0x0080 line=129
+        0x0081 line=130
+        0x0082 line=131
+        0x0083 line=132
+        0x0084 line=133
+        0x0085 line=134
+        0x0086 line=135
+        0x0087 line=136
+        0x0088 line=137
+        0x0089 line=138
+        0x008a line=139
+        0x008b line=140
+      locals        :
+        0x0000 - 0x008c reg=9 (null) Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x008c reg=10 (null) Landroid/view/View$OnClickListener;
+        0x0000 - 0x008c reg=11 (null) Landroid/view/View;
+
+  Virtual methods   -
+    #0              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'dispatchTouchEvent'
+      type          : '(Landroid/view/MotionEvent;)Z'
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 8
+      ins           : 2
+      outs          : 4
+      insns size    : 192 16-bit code units
+422cb4:                                        |[422cb4] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.dispatchTouchEvent:(Landroid/view/MotionEvent;)Z
+422cc4: 1a00 e9a5                              |0000: const-string v0, "event" // string@a5e9
+422cc8: 7120 e2e2 0700                         |0002: invoke-static {v7, v0}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e2
+422cce: 6e10 5830 0700                         |0005: invoke-virtual {v7}, Landroid/view/MotionEvent;.getAction:()I // method@3058
+422cd4: 0a00                                   |0008: move-result v0
+422cd6: 6e10 5d30 0700                         |0009: invoke-virtual {v7}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+422cdc: 0a01                                   |000c: move-result v1
+422cde: 1302 1000                              |000d: const/16 v2, #int 16 // #10
+422ce2: 7110 62e5 0200                         |000f: invoke-static {v2}, Lkotlin/text/CharsKt;.checkRadix:(I)I // method@e562
+422ce8: 0a02                                   |0012: move-result v2
+422cea: 7120 3ed7 2100                         |0013: invoke-static {v1, v2}, Ljava/lang/Integer;.toString:(II)Ljava/lang/String; // method@d73e
+422cf0: 0c01                                   |0016: move-result-object v1
+422cf2: 1a02 f5f1                              |0017: const-string v2, "toString(...)" // string@f1f5
+422cf6: 7120 e1e2 2100                         |0019: invoke-static {v1, v2}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e1
+422cfc: 6e10 6530 0700                         |001c: invoke-virtual {v7}, Landroid/view/MotionEvent;.getX:()F // method@3065
+422d02: 0a02                                   |001f: move-result v2
+422d04: 6e10 6730 0700                         |0020: invoke-virtual {v7}, Landroid/view/MotionEvent;.getY:()F // method@3067
+422d0a: 0a03                                   |0023: move-result v3
+422d0c: 2204 f92b                              |0024: new-instance v4, Ljava/lang/StringBuilder; // type@2bf9
+422d10: 7010 d2d7 0400                         |0026: invoke-direct {v4}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+422d16: 1a05 ba8c                              |0029: const-string v5, "[SecureAcceptButton] dispatchTouchEvent called - action=" // string@8cba
+422d1a: 6e20 dcd7 5400                         |002b: invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422d20: 6e20 d8d7 0400                         |002e: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@d7d8
+422d26: 1a00 730e                              |0031: const-string v0, ", flags=0x" // string@0e73
+422d2a: 6e20 dcd7 0400                         |0033: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422d30: 6e20 dcd7 1400                         |0036: invoke-virtual {v4, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422d36: 1a00 0612                              |0039: const-string v0, ", x=" // string@1206
+422d3a: 6e20 dcd7 0400                         |003b: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422d40: 6e20 d7d7 2400                         |003e: invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;.append:(F)Ljava/lang/StringBuilder; // method@d7d7
+422d46: 1a00 0712                              |0041: const-string v0, ", y=" // string@1207
+422d4a: 6e20 dcd7 0400                         |0043: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422d50: 6e20 d7d7 3400                         |0046: invoke-virtual {v4, v3}, Ljava/lang/StringBuilder;.append:(F)Ljava/lang/StringBuilder; // method@d7d7
+422d56: 6e10 e5d7 0400                         |0049: invoke-virtual {v4}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+422d5c: 0c00                                   |004c: move-result-object v0
+422d5e: 1a01 7d28                              |004d: const-string v1, "FraudProtectionHelper" // string@287d
+422d62: 7120 22f0 0100                         |004f: invoke-static {v1, v0}, Lpc/D;.a:(Ljava/lang/String;Ljava/lang/String;)V // method@f022
+422d68: 6e10 5830 0700                         |0052: invoke-virtual {v7}, Landroid/view/MotionEvent;.getAction:()I // method@3058
+422d6e: 0a00                                   |0055: move-result v0
+422d70: 1212                                   |0056: const/4 v2, #int 1 // #1
+422d72: 3900 0500                              |0057: if-nez v0, 005c // +0005
+422d76: 5c62 6860                              |0059: iput-boolean v2, v6, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.isTouchEventInProgress:Z // field@6068
+422d7a: 2818                                   |005b: goto 0073 // +0018
+422d7c: 6e10 5830 0700                         |005c: invoke-virtual {v7}, Landroid/view/MotionEvent;.getAction:()I // method@3058
+422d82: 0a00                                   |005f: move-result v0
+422d84: 3220 0900                              |0060: if-eq v0, v2, 0069 // +0009
+422d88: 6e10 5830 0700                         |0062: invoke-virtual {v7}, Landroid/view/MotionEvent;.getAction:()I // method@3058
+422d8e: 0a00                                   |0065: move-result v0
+422d90: 1233                                   |0066: const/4 v3, #int 3 // #3
+422d92: 3330 0c00                              |0067: if-ne v0, v3, 0073 // +000c
+422d96: 2200 2b07                              |0069: new-instance v0, LX9/u; // type@072b
+422d9a: 7020 4f25 6000                         |006b: invoke-direct {v0, v6}, LX9/u;.<init>:(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)V // method@254f
+422da0: 1603 6400                              |006e: const-wide/16 v3, #int 100 // #64
+422da4: 6e40 f030 0643                         |0070: invoke-virtual {v6, v0, v3, v4}, Landroid/view/View;.postDelayed:(Ljava/lang/Runnable;J)Z // method@30f0
+422daa: 6e10 5d30 0700                         |0073: invoke-virtual {v7}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+422db0: 0a00                                   |0076: move-result v0
+422db2: b520                                   |0077: and-int/2addr v0, v2
+422db4: 1203                                   |0078: const/4 v3, #int 0 // #0
+422db6: 3800 0400                              |0079: if-eqz v0, 007d // +0004
+422dba: 0120                                   |007b: move v0, v2
+422dbc: 2802                                   |007c: goto 007e // +0002
+422dbe: 0130                                   |007d: move v0, v3
+422dc0: 6e10 5d30 0700                         |007e: invoke-virtual {v7}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+422dc6: 0a04                                   |0081: move-result v4
+422dc8: dd04 0402                              |0082: and-int/lit8 v4, v4, #int 2 // #02
+422dcc: 3804 0300                              |0084: if-eqz v4, 0087 // +0003
+422dd0: 2802                                   |0086: goto 0088 // +0002
+422dd2: 0132                                   |0087: move v2, v3
+422dd4: 3900 0400                              |0088: if-nez v0, 008c // +0004
+422dd8: 3802 3100                              |008a: if-eqz v2, 00bb // +0031
+422ddc: 2204 f92b                              |008c: new-instance v4, Ljava/lang/StringBuilder; // type@2bf9
+422de0: 7010 d2d7 0400                         |008e: invoke-direct {v4}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+422de6: 1a05 b98c                              |0091: const-string v5, "[SecureAcceptButton] dispatchTouchEvent - Obscured touch detected! fully=" // string@8cb9
+422dea: 6e20 dcd7 5400                         |0093: invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422df0: 6e20 ddd7 0400                         |0096: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+422df6: 1a05 1e10                              |0099: const-string v5, ", partial=" // string@101e
+422dfa: 6e20 dcd7 5400                         |009b: invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422e00: 6e20 ddd7 2400                         |009e: invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+422e06: 6e10 e5d7 0400                         |00a1: invoke-virtual {v4}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+422e0c: 0c02                                   |00a4: move-result-object v2
+422e0e: 7120 2cf0 2100                         |00a5: invoke-static {v1, v2}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+422e14: 7020 988d 7600                         |00a8: invoke-direct {v6, v7}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.logFraudTouchAttempt:(Landroid/view/MotionEvent;)V // method@8d98
+422e1a: 3800 1000                              |00ab: if-eqz v0, 00bb // +0010
+422e1e: 6200 2fb6                              |00ad: sget-object v0, Lpc/P;.a:Lpc/P; // field@b62f
+422e22: 6e10 caf0 0000                         |00af: invoke-virtual {v0}, Lpc/P;.e:()Z // method@f0ca
+422e28: 0a00                                   |00b2: move-result v0
+422e2a: 3800 0800                              |00b3: if-eqz v0, 00bb // +0008
+422e2e: 1a07 b88c                              |00b5: const-string v7, "[SecureAcceptButton] dispatchTouchEvent - Blocking suspected fraud touch (fully obscured)" // string@8cb8
+422e32: 7120 2cf0 7100                         |00b7: invoke-static {v1, v7}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+422e38: 0f03                                   |00ba: return v3
+422e3a: 6f20 9930 7600                         |00bb: invoke-super {v6, v7}, Landroid/view/View;.dispatchTouchEvent:(Landroid/view/MotionEvent;)Z // method@3099
+422e40: 0a07                                   |00be: move-result v7
+422e42: 0f07                                   |00bf: return v7
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+        0x0014 line=21
+        0x0015 line=22
+        0x0016 line=23
+        0x0017 line=24
+        0x0018 line=25
+        0x0019 line=26
+        0x001a line=27
+        0x001b line=28
+        0x001c line=29
+        0x001d line=30
+        0x001e line=31
+        0x001f line=32
+        0x0020 line=33
+        0x0021 line=34
+        0x0022 line=35
+        0x0023 line=36
+        0x0024 line=37
+        0x0025 line=38
+        0x0026 line=39
+        0x0027 line=40
+        0x0028 line=41
+        0x0029 line=42
+        0x002a line=43
+        0x002b line=44
+        0x002c line=45
+        0x002d line=46
+        0x002e line=47
+        0x002f line=48
+        0x0030 line=49
+        0x0031 line=50
+        0x0032 line=51
+        0x0033 line=52
+        0x0034 line=53
+        0x0035 line=54
+        0x0036 line=55
+        0x0037 line=56
+        0x0038 line=57
+        0x0039 line=58
+        0x003a line=59
+        0x003b line=60
+        0x003c line=61
+        0x003d line=62
+        0x003e line=63
+        0x003f line=64
+        0x0040 line=65
+        0x0041 line=66
+        0x0042 line=67
+        0x0043 line=68
+        0x0044 line=69
+        0x0045 line=70
+        0x0046 line=71
+        0x0047 line=72
+        0x0048 line=73
+        0x0049 line=74
+        0x004a line=75
+        0x004b line=76
+        0x004c line=77
+        0x004d line=78
+        0x004e line=79
+        0x004f line=80
+        0x0050 line=81
+        0x0051 line=82
+        0x0052 line=83
+        0x0053 line=84
+        0x0054 line=85
+        0x0055 line=86
+        0x0056 line=87
+        0x0057 line=88
+        0x0058 line=89
+        0x0059 line=90
+        0x005a line=91
+        0x005b line=92
+        0x005c line=93
+        0x005d line=94
+        0x005e line=95
+        0x005f line=96
+        0x0060 line=97
+        0x0061 line=98
+        0x0062 line=99
+        0x0063 line=100
+        0x0064 line=101
+        0x0065 line=102
+        0x0066 line=103
+        0x0067 line=104
+        0x0068 line=105
+        0x0069 line=106
+        0x006a line=107
+        0x006b line=108
+        0x006c line=109
+        0x006d line=110
+        0x006e line=111
+        0x006f line=112
+        0x0070 line=113
+        0x0071 line=114
+        0x0072 line=115
+        0x0073 line=116
+        0x0074 line=117
+        0x0075 line=118
+        0x0076 line=119
+        0x0077 line=120
+        0x0078 line=121
+        0x0079 line=122
+        0x007a line=123
+        0x007b line=124
+        0x007c line=125
+        0x007d line=126
+        0x007e line=127
+        0x007f line=128
+        0x0080 line=129
+        0x0081 line=130
+        0x0082 line=131
+        0x0083 line=132
+        0x0084 line=133
+        0x0085 line=134
+        0x0086 line=135
+        0x0087 line=136
+        0x0088 line=137
+        0x0089 line=138
+        0x008a line=139
+        0x008b line=140
+        0x008c line=141
+        0x008d line=142
+        0x008e line=143
+        0x008f line=144
+        0x0090 line=145
+        0x0091 line=146
+        0x0092 line=147
+        0x0093 line=148
+        0x0094 line=149
+        0x0095 line=150
+        0x0096 line=151
+        0x0097 line=152
+        0x0098 line=153
+        0x0099 line=154
+        0x009a line=155
+        0x009b line=156
+        0x009c line=157
+        0x009d line=158
+        0x009e line=159
+        0x009f line=160
+        0x00a0 line=161
+        0x00a1 line=162
+        0x00a2 line=163
+        0x00a3 line=164
+        0x00a4 line=165
+        0x00a5 line=166
+        0x00a6 line=167
+        0x00a7 line=168
+        0x00a8 line=169
+        0x00a9 line=170
+        0x00aa line=171
+        0x00ab line=172
+        0x00ac line=173
+        0x00ad line=174
+        0x00ae line=175
+        0x00af line=176
+        0x00b0 line=177
+        0x00b1 line=178
+        0x00b2 line=179
+        0x00b3 line=180
+        0x00b4 line=181
+        0x00b5 line=182
+        0x00b6 line=183
+        0x00b7 line=184
+        0x00b8 line=185
+        0x00b9 line=186
+        0x00ba line=187
+        0x00bb line=188
+        0x00bc line=189
+        0x00bd line=190
+        0x00be line=191
+        0x00bf line=192
+      locals        :
+        0x0000 - 0x00c0 reg=6 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x00c0 reg=7 (null) Landroid/view/MotionEvent;
+
+    #1              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'onFilterTouchEventForSecurity'
+      type          : '(Landroid/view/MotionEvent;)Z'
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 10
+      ins           : 2
+      outs          : 2
+      insns size    : 202 16-bit code units
+422e44:                                        |[422e44] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.onFilterTouchEventForSecurity:(Landroid/view/MotionEvent;)Z
+422e54: 1a00 e9a5                              |0000: const-string v0, "event" // string@a5e9
+422e58: 7120 e2e2 0900                         |0002: invoke-static {v9, v0}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e2
+422e5e: 6e10 5830 0900                         |0005: invoke-virtual {v9}, Landroid/view/MotionEvent;.getAction:()I // method@3058
+422e64: 0a00                                   |0008: move-result v0
+422e66: 6e10 5d30 0900                         |0009: invoke-virtual {v9}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+422e6c: 0a01                                   |000c: move-result v1
+422e6e: 1302 1000                              |000d: const/16 v2, #int 16 // #10
+422e72: 7110 62e5 0200                         |000f: invoke-static {v2}, Lkotlin/text/CharsKt;.checkRadix:(I)I // method@e562
+422e78: 0a02                                   |0012: move-result v2
+422e7a: 7120 3ed7 2100                         |0013: invoke-static {v1, v2}, Ljava/lang/Integer;.toString:(II)Ljava/lang/String; // method@d73e
+422e80: 0c01                                   |0016: move-result-object v1
+422e82: 1a02 f5f1                              |0017: const-string v2, "toString(...)" // string@f1f5
+422e86: 7120 e1e2 2100                         |0019: invoke-static {v1, v2}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e1
+422e8c: 2202 f92b                              |001c: new-instance v2, Ljava/lang/StringBuilder; // type@2bf9
+422e90: 7010 d2d7 0200                         |001e: invoke-direct {v2}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+422e96: 1a03 bc8c                              |0021: const-string v3, "[SecureAcceptButton] onFilterTouchEventForSecurity called - action=" // string@8cbc
+422e9a: 6e20 dcd7 3200                         |0023: invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422ea0: 6e20 d8d7 0200                         |0026: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@d7d8
+422ea6: 1a00 730e                              |0029: const-string v0, ", flags=0x" // string@0e73
+422eaa: 6e20 dcd7 0200                         |002b: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422eb0: 6e20 dcd7 1200                         |002e: invoke-virtual {v2, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422eb6: 6e10 e5d7 0200                         |0031: invoke-virtual {v2}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+422ebc: 0c00                                   |0034: move-result-object v0
+422ebe: 1a01 7d28                              |0035: const-string v1, "FraudProtectionHelper" // string@287d
+422ec2: 7120 22f0 0100                         |0037: invoke-static {v1, v0}, Lpc/D;.a:(Ljava/lang/String;Ljava/lang/String;)V // method@f022
+422ec8: 6e10 5d30 0900                         |003a: invoke-virtual {v9}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+422ece: 0a00                                   |003d: move-result v0
+422ed0: 1212                                   |003e: const/4 v2, #int 1 // #1
+422ed2: b520                                   |003f: and-int/2addr v0, v2
+422ed4: 1203                                   |0040: const/4 v3, #int 0 // #0
+422ed6: 3800 0400                              |0041: if-eqz v0, 0045 // +0004
+422eda: 0120                                   |0043: move v0, v2
+422edc: 2802                                   |0044: goto 0046 // +0002
+422ede: 0130                                   |0045: move v0, v3
+422ee0: 6e10 5d30 0900                         |0046: invoke-virtual {v9}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+422ee6: 0a04                                   |0049: move-result v4
+422ee8: dd04 0402                              |004a: and-int/lit8 v4, v4, #int 2 // #02
+422eec: 3804 0400                              |004c: if-eqz v4, 0050 // +0004
+422ef0: 0124                                   |004e: move v4, v2
+422ef2: 2802                                   |004f: goto 0051 // +0002
+422ef4: 0134                                   |0050: move v4, v3
+422ef6: 3900 0700                              |0051: if-nez v0, 0058 // +0007
+422efa: 3804 0300                              |0053: if-eqz v4, 0056 // +0003
+422efe: 2803                                   |0055: goto 0058 // +0003
+422f00: 0135                                   |0056: move v5, v3
+422f02: 2802                                   |0057: goto 0059 // +0002
+422f04: 0125                                   |0058: move v5, v2
+422f06: 2206 f92b                              |0059: new-instance v6, Ljava/lang/StringBuilder; // type@2bf9
+422f0a: 7010 d2d7 0600                         |005b: invoke-direct {v6}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+422f10: 1a07 bb8c                              |005e: const-string v7, "[SecureAcceptButton] obscured=" // string@8cbb
+422f14: 6e20 dcd7 7600                         |0060: invoke-virtual {v6, v7}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422f1a: 6e20 ddd7 5600                         |0063: invoke-virtual {v6, v5}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+422f20: 1a07 820e                              |0066: const-string v7, ", fullyObscured=" // string@0e82
+422f24: 6e20 dcd7 7600                         |0068: invoke-virtual {v6, v7}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422f2a: 6e20 ddd7 0600                         |006b: invoke-virtual {v6, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+422f30: 1a07 1f10                              |006e: const-string v7, ", partiallyObscured=" // string@101f
+422f34: 6e20 dcd7 7600                         |0070: invoke-virtual {v6, v7}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422f3a: 6e20 ddd7 4600                         |0073: invoke-virtual {v6, v4}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+422f40: 6e10 e5d7 0600                         |0076: invoke-virtual {v6}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+422f46: 0c04                                   |0079: move-result-object v4
+422f48: 7120 22f0 4100                         |007a: invoke-static {v1, v4}, Lpc/D;.a:(Ljava/lang/String;Ljava/lang/String;)V // method@f022
+422f4e: 3805 4800                              |007d: if-eqz v5, 00c5 // +0048
+422f52: 7020 988d 9800                         |007f: invoke-direct {v8, v9}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.logFraudTouchAttempt:(Landroid/view/MotionEvent;)V // method@8d98
+422f58: 3800 0b00                              |0082: if-eqz v0, 008d // +000b
+422f5c: 6204 2fb6                              |0084: sget-object v4, Lpc/P;.a:Lpc/P; // field@b62f
+422f60: 6e10 caf0 0400                         |0086: invoke-virtual {v4}, Lpc/P;.e:()Z // method@f0ca
+422f66: 0a04                                   |0089: move-result v4
+422f68: 3804 0300                              |008a: if-eqz v4, 008d // +0003
+422f6c: 2802                                   |008c: goto 008e // +0002
+422f6e: 0132                                   |008d: move v2, v3
+422f70: 6204 2fb6                              |008e: sget-object v4, Lpc/P;.a:Lpc/P; // field@b62f
+422f74: 6e10 caf0 0400                         |0090: invoke-virtual {v4}, Lpc/P;.e:()Z // method@f0ca
+422f7a: 0a04                                   |0093: move-result v4
+422f7c: 2205 f92b                              |0094: new-instance v5, Ljava/lang/StringBuilder; // type@2bf9
+422f80: 7010 d2d7 0500                         |0096: invoke-direct {v5}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+422f86: 1a06 c28c                              |0099: const-string v6, "[SecureAcceptButton] shouldBlockFraudClicks=" // string@8cc2
+422f8a: 6e20 dcd7 6500                         |009b: invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422f90: 6e20 ddd7 4500                         |009e: invoke-virtual {v5, v4}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+422f96: 1a04 fd0e                              |00a1: const-string v4, ", isFullyObscured=" // string@0efd
+422f9a: 6e20 dcd7 4500                         |00a3: invoke-virtual {v5, v4}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422fa0: 6e20 ddd7 0500                         |00a6: invoke-virtual {v5, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+422fa6: 1a00 2b0d                              |00a9: const-string v0, ", blocking=" // string@0d2b
+422faa: 6e20 dcd7 0500                         |00ab: invoke-virtual {v5, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+422fb0: 6e20 ddd7 2500                         |00ae: invoke-virtual {v5, v2}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+422fb6: 6e10 e5d7 0500                         |00b1: invoke-virtual {v5}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+422fbc: 0c00                                   |00b4: move-result-object v0
+422fbe: 7120 22f0 0100                         |00b5: invoke-static {v1, v0}, Lpc/D;.a:(Ljava/lang/String;Ljava/lang/String;)V // method@f022
+422fc4: 3802 0800                              |00b8: if-eqz v2, 00c0 // +0008
+422fc8: 1a09 b28c                              |00ba: const-string v9, "[SecureAcceptButton] Blocking obscured touch (fully obscured)" // string@8cb2
+422fcc: 7120 2cf0 9100                         |00bc: invoke-static {v1, v9}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+422fd2: 0f03                                   |00bf: return v3
+422fd4: 1a00 af8c                              |00c0: const-string v0, "[SecureAcceptButton] Allowing obscured touch (fraud protection disabled or only partially obscured)" // string@8caf
+422fd8: 7120 22f0 0100                         |00c2: invoke-static {v1, v0}, Lpc/D;.a:(Ljava/lang/String;Ljava/lang/String;)V // method@f022
+422fde: 6f20 e230 9800                         |00c5: invoke-super {v8, v9}, Landroid/view/View;.onFilterTouchEventForSecurity:(Landroid/view/MotionEvent;)Z // method@30e2
+422fe4: 0a09                                   |00c8: move-result v9
+422fe6: 0f09                                   |00c9: return v9
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+        0x0014 line=21
+        0x0015 line=22
+        0x0016 line=23
+        0x0017 line=24
+        0x0018 line=25
+        0x0019 line=26
+        0x001a line=27
+        0x001b line=28
+        0x001c line=29
+        0x001d line=30
+        0x001e line=31
+        0x001f line=32
+        0x0020 line=33
+        0x0021 line=34
+        0x0022 line=35
+        0x0023 line=36
+        0x0024 line=37
+        0x0025 line=38
+        0x0026 line=39
+        0x0027 line=40
+        0x0028 line=41
+        0x0029 line=42
+        0x002a line=43
+        0x002b line=44
+        0x002c line=45
+        0x002d line=46
+        0x002e line=47
+        0x002f line=48
+        0x0030 line=49
+        0x0031 line=50
+        0x0032 line=51
+        0x0033 line=52
+        0x0034 line=53
+        0x0035 line=54
+        0x0036 line=55
+        0x0037 line=56
+        0x0038 line=57
+        0x0039 line=58
+        0x003a line=59
+        0x003b line=60
+        0x003c line=61
+        0x003d line=62
+        0x003e line=63
+        0x003f line=64
+        0x0040 line=65
+        0x0041 line=66
+        0x0042 line=67
+        0x0043 line=68
+        0x0044 line=69
+        0x0045 line=70
+        0x0046 line=71
+        0x0047 line=72
+        0x0048 line=73
+        0x0049 line=74
+        0x004a line=75
+        0x004b line=76
+        0x004c line=77
+        0x004d line=78
+        0x004e line=79
+        0x004f line=80
+        0x0050 line=81
+        0x0051 line=82
+        0x0052 line=83
+        0x0053 line=84
+        0x0054 line=85
+        0x0055 line=86
+        0x0056 line=87
+        0x0057 line=88
+        0x0058 line=89
+        0x0059 line=90
+        0x005a line=91
+        0x005b line=92
+        0x005c line=93
+        0x005d line=94
+        0x005e line=95
+        0x005f line=96
+        0x0060 line=97
+        0x0061 line=98
+        0x0062 line=99
+        0x0063 line=100
+        0x0064 line=101
+        0x0065 line=102
+        0x0066 line=103
+        0x0067 line=104
+        0x0068 line=105
+        0x0069 line=106
+        0x006a line=107
+        0x006b line=108
+        0x006c line=109
+        0x006d line=110
+        0x006e line=111
+        0x006f line=112
+        0x0070 line=113
+        0x0071 line=114
+        0x0072 line=115
+        0x0073 line=116
+        0x0074 line=117
+        0x0075 line=118
+        0x0076 line=119
+        0x0077 line=120
+        0x0078 line=121
+        0x0079 line=122
+        0x007a line=123
+        0x007b line=124
+        0x007c line=125
+        0x007d line=126
+        0x007e line=127
+        0x007f line=128
+        0x0080 line=129
+        0x0081 line=130
+        0x0082 line=131
+        0x0083 line=132
+        0x0084 line=133
+        0x0085 line=134
+        0x0086 line=135
+        0x0087 line=136
+        0x0088 line=137
+        0x0089 line=138
+        0x008a line=139
+        0x008b line=140
+        0x008c line=141
+        0x008d line=142
+        0x008e line=143
+        0x008f line=144
+        0x0090 line=145
+        0x0091 line=146
+        0x0092 line=147
+        0x0093 line=148
+        0x0094 line=149
+        0x0095 line=150
+        0x0096 line=151
+        0x0097 line=152
+        0x0098 line=153
+        0x0099 line=154
+        0x009a line=155
+        0x009b line=156
+        0x009c line=157
+        0x009d line=158
+        0x009e line=159
+        0x009f line=160
+        0x00a0 line=161
+        0x00a1 line=162
+        0x00a2 line=163
+        0x00a3 line=164
+        0x00a4 line=165
+        0x00a5 line=166
+        0x00a6 line=167
+        0x00a7 line=168
+        0x00a8 line=169
+        0x00a9 line=170
+        0x00aa line=171
+        0x00ab line=172
+        0x00ac line=173
+        0x00ad line=174
+        0x00ae line=175
+        0x00af line=176
+        0x00b0 line=177
+        0x00b1 line=178
+        0x00b2 line=179
+        0x00b3 line=180
+        0x00b4 line=181
+        0x00b5 line=182
+        0x00b6 line=183
+        0x00b7 line=184
+        0x00b8 line=185
+        0x00b9 line=186
+        0x00ba line=187
+        0x00bb line=188
+        0x00bc line=189
+        0x00bd line=190
+        0x00be line=191
+        0x00bf line=192
+        0x00c0 line=193
+        0x00c1 line=194
+        0x00c2 line=195
+        0x00c3 line=196
+        0x00c4 line=197
+        0x00c5 line=198
+        0x00c6 line=199
+        0x00c7 line=200
+        0x00c8 line=201
+        0x00c9 line=202
+      locals        :
+        0x0000 - 0x00ca reg=8 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x00ca reg=9 (null) Landroid/view/MotionEvent;
+
+    #2              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'onTouchEvent'
+      type          : '(Landroid/view/MotionEvent;)Z'
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 8
+      ins           : 2
+      outs          : 2
+      insns size    : 141 16-bit code units
+422fe8:                                        |[422fe8] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.onTouchEvent:(Landroid/view/MotionEvent;)Z
+422ff8: 1a00 e9a5                              |0000: const-string v0, "event" // string@a5e9
+422ffc: 7120 e2e2 0700                         |0002: invoke-static {v7, v0}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e2
+423002: 6e10 5830 0700                         |0005: invoke-virtual {v7}, Landroid/view/MotionEvent;.getAction:()I // method@3058
+423008: 0a00                                   |0008: move-result v0
+42300a: 6e10 5d30 0700                         |0009: invoke-virtual {v7}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+423010: 0a01                                   |000c: move-result v1
+423012: 1302 1000                              |000d: const/16 v2, #int 16 // #10
+423016: 7110 62e5 0200                         |000f: invoke-static {v2}, Lkotlin/text/CharsKt;.checkRadix:(I)I // method@e562
+42301c: 0a02                                   |0012: move-result v2
+42301e: 7120 3ed7 2100                         |0013: invoke-static {v1, v2}, Ljava/lang/Integer;.toString:(II)Ljava/lang/String; // method@d73e
+423024: 0c01                                   |0016: move-result-object v1
+423026: 1a02 f5f1                              |0017: const-string v2, "toString(...)" // string@f1f5
+42302a: 7120 e1e2 2100                         |0019: invoke-static {v1, v2}, Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V // method@e2e1
+423030: 6e10 6530 0700                         |001c: invoke-virtual {v7}, Landroid/view/MotionEvent;.getX:()F // method@3065
+423036: 0a02                                   |001f: move-result v2
+423038: 6e10 6730 0700                         |0020: invoke-virtual {v7}, Landroid/view/MotionEvent;.getY:()F // method@3067
+42303e: 0a03                                   |0023: move-result v3
+423040: 2204 f92b                              |0024: new-instance v4, Ljava/lang/StringBuilder; // type@2bf9
+423044: 7010 d2d7 0400                         |0026: invoke-direct {v4}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+42304a: 1a05 be8c                              |0029: const-string v5, "[SecureAcceptButton] onTouchEvent called - action=" // string@8cbe
+42304e: 6e20 dcd7 5400                         |002b: invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423054: 6e20 d8d7 0400                         |002e: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(I)Ljava/lang/StringBuilder; // method@d7d8
+42305a: 1a00 730e                              |0031: const-string v0, ", flags=0x" // string@0e73
+42305e: 6e20 dcd7 0400                         |0033: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423064: 6e20 dcd7 1400                         |0036: invoke-virtual {v4, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+42306a: 1a00 0612                              |0039: const-string v0, ", x=" // string@1206
+42306e: 6e20 dcd7 0400                         |003b: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423074: 6e20 d7d7 2400                         |003e: invoke-virtual {v4, v2}, Ljava/lang/StringBuilder;.append:(F)Ljava/lang/StringBuilder; // method@d7d7
+42307a: 1a00 0712                              |0041: const-string v0, ", y=" // string@1207
+42307e: 6e20 dcd7 0400                         |0043: invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423084: 6e20 d7d7 3400                         |0046: invoke-virtual {v4, v3}, Ljava/lang/StringBuilder;.append:(F)Ljava/lang/StringBuilder; // method@d7d7
+42308a: 6e10 e5d7 0400                         |0049: invoke-virtual {v4}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+423090: 0c00                                   |004c: move-result-object v0
+423092: 1a01 7d28                              |004d: const-string v1, "FraudProtectionHelper" // string@287d
+423096: 7120 22f0 0100                         |004f: invoke-static {v1, v0}, Lpc/D;.a:(Ljava/lang/String;Ljava/lang/String;)V // method@f022
+42309c: 6e10 5d30 0700                         |0052: invoke-virtual {v7}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+4230a2: 0a00                                   |0055: move-result v0
+4230a4: 1212                                   |0056: const/4 v2, #int 1 // #1
+4230a6: b520                                   |0057: and-int/2addr v0, v2
+4230a8: 1203                                   |0058: const/4 v3, #int 0 // #0
+4230aa: 3800 0400                              |0059: if-eqz v0, 005d // +0004
+4230ae: 0120                                   |005b: move v0, v2
+4230b0: 2802                                   |005c: goto 005e // +0002
+4230b2: 0130                                   |005d: move v0, v3
+4230b4: 6e10 5d30 0700                         |005e: invoke-virtual {v7}, Landroid/view/MotionEvent;.getFlags:()I // method@305d
+4230ba: 0a04                                   |0061: move-result v4
+4230bc: dd04 0402                              |0062: and-int/lit8 v4, v4, #int 2 // #02
+4230c0: 3804 0300                              |0064: if-eqz v4, 0067 // +0003
+4230c4: 2802                                   |0066: goto 0068 // +0002
+4230c6: 0132                                   |0067: move v2, v3
+4230c8: 3900 0400                              |0068: if-nez v0, 006c // +0004
+4230cc: 3802 1e00                              |006a: if-eqz v2, 0088 // +001e
+4230d0: 2203 f92b                              |006c: new-instance v3, Ljava/lang/StringBuilder; // type@2bf9
+4230d4: 7010 d2d7 0300                         |006e: invoke-direct {v3}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+4230da: 1a04 bd8c                              |0071: const-string v4, "[SecureAcceptButton] onTouchEvent - Touch has obscured flags! fully=" // string@8cbd
+4230de: 6e20 dcd7 4300                         |0073: invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4230e4: 6e20 ddd7 0300                         |0076: invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+4230ea: 1a00 1e10                              |0079: const-string v0, ", partial=" // string@101e
+4230ee: 6e20 dcd7 0300                         |007b: invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4230f4: 6e20 ddd7 2300                         |007e: invoke-virtual {v3, v2}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+4230fa: 6e10 e5d7 0300                         |0081: invoke-virtual {v3}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+423100: 0c00                                   |0084: move-result-object v0
+423102: 7120 2cf0 0100                         |0085: invoke-static {v1, v0}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+423108: 6f20 ea30 7600                         |0088: invoke-super {v6, v7}, Landroid/view/View;.onTouchEvent:(Landroid/view/MotionEvent;)Z // method@30ea
+42310e: 0a07                                   |008b: move-result v7
+423110: 0f07                                   |008c: return v7
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+        0x0014 line=21
+        0x0015 line=22
+        0x0016 line=23
+        0x0017 line=24
+        0x0018 line=25
+        0x0019 line=26
+        0x001a line=27
+        0x001b line=28
+        0x001c line=29
+        0x001d line=30
+        0x001e line=31
+        0x001f line=32
+        0x0020 line=33
+        0x0021 line=34
+        0x0022 line=35
+        0x0023 line=36
+        0x0024 line=37
+        0x0025 line=38
+        0x0026 line=39
+        0x0027 line=40
+        0x0028 line=41
+        0x0029 line=42
+        0x002a line=43
+        0x002b line=44
+        0x002c line=45
+        0x002d line=46
+        0x002e line=47
+        0x002f line=48
+        0x0030 line=49
+        0x0031 line=50
+        0x0032 line=51
+        0x0033 line=52
+        0x0034 line=53
+        0x0035 line=54
+        0x0036 line=55
+        0x0037 line=56
+        0x0038 line=57
+        0x0039 line=58
+        0x003a line=59
+        0x003b line=60
+        0x003c line=61
+        0x003d line=62
+        0x003e line=63
+        0x003f line=64
+        0x0040 line=65
+        0x0041 line=66
+        0x0042 line=67
+        0x0043 line=68
+        0x0044 line=69
+        0x0045 line=70
+        0x0046 line=71
+        0x0047 line=72
+        0x0048 line=73
+        0x0049 line=74
+        0x004a line=75
+        0x004b line=76
+        0x004c line=77
+        0x004d line=78
+        0x004e line=79
+        0x004f line=80
+        0x0050 line=81
+        0x0051 line=82
+        0x0052 line=83
+        0x0053 line=84
+        0x0054 line=85
+        0x0055 line=86
+        0x0056 line=87
+        0x0057 line=88
+        0x0058 line=89
+        0x0059 line=90
+        0x005a line=91
+        0x005b line=92
+        0x005c line=93
+        0x005d line=94
+        0x005e line=95
+        0x005f line=96
+        0x0060 line=97
+        0x0061 line=98
+        0x0062 line=99
+        0x0063 line=100
+        0x0064 line=101
+        0x0065 line=102
+        0x0066 line=103
+        0x0067 line=104
+        0x0068 line=105
+        0x0069 line=106
+        0x006a line=107
+        0x006b line=108
+        0x006c line=109
+        0x006d line=110
+        0x006e line=111
+        0x006f line=112
+        0x0070 line=113
+        0x0071 line=114
+        0x0072 line=115
+        0x0073 line=116
+        0x0074 line=117
+        0x0075 line=118
+        0x0076 line=119
+        0x0077 line=120
+        0x0078 line=121
+        0x0079 line=122
+        0x007a line=123
+        0x007b line=124
+        0x007c line=125
+        0x007d line=126
+        0x007e line=127
+        0x007f line=128
+        0x0080 line=129
+        0x0081 line=130
+        0x0082 line=131
+        0x0083 line=132
+        0x0084 line=133
+        0x0085 line=134
+        0x0086 line=135
+        0x0087 line=136
+        0x0088 line=137
+        0x0089 line=138
+        0x008a line=139
+        0x008b line=140
+        0x008c line=141
+      locals        :
+        0x0000 - 0x008d reg=6 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x008d reg=7 (null) Landroid/view/MotionEvent;
+
+    #3              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'performClick'
+      type          : '()Z'
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 5
+      ins           : 1
+      outs          : 2
+      insns size    : 65 16-bit code units
+423114:                                        |[423114] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.performClick:()Z
+423124: 5440 6760                              |0000: iget-object v0, v4, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.bookingId:Ljava/lang/String; // field@6067
+423128: 3900 0400                              |0002: if-nez v0, 0006 // +0004
+42312c: 1a00 27f4                              |0004: const-string v0, "unknown" // string@f427
+423130: 5541 6860                              |0006: iget-boolean v1, v4, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.isTouchEventInProgress:Z // field@6068
+423134: 2202 f92b                              |0008: new-instance v2, Ljava/lang/StringBuilder; // type@2bf9
+423138: 7010 d2d7 0200                         |000a: invoke-direct {v2}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+42313e: 1a03 bf8c                              |000d: const-string v3, "[SecureAcceptButton] performClick() called! bookingId=" // string@8cbf
+423142: 6e20 dcd7 3200                         |000f: invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423148: 6e20 dcd7 0200                         |0012: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+42314e: 1a00 130f                              |0015: const-string v0, ", isTouchEventInProgress=" // string@0f13
+423152: 6e20 dcd7 0200                         |0017: invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+423158: 6e20 ddd7 1200                         |001a: invoke-virtual {v2, v1}, Ljava/lang/StringBuilder;.append:(Z)Ljava/lang/StringBuilder; // method@d7dd
+42315e: 6e10 e5d7 0200                         |001d: invoke-virtual {v2}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+423164: 0c00                                   |0020: move-result-object v0
+423166: 1a01 7d28                              |0021: const-string v1, "FraudProtectionHelper" // string@287d
+42316a: 7120 2cf0 0100                         |0023: invoke-static {v1, v0}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+423170: 5540 6860                              |0026: iget-boolean v0, v4, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.isTouchEventInProgress:Z // field@6068
+423174: 3900 1400                              |0028: if-nez v0, 003c // +0014
+423178: 6200 2fb6                              |002a: sget-object v0, Lpc/P;.a:Lpc/P; // field@b62f
+42317c: 6e10 caf0 0000                         |002c: invoke-virtual {v0}, Lpc/P;.e:()Z // method@f0ca
+423182: 0a00                                   |002f: move-result v0
+423184: 3800 0c00                              |0030: if-eqz v0, 003c // +000c
+423188: 1a00 b38c                              |0032: const-string v0, "[SecureAcceptButton] Blocking performClick() - no touch event in progress, likely fraud attempt" // string@8cb3
+42318c: 7120 2cf0 0100                         |0034: invoke-static {v1, v0}, Lpc/D;.k:(Ljava/lang/String;Ljava/lang/String;)V // method@f02c
+423192: 7010 998d 0400                         |0037: invoke-direct {v4}, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.logProgrammaticClickAttempt:()V // method@8d99
+423198: 1200                                   |003a: const/4 v0, #int 0 // #0
+42319a: 0f00                                   |003b: return v0
+42319c: 6f10 ed30 0400                         |003c: invoke-super {v4}, Landroid/view/View;.performClick:()Z // method@30ed
+4231a2: 0a00                                   |003f: move-result v0
+4231a4: 0f00                                   |0040: return v0
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+        0x0014 line=21
+        0x0015 line=22
+        0x0016 line=23
+        0x0017 line=24
+        0x0018 line=25
+        0x0019 line=26
+        0x001a line=27
+        0x001b line=28
+        0x001c line=29
+        0x001d line=30
+        0x001e line=31
+        0x001f line=32
+        0x0020 line=33
+        0x0021 line=34
+        0x0022 line=35
+        0x0023 line=36
+        0x0024 line=37
+        0x0025 line=38
+        0x0026 line=39
+        0x0027 line=40
+        0x0028 line=41
+        0x0029 line=42
+        0x002a line=43
+        0x002b line=44
+        0x002c line=45
+        0x002d line=46
+        0x002e line=47
+        0x002f line=48
+        0x0030 line=49
+        0x0031 line=50
+        0x0032 line=51
+        0x0033 line=52
+        0x0034 line=53
+        0x0035 line=54
+        0x0036 line=55
+        0x0037 line=56
+        0x0038 line=57
+        0x0039 line=58
+        0x003a line=59
+        0x003b line=60
+        0x003c line=61
+        0x003d line=62
+        0x003e line=63
+        0x003f line=64
+        0x0040 line=65
+      locals        :
+        0x0000 - 0x0041 reg=4 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+
+    #4              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'setBookingId'
+      type          : '(Ljava/lang/String;)V'
+      access        : 0x0011 (PUBLIC FINAL)
+      code          -
+      registers     : 4
+      ins           : 2
+      outs          : 2
+      insns size    : 25 16-bit code units
+42358c:                                        |[42358c] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.setBookingId:(Ljava/lang/String;)V
+42359c: 5b23 6760                              |0000: iput-object v3, v2, Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;.bookingId:Ljava/lang/String; // field@6067
+4235a0: 2200 f92b                              |0002: new-instance v0, Ljava/lang/StringBuilder; // type@2bf9
+4235a4: 7010 d2d7 0000                         |0004: invoke-direct {v0}, Ljava/lang/StringBuilder;.<init>:()V // method@d7d2
+4235aa: 1a01 c08c                              |0007: const-string v1, "[SecureAcceptButton] setBookingId called with: " // string@8cc0
+4235ae: 6e20 dcd7 1000                         |0009: invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4235b4: 6e20 dcd7 3000                         |000c: invoke-virtual {v0, v3}, Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder; // method@d7dc
+4235ba: 6e10 e5d7 0000                         |000f: invoke-virtual {v0}, Ljava/lang/StringBuilder;.toString:()Ljava/lang/String; // method@d7e5
+4235c0: 0c03                                   |0012: move-result-object v3
+4235c2: 1a00 7d28                              |0013: const-string v0, "FraudProtectionHelper" // string@287d
+4235c6: 7120 22f0 3000                         |0015: invoke-static {v0, v3}, Lpc/D;.a:(Ljava/lang/String;Ljava/lang/String;)V // method@f022
+4235cc: 0e00                                   |0018: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+        0x0014 line=21
+        0x0015 line=22
+        0x0016 line=23
+        0x0017 line=24
+        0x0018 line=25
+      locals        :
+        0x0000 - 0x0019 reg=2 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x0019 reg=3 (null) Ljava/lang/String;
+
+    #5              : (in Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;)
+      name          : 'setOnClickListener'
+      type          : '(Landroid/view/View$OnClickListener;)V'
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 4
+      ins           : 2
+      outs          : 3
+      insns size    : 20 16-bit code units
+4236f8:                                        |[4236f8] com.olacabs.oladriver.bookingflow.motivator.ui.SecureAcceptButton.setOnClickListener:(Landroid/view/View$OnClickListener;)V
+423708: 1a00 7d28                              |0000: const-string v0, "FraudProtectionHelper" // string@287d
+42370c: 1a01 c18c                              |0002: const-string v1, "[SecureAcceptButton] setOnClickListener called" // string@8cc1
+423710: 7120 22f0 1000                         |0004: invoke-static {v0, v1}, Lpc/D;.a:(Ljava/lang/String;Ljava/lang/String;)V // method@f022
+423716: 3803 0800                              |0007: if-eqz v3, 000f // +0008
+42371a: 2200 2c07                              |0009: new-instance v0, LX9/v; // type@072c
+42371e: 7030 5125 2003                         |000b: invoke-direct {v0, v2, v3}, LX9/v;.<init>:(Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;Landroid/view/View$OnClickListener;)V // method@2551
+423724: 2802                                   |000e: goto 0010 // +0002
+423726: 1200                                   |000f: const/4 v0, #int 0 // #0
+423728: 6f20 1631 0200                         |0010: invoke-super {v2, v0}, Landroid/view/View;.setOnClickListener:(Landroid/view/View$OnClickListener;)V // method@3116
+42372e: 0e00                                   |0013: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=1
+        0x0001 line=2
+        0x0002 line=3
+        0x0003 line=4
+        0x0004 line=5
+        0x0005 line=6
+        0x0006 line=7
+        0x0007 line=8
+        0x0008 line=9
+        0x0009 line=10
+        0x000a line=11
+        0x000b line=12
+        0x000c line=13
+        0x000d line=14
+        0x000e line=15
+        0x000f line=16
+        0x0010 line=17
+        0x0011 line=18
+        0x0012 line=19
+        0x0013 line=20
+      locals        :
+        0x0000 - 0x0014 reg=2 this Lcom/olacabs/oladriver/bookingflow/motivator/ui/SecureAcceptButton;
+        0x0000 - 0x0014 reg=3 (null) Landroid/view/View$OnClickListener;
+
+  source_file_idx   : 31867 (SourceFile)
+
+Class #6435            -

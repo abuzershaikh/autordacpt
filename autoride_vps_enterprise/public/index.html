@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ride AutoAccept — Enterprise VPS Control Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="dark-theme">
+  <!-- Login Screen Overlay -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card glass-panel">
+      <div class="login-brand">
+        <div class="brand-badge"><i class="fa-solid fa-bolt-lightning"></i></div>
+        <h2>AutoAccept Engine</h2>
+        <p>Enterprise VPS Control Panel</p>
+      </div>
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label><i class="fa-solid fa-user"></i> Admin Username</label>
+          <input type="text" id="loginUsername" value="admin" required placeholder="Enter username">
+        </div>
+        <div class="form-group">
+          <label><i class="fa-solid fa-lock"></i> Password</label>
+          <input type="password" id="loginPassword" value="admin123" required placeholder="Enter password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <span>Sign In to Dashboard</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        <div id="loginError" class="login-error hidden"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Layout -->
+  <div class="app-layout" id="mainAppLayout">
+    <!-- Sidebar -->
+    <aside class="sidebar glass-panel">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="logo-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+          <div class="logo-text">
+            <h1>AutoAccept</h1>
+            <span class="badge-vps">VPS ENGINE 2.0</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="overview">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Live Overview</span>
+        </button>
+        <button class="nav-item" data-tab="riders">
+          <i class="fa-solid fa-id-card"></i>
+          <span>Riders Directory</span>
+        </button>
+        <button class="nav-item" data-tab="rides">
+          <i class="fa-solid fa-route"></i>
+          <span>Ride Streams</span>
+        </button>
+        <button class="nav-item" data-tab="crashes">
+          <i class="fa-solid fa-bug"></i>
+          <span>Crashlytics</span>
+        </button>
+        <button class="nav-item" data-tab="tutorials">
+          <i class="fa-brands fa-youtube"></i>
+          <span>Tutorials Studio</span>
+        </button>
+        <button class="nav-item" data-tab="payments">
+          <i class="fa-solid fa-credit-card"></i>
+          <span>Razorpay & Pricing</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Remote Config</span>
+        </button>
+        <button class="nav-item" data-tab="version-control">
+          <i class="fa-solid fa-code-branch"></i>
+          <span>Version Control</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-health">
+          <div class="pulse-indicator"></div>
+          <div>
+            <div class="health-title">System Status</div>
+            <div class="health-sub">VPS Online • Port 3000</div>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn-logout" title="Sign Out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navigation Bar -->
+      <header class="topbar glass-panel">
+        <div class="topbar-left">
+          <h2 id="pageTitle">Live Overview</h2>
+          <span class="current-time" id="liveClock">--:--:--</span>
+        </div>
+        <div class="topbar-right">
+          <button id="btnSyncFirestore" class="btn btn-secondary btn-sm" title="Sync registered users from Firebase Firestore">
+            <i class="fa-solid fa-cloud-arrow-down"></i>
+            <span>Sync Firestore Users</span>
+          </button>
+          <button id="btnRefreshData" class="btn btn-secondary btn-icon" title="Refresh Data">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+          <div class="admin-profile-pill">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Super Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- View 1: Live Overview Tab -->
+      <section id="tab-overview" class="view-panel active">
+        <!-- KPI Metric Cards Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card glass-panel glow-green">
+            <div class="metric-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Total Riders</span>
+              <h3 class="metric-value" id="kpiTotalRiders">0</h3>
+              <span class="metric-sub"><span id="kpiOnlineRiders" class="text-green">0 Online</span> now</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-panel glow-blue">
+            <div class="metric-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Rides Accepted</span>
+              <h3 class="metric-value" id="kpiAcceptedRides">0</h3>
+              <span class="metric-sub" id="kpiAcceptanceRate">0.0% acceptance rate</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-panel glow-amber">
+            <div class="metric-icon"><i class="fa-solid fa-forward-step"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Missed / Filtered</span>
+              <h3 class="metric-value" id="kpiMissedRides">0</h3>
+              <span class="metric-sub" id="kpiTotalFare">₹0.00 total earned</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-panel glow-purple">
+            <div class="metric-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Active Subscriptions</span>
+              <h3 class="metric-value" id="kpiActivePlans">0</h3>
+              <span class="metric-sub" id="kpiAccessibilityOn">0 Accessibility Active</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-panel glow-red">
+            <div class="metric-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">App Crashes</span>
+              <h3 class="metric-value" id="kpiTotalCrashes">0</h3>
+              <span class="metric-sub"><span id="kpiUnresolvedCrashes" class="text-red">0 Unresolved</span></span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-panel glow-cyan">
+            <div class="metric-icon"><i class="fa-solid fa-stopwatch"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Avg Click Response</span>
+              <h3 class="metric-value" id="kpiAvgResponse">0 ms</h3>
+              <span class="metric-sub">Sub-frame hardware tap</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Platform Breakdown & Recent Stream -->
+        <div class="dashboard-split">
+          <!-- Platform Comparison Card -->
+          <div class="split-col glass-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-layer-group"></i> Platform Breakdown (Porter, Rapido, Ola, Uber)</h3>
+            </div>
+            <div class="platform-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Total Seen</th>
+                    <th>Accepted</th>
+                    <th>Missed</th>
+                    <th>Success Rate</th>
+                  </tr>
+                </thead>
+                <tbody id="platformBreakdownTbody">
+                  <tr><td colspan="5" class="text-center">Loading platform data...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Dynamic Control -->
+          <div class="split-col glass-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-sliders"></i> Remote Control Quick Panel</h3>
+            </div>
+            <div class="quick-control-content">
+              <div class="control-box">
+                <label>Dynamic Free Trial Rides Limit</label>
+                <div class="input-with-button">
+                  <input type="number" id="quickFreeLimitInput" value="10" min="0" max="100">
+                  <button id="btnSaveQuickLimit" class="btn btn-primary">Save Limit</button>
+                </div>
+                <small class="hint-text">All mobile devices default to this limit. 1st time users get this many free rides before plan prompt.</small>
+              </div>
+
+              <div class="control-box mt-3">
+                <label>Broadcast Driver Announcement</label>
+                <textarea id="quickAnnouncementInput" rows="2" placeholder="Announcement shown on rider dashboard..."></textarea>
+                <button id="btnSaveQuickAnnouncement" class="btn btn-secondary btn-block mt-2">Publish Announcement</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 2: Riders Directory Tab -->
+      <section id="tab-riders" class="view-panel">
+        <div class="panel-card glass-panel">
+          <div class="table-toolbar">
+            <div class="search-input-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="riderSearchInput" placeholder="Search by phone, name, email, or UID...">
+            </div>
+            <div class="toolbar-filters">
+              <select id="riderPlanFilter" class="select-filter">
+                <option value="all">All Plans</option>
+                <option value="active">Active Plan</option>
+                <option value="inactive">Free Trial / Inactive</option>
+                <option value="expired">Expired</option>
+              </select>
+              <button id="btnSearchRiders" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Driver Details</th>
+                  <th>Contact</th>
+                  <th>Device / OS</th>
+                  <th>Active Plan</th>
+                  <th>Accessibility</th>
+                  <th>Status</th>
+                  <th>Today (Acc/Miss)</th>
+                  <th>Joined Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ridersTbody">
+                <tr><td colspan="9" class="text-center">Loading riders...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination-footer">
+            <span class="pagination-info" id="ridersPaginationInfo">Showing 0 of 0</span>
+            <div class="pagination-buttons">
+              <button id="btnPrevRiders" class="btn btn-secondary btn-sm" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+              <span id="ridersPageNumber" class="current-page">Page 1</span>
+              <button id="btnNextRiders" class="btn btn-secondary btn-sm" disabled>Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 3: Ride Streams Tab -->
+      <section id="tab-rides" class="view-panel">
+        <div class="panel-card glass-panel">
+          <div class="table-toolbar">
+            <div class="search-input-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="rideSearchInput" placeholder="Filter by phone, driver name, or order ID...">
+            </div>
+            <div class="toolbar-filters">
+              <select id="rideServiceFilter" class="select-filter">
+                <option value="all">All Services</option>
+                <option value="porter">Porter</option>
+                <option value="rapido">Rapido</option>
+                <option value="ola">Ola</option>
+                <option value="uber">Uber</option>
+              </select>
+              <select id="rideStatusFilter" class="select-filter">
+                <option value="all">All Statuses</option>
+                <option value="accepted">Accepted</option>
+                <option value="missed">Missed</option>
+                <option value="rejected">Rejected / Filtered</option>
+              </select>
+              <button id="btnFilterRides" class="btn btn-primary">Apply Filter</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Driver Partner</th>
+                  <th>Service</th>
+                  <th>Status</th>
+                  <th>Fare</th>
+                  <th>Pickup</th>
+                  <th>Trip</th>
+                  <th>Response Time</th>
+                  <th>Reason / Details</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="ridesTbody">
+                <tr><td colspan="10" class="text-center">Loading ride events...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination-footer">
+            <span class="pagination-info" id="ridesPaginationInfo">Showing 0 of 0</span>
+            <div class="pagination-buttons">
+              <button id="btnPrevRides" class="btn btn-secondary btn-sm" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+              <span id="ridesPageNumber" class="current-page">Page 1</span>
+              <button id="btnNextRides" class="btn btn-secondary btn-sm" disabled>Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 4: Crashlytics Tab -->
+      <section id="tab-crashes" class="view-panel">
+        <div class="panel-card glass-panel">
+          <div class="table-toolbar">
+            <div class="search-input-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="crashSearchInput" placeholder="Search crash error message or screen...">
+            </div>
+            <div class="toolbar-filters">
+              <select id="crashStatusFilter" class="select-filter">
+                <option value="all">All Crashes</option>
+                <option value="false">Unresolved Only</option>
+                <option value="true">Resolved</option>
+              </select>
+              <button id="btnFilterCrashes" class="btn btn-primary">Filter</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Crash ID</th>
+                  <th>Error Message</th>
+                  <th>Screen / Route</th>
+                  <th>Device / OS</th>
+                  <th>Driver Phone</th>
+                  <th>App Version</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="crashesTbody">
+                <tr><td colspan="9" class="text-center">Loading crash reports...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination-footer">
+            <span class="pagination-info" id="crashesPaginationInfo">Showing 0 of 0</span>
+            <div class="pagination-buttons">
+              <button id="btnPrevCrashes" class="btn btn-secondary btn-sm" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+              <span id="crashesPageNumber" class="current-page">Page 1</span>
+              <button id="btnNextCrashes" class="btn btn-secondary btn-sm" disabled>Next <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 5: Tutorials Studio Tab -->
+      <section id="tab-tutorials" class="view-panel">
+        <div class="dashboard-split">
+          <!-- Add / Edit Tutorial Form -->
+          <div class="split-col glass-panel">
+            <div class="panel-header">
+              <h3 id="tutorialFormHeading"><i class="fa-solid fa-plus-circle"></i> Add New YouTube Tutorial Video</h3>
+            </div>
+            <form id="tutorialForm" class="tutorial-form">
+              <input type="hidden" id="tutorialEditId" value="">
+              
+              <div class="form-group">
+                <label>Video Title *</label>
+                <input type="text" id="tutTitle" required placeholder="e.g. Ola Driver Instant Auto-Accept Tutorial">
+              </div>
+
+              <div class="form-group">
+                <label>YouTube Video URL *</label>
+                <input type="url" id="tutUrl" required placeholder="https://www.youtube.com/watch?v=xyz or https://youtu.be/xyz">
+              </div>
+
+              <!-- Live YouTube Preview Thumbnail -->
+              <div id="ytPreviewWrap" class="yt-preview-box hidden">
+                <img id="ytPreviewThumb" src="" alt="Thumbnail preview">
+                <div class="preview-overlay"><i class="fa-brands fa-youtube"></i> Valid YouTube ID: <span id="ytPreviewId"></span></div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label>Service Category</label>
+                  <select id="tutCategory" class="select-filter">
+                    <option value="general">General Setup</option>
+                    <option value="ola">Ola Driver</option>
+                    <option value="rapido">Rapido Captain</option>
+                    <option value="porter">Porter Partner</option>
+                    <option value="uber">Uber Driver</option>
+                    <option value="troubleshooting">Troubleshooting</option>
+                  </select>
+                </div>
+                <div class="form-group flex-1">
+                  <label>Display Order Index</label>
+                  <input type="number" id="tutOrder" value="1" min="0">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Description / Step-by-Step Instructions</label>
+                <textarea id="tutDescription" rows="4" placeholder="Enter key takeaways or steps for riders to follow..."></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" id="btnCancelTutEdit" class="btn btn-secondary hidden">Cancel Edit</button>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <span id="btnSubmitTutText">Save Tutorial to App</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Existing Tutorials List -->
+          <div class="split-col glass-panel">
+            <div class="panel-header">
+              <h3><i class="fa-brands fa-youtube text-red"></i> Published Video Tutorials (Live in App)</h3>
+              <span id="tutCountBadge" class="badge-count">0 Videos</span>
+            </div>
+            <div id="tutorialsListContainer" class="tutorials-card-list">
+              <div class="text-center text-muted">Loading tutorials...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View: Dynamic Razorpay & Pricing Gateway Tab -->
+      <section id="tab-payments" class="view-panel">
+        <!-- Top Status & Revenue KPI Strip -->
+        <div class="metrics-grid">
+          <div class="metric-card glass-panel border-accent-blue">
+            <div class="metric-icon bg-blue-glow"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Total Revenue Collected</span>
+              <h3 class="metric-val" id="payKpiTotalRevenue">₹0.00</h3>
+              <span class="metric-sub text-green"><i class="fa-solid fa-arrow-trend-up"></i> Live Real-Time</span>
+            </div>
+          </div>
+          <div class="metric-card glass-panel border-accent-green">
+            <div class="metric-icon bg-green-glow"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Successful Paid Orders</span>
+              <h3 class="metric-val" id="payKpiTotalSales">0</h3>
+              <span class="metric-sub text-dim">Activated Drivers</span>
+            </div>
+          </div>
+          <div class="metric-card glass-panel border-accent-purple">
+            <div class="metric-icon bg-purple-glow"><i class="fa-solid fa-wallet"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Active Gateway Mode</span>
+              <h3 class="metric-val" id="payKpiModeBadge"><span class="badge badge-amber">TEST MODE</span></h3>
+              <span class="metric-sub" id="payKpiAccountLabel">Default Account</span>
+            </div>
+          </div>
+          <div class="metric-card glass-panel">
+            <div class="metric-icon"><i class="fa-solid fa-key"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Active Key ID</span>
+              <h3 class="metric-val font-mono" id="payKpiKeyPreview" style="font-size: 1.1rem;">rzp_...</h3>
+              <span class="metric-sub text-green"><i class="fa-solid fa-bolt"></i> Synced to App</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-split mt-4">
+          <!-- Left Column: Razorpay Account Credentials Live Switcher -->
+          <div class="split-col glass-panel">
+            <div class="panel-header">
+              <div>
+                <h3><i class="fa-solid fa-credit-card text-blue"></i> Razorpay Multi-Account Switcher</h3>
+                <p class="panel-subtitle">Yahan se naya Razorpay account daal kar Save karein — bina app update kiye direct live change ho jayega!</p>
+              </div>
+              <span class="badge badge-blue font-mono" id="gatewayStatusBadge">ACTIVE IN MYSQL</span>
+            </div>
+
+            <form id="razorpayConfigForm" class="tutorial-form">
+              <div class="form-group">
+                <label>Account Label / Friendly Name</label>
+                <input type="text" id="rzpAccountLabel" class="form-control" placeholder="e.g. Primary Merchant Account or Backup Account" required>
+                <small class="text-dim">Internal reference name for this merchant account.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Razorpay Key ID <span class="text-red">*</span></label>
+                <input type="text" id="rzpKeyId" class="form-control font-mono" placeholder="rzp_live_xxxxxxxx or rzp_test_xxxxxxxx" required>
+                <small class="text-dim">Yeh Key ID Android Mobile app ko dynamic API ke zariye live send hoti hai.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Razorpay Key Secret <span class="text-red">*</span></label>
+                <div class="input-with-button">
+                  <input type="password" id="rzpKeySecret" class="form-control font-mono" placeholder="Enter Razorpay Secret Key" required>
+                  <button type="button" id="btnToggleSecretVisibility" class="btn btn-secondary btn-icon" title="Toggle Secret Visibility">
+                    <i class="fa-solid fa-eye" id="secretEyeIcon"></i>
+                  </button>
+                </div>
+                <small class="text-dim">VPS MySQL me secure store rehta hai aur order creation & HMAC verification me use hota hai.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Unified Webhook Secret <span class="text-red">*</span></label>
+                <div class="input-with-button">
+                  <input type="text" id="rzpWebhookSecret" class="form-control font-mono" placeholder="whsec_xxxxxxxx" required>
+                  <button type="button" id="btnGenWebhookSecret" class="btn btn-secondary" title="Auto-generate secret">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate
+                  </button>
+                </div>
+                <small class="text-dim">Razorpay dashboard me webhook configure karte waqt yahi secret daalein.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Gateway Mode</label>
+                <div class="radio-pill-group">
+                  <label class="radio-pill">
+                    <input type="radio" name="rzpMode" value="0" id="rzpModeTest" checked>
+                    <span><i class="fa-solid fa-flask"></i> Test Sandbox</span>
+                  </label>
+                  <label class="radio-pill">
+                    <input type="radio" name="rzpMode" value="1" id="rzpModeLive">
+                    <span><i class="fa-solid fa-bolt text-amber"></i> Live Production</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Webhook URL Display Card -->
+              <div class="webhook-info-box glass-panel p-3 border-accent-purple">
+                <div class="d-flex justify-between align-center mb-1">
+                  <span class="text-bold"><i class="fa-solid fa-link text-purple"></i> Unified VPS Webhook URL:</span>
+                  <button type="button" id="btnCopyWebhookUrl" class="btn btn-sm btn-secondary">
+                    <i class="fa-solid fa-copy"></i> Copy URL
+                  </button>
+                </div>
+                <div class="code-block font-mono text-break" id="vpsWebhookUrlDisplay">
+                  http://139.84.158.149:5000/api/payment/webhook
+                </div>
+                <small class="text-dim mt-2 d-block">
+                  <i class="fa-solid fa-circle-info text-blue"></i> Razorpay Dashboard ➔ Settings ➔ Webhooks me yeh URL add karein aur <strong>payment.captured</strong> aur <strong>order.paid</strong> select karein.
+                </small>
+              </div>
+
+              <div class="form-actions mt-3 d-flex gap-2">
+                <button type="button" id="btnTestCredentials" class="btn btn-secondary flex-1">
+                  <i class="fa-solid fa-vial"></i> Test Connection
+                </button>
+                <button type="submit" id="btnSaveGatewayConfig" class="btn btn-primary flex-2">
+                  <i class="fa-solid fa-floppy-disk"></i> Save & Switch Live Account
+                </button>
+              </div>
+              <div id="gatewayAlertBox" class="alert-box mt-2 hidden"></div>
+            </form>
+          </div>
+
+          <!-- Right Column: Subscription Plans & Live Pricing Matrix -->
+          <div class="split-col glass-panel">
+            <div class="panel-header">
+              <div>
+                <h3><i class="fa-solid fa-tags text-green"></i> Dynamic Plans & Pricing Matrix</h3>
+                <p class="panel-subtitle">Prices edit karein aur Save karein — Android App me turant naye rates reflect honge!</p>
+              </div>
+              <button id="btnAddNewPlanModal" class="btn btn-sm btn-secondary">
+                <i class="fa-solid fa-plus"></i> Add Plan
+              </button>
+            </div>
+
+            <!-- Dynamic Plans List Container -->
+            <div id="plansListContainer" class="plans-editor-grid">
+              <div class="text-center p-4 text-dim">Loading plans from MySQL...</div>
+            </div>
+
+            <div class="panel-footer-actions mt-3 d-flex justify-between align-center">
+              <small class="text-dim"><i class="fa-solid fa-arrows-rotate"></i> Cached for 15s, immediate update on save.</small>
+              <button id="btnSaveAllPlans" class="btn btn-success">
+                <i class="fa-solid fa-circle-check"></i> Save All Plan Changes
+              </button>
+            </div>
+            <div id="plansAlertBox" class="alert-box mt-2 hidden"></div>
+          </div>
+        </div>
+
+        <!-- Bottom Table: Real-Time Payment Transactions Ledger -->
+        <div class="panel-card glass-panel mt-4">
+          <div class="panel-header">
+            <div>
+              <h3><i class="fa-solid fa-clock-rotate-left text-amber"></i> Live Payment Transactions & Orders Audit</h3>
+              <p class="panel-subtitle">Real-time payment attempts, verified orders, and razorpay account tracking.</p>
+            </div>
+            <div class="d-flex gap-2">
+              <select id="filterPaymentStatus" class="form-control form-control-sm">
+                <option value="">All Statuses</option>
+                <option value="paid">Paid & Activated</option>
+                <option value="created">Created (Pending)</option>
+                <option value="failed">Failed / Mismatch</option>
+              </select>
+              <button id="btnRefreshPayments" class="btn btn-secondary btn-icon" title="Refresh Payments">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Time (IST)</th>
+                  <th>Order ID</th>
+                  <th>Payment ID</th>
+                  <th>Driver Phone / User</th>
+                  <th>Plan</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Account Used</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsTbody">
+                <tr><td colspan="8" class="text-center text-muted">Loading transactions ledger...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 6: Remote Config & VPS Settings Tab -->
+      <section id="tab-settings" class="view-panel">
+        <div class="dashboard-split">
+          <div class="split-col glass-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-sliders"></i> Dynamic App Settings</h3>
+            </div>
+            <form id="settingsForm" class="tutorial-form">
+              <div class="form-group">
+                <label>Default Free Trial Rides Count</label>
+                <input type="number" id="settingFreeRides" value="10" min="0" max="100">
+                <small class="hint-text">Number of free rides before auto-accept stops and prompts subscription plan.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Minimum Required App Version</label>
+                <input type="text" id="settingMinVersion" value="1.0.0">
+              </div>
+
+              <div class="form-group">
+                <label>Global Announcement Banner</label>
+                <textarea id="settingAnnouncement" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="settingAnnouncementActive" checked>
+                  <span>Show Announcement Banner in Mobile App</span>
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Save Settings
+              </button>
+            </form>
+          </div>
+
+          <div class="split-col glass-panel">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-server"></i> VPS & Firebase Integration Info</h3>
+            </div>
+            <div class="info-content">
+              <div class="info-item">
+                <span class="info-label">Firebase Project ID:</span>
+                <span class="info-val">autoride-accept</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Client Email:</span>
+                <span class="info-val font-mono">firebase-adminsdk-fbsvc@autoride-accept.iam.gserviceaccount.com</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Mobile Telemetry Endpoint:</span>
+                <span class="info-val font-mono">POST /api/telemetry/ride</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Mobile Crashlytics Endpoint:</span>
+                <span class="info-val font-mono">POST /api/telemetry/crash</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Dynamic Free Rides Endpoint:</span>
+                <span class="info-val font-mono">GET /api/free-rides</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Tutorials JSON Endpoint:</span>
+                <span class="info-val font-mono">GET /api/tutorials</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View 6.5: Version Control & Remote Fleet Upgrades View -->
+      <section id="tab-version-control" class="view-panel">
+        <div class="panel-header">
+          <div>
+            <h3><i class="fa-solid fa-code-branch"></i> APK Version Control & Fleet Upgrade Center</h3>
+            <p class="panel-sub">Auto-detects rider app versions, forces mandatory updates, blocks old versions, and provides instant browser download links.</p>
+          </div>
+          <button id="btnRefreshVersions" class="btn btn-secondary btn-sm">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Refresh Versions</span>
+          </button>
+        </div>
+
+        <!-- 4 KPI Badges for Version Fleet -->
+        <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 20px;">
+          <div class="metric-card glass-panel glow-green">
+            <div class="metric-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Latest Version</span>
+              <h3 class="metric-value font-mono" id="vcKpiLatestVersion">v1.0.0</h3>
+              <span class="metric-sub" id="vcKpiLatestCode">Build Code: 1</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-panel glow-amber">
+            <div class="metric-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Min Required Build</span>
+              <h3 class="metric-value font-mono" id="vcKpiMinCode">Code 1</h3>
+              <span class="metric-sub">Older builds force-blocked</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-panel glow-red">
+            <div class="metric-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Mandatory Update</span>
+              <h3 class="metric-value" id="vcKpiForceStatus">Active</h3>
+              <span class="metric-sub">Full screen modal on phones</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-panel glow-cyan">
+            <div class="metric-icon"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+            <div class="metric-info">
+              <span class="metric-label">Detected Versions</span>
+              <h3 class="metric-value" id="vcKpiTotalVersions">1</h3>
+              <span class="metric-sub">Registered across fleet</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Layout: Deploy Release Form & Global Policy -->
+        <div class="settings-grid" style="margin-bottom: 24px;">
+          <!-- Card 1: Publish New APK Release -->
+          <div class="settings-card glass-panel">
+            <div class="card-header">
+              <i class="fa-solid fa-upload"></i>
+              <h4>Deploy New APK Release</h4>
+            </div>
+            <form id="formNewRelease" class="settings-form">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label><i class="fa-solid fa-tag"></i> Version Name (e.g. 1.0.1)</label>
+                  <input type="text" id="vcInputVersionName" required placeholder="1.0.1" value="1.0.1">
+                </div>
+                <div class="form-group">
+                  <label><i class="fa-solid fa-hashtag"></i> Version Code (e.g. 2)</label>
+                  <input type="number" id="vcInputVersionCode" required placeholder="2" value="2" min="1">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-link"></i> APK Download URL (Direct link for Chrome)</label>
+                <input type="url" id="vcInputDownloadUrl" required placeholder="http://65.20.77.112:5000/download/latest.apk" value="http://65.20.77.112:5000/download/latest.apk">
+                <small class="text-dim">When clicked in app, Chrome will open and auto-start the APK download.</small>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-bullhorn"></i> Update Alert Title (Shown on Driver's Phone)</label>
+                <input type="text" id="vcInputTitle" required value="🚨 Naya Update Aaya Hai! (Mandatory)">
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-comment-dots"></i> Custom Update Message (Hindi / English)</label>
+                <textarea id="vcInputMessage" rows="2" placeholder="App ka naya version update karein. Purana version band ho gaya hai.">App ka naya version release ho gaya hai! Purana version disable kar diya gaya hai. Auto-accept continue rakhne ke liye abhi naya APK download aur install karein.</textarea>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-list-check"></i> Release Notes / Changelog</label>
+                <textarea id="vcInputNotes" rows="2" placeholder="Speed 5ms touch injection, background stability fixes">Speed 5ms touch injection, 24/7 background service, Rapido & Ola instant auto-accept improvements.</textarea>
+              </div>
+
+              <div class="form-group form-check" style="margin-top: 4px;">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="vcInputForceUpdate" checked style="width:18px; height:18px; accent-color: var(--primary-green);">
+                  <strong style="color: #38bdf8;">Forcefully Block All Old Versions (Drivers must update to use app)</strong>
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Publish Release & Notify Drivers</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Card 2: Global Version Policy & Enforcement -->
+          <div class="settings-card glass-panel">
+            <div class="card-header">
+              <i class="fa-solid fa-sliders"></i>
+              <h4>Global Version Rules</h4>
+            </div>
+            <form id="formGlobalVersionPolicy" class="settings-form">
+              <div class="form-group">
+                <label><i class="fa-solid fa-ban"></i> Minimum Allowed Version Code</label>
+                <input type="number" id="vcPolicyMinCode" value="1" min="1">
+                <small class="text-dim">Any driver running a version code strictly below this number will be permanently blocked with full-screen lock.</small>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-globe"></i> Default Global Download URL</label>
+                <input type="url" id="vcPolicyDownloadUrl" value="http://65.20.77.112:5000/download/latest.apk">
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-message"></i> Default Force Update Message</label>
+                <textarea id="vcPolicyMessage" rows="3">Aapka app version band ho chuka hai. Kripya naya update download karke install karein.</textarea>
+              </div>
+
+              <div class="form-group form-check">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="vcPolicyForceAll" style="width:18px; height:18px; accent-color: #ef4444;">
+                  <strong style="color: #f87171;">Emergency Killswitch: Force-lock all older versions immediately</strong>
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-secondary btn-block" style="margin-top: 14px;">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Save Global Policy</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Fleet Versions Table -->
+        <div class="panel-header" style="margin-top: 10px;">
+          <div>
+            <h4><i class="fa-solid fa-server"></i> Fleet Registered Versions & Disabler Controls</h4>
+            <p class="panel-sub">Toggle disable on any old version to block all riders running that build in real-time.</p>
+          </div>
+        </div>
+
+        <div class="data-table-wrap glass-panel" style="margin-bottom: 30px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th>Build Code</th>
+                <th>Status</th>
+                <th>Force Lock</th>
+                <th>Active Devices</th>
+                <th>Download Link</th>
+                <th>Message</th>
+                <th>Registered Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="versionFleetTbody">
+              <tr><td colspan="9" class="text-center">Loading versions fleet...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- View 7: Dedicated Rider Full Inspection & Diagnostics View -->
+      <section id="tab-rider-detail" class="view-panel">
+        <!-- Top Nav & Breadcrumb Bar -->
+        <div class="rider-inspection-header glass-panel">
+          <div class="header-left">
+            <button id="btnBackToRiders" class="btn btn-secondary">
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>Back to Riders Directory</span>
+            </button>
+            <div class="breadcrumb-trail">
+              <span class="text-dim">Riders</span>
+              <i class="fa-solid fa-chevron-right separator"></i>
+              <span class="text-dim">Dossier</span>
+              <i class="fa-solid fa-chevron-right separator"></i>
+              <strong id="rdBreadcrumbName" class="text-green">Driver Partner</strong>
+            </div>
+          </div>
+          <div class="header-right">
+            <button id="btnRefreshRiderScreen" class="btn btn-secondary btn-sm" title="Refresh Live Rider State">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Refresh</span>
+            </button>
+            <span id="rdOnlineBadge" class="badge">Checking...</span>
+            <span id="rdA11yBadge" class="badge">Accessibility Check</span>
+          </div>
+        </div>
+
+        <!-- Rider Profile Hero Banner -->
+        <div class="rider-profile-hero glass-panel">
+          <div class="profile-hero-left">
+            <div class="hero-avatar">
+              <i class="fa-solid fa-user-astronaut"></i>
+            </div>
+            <div class="hero-details">
+              <div class="name-row">
+                <h2 id="rdDisplayName">Driver Name</h2>
+                <span id="rdPlanPill" class="badge badge-purple">Free Trial</span>
+              </div>
+              <div class="meta-row">
+                <span><i class="fa-solid fa-phone"></i> <strong id="rdPhone" class="font-mono">--</strong></span>
+                <span><i class="fa-solid fa-envelope"></i> <span id="rdEmail">--</span></span>
+                <span><i class="fa-solid fa-fingerprint"></i> <span id="rdUid" class="font-mono text-dim">--</span></span>
+              </div>
+              <div class="meta-row secondary-meta">
+                <span><i class="fa-solid fa-mobile-screen"></i> <span id="rdDeviceSpecs">Android Device</span></span>
+                <span><i class="fa-solid fa-calendar-check"></i> Joined: <span id="rdJoinedAt">--</span></span>
+                <span><i class="fa-solid fa-signal"></i> Last Signal: <span id="rdLastPing">--</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Inspection & Diagnostic Cards -->
+        <div class="inspection-cards-grid">
+          <!-- Card 1: Rider Configured Limits -->
+          <div class="inspect-card glass-panel border-accent-blue">
+            <div class="card-title">
+              <i class="fa-solid fa-sliders text-blue"></i>
+              <div>
+                <h4>Rider's Configured Limits</h4>
+                <small class="text-dim">Filter settings in mobile app</small>
+              </div>
+            </div>
+            <div class="inspect-kv-list">
+              <div class="kv-item">
+                <span class="kv-label">Auto-Accept Toggle</span>
+                <span class="kv-val" id="rdAutoAcceptVal"><span class="badge badge-green">ENABLED</span></span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Min Fare Filter</span>
+                <span class="kv-val font-bold text-green" id="rdMinFareVal">₹40</span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Max Fare Filter</span>
+                <span class="kv-val font-bold text-cyan" id="rdMaxFareVal">₹2,000</span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Max Pickup Distance</span>
+                <span class="kv-val font-bold text-amber" id="rdMaxPickupVal">5.0 km</span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Max Trip Distance</span>
+                <span class="kv-val font-bold text-purple" id="rdMaxTripVal">30.0 km</span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Hardware Tap Delay</span>
+                <span class="kv-val font-mono" id="rdClickSpeedVal">Instant (5ms)</span>
+              </div>
+            </div>
+            <div class="card-footer-note">
+              <i class="fa-solid fa-circle-info"></i> Rides outside these exact boundaries are rejected automatically.
+            </div>
+          </div>
+
+          <!-- Card 2: Plan & Free Trial Verification -->
+          <div class="inspect-card glass-panel border-accent-purple">
+            <div class="card-title">
+              <i class="fa-solid fa-receipt text-purple"></i>
+              <div>
+                <h4>Plan & Free Trial Audit</h4>
+                <small class="text-dim">Subscription & Trial verification</small>
+              </div>
+            </div>
+            <div class="inspect-kv-list">
+              <div class="kv-item">
+                <span class="kv-label">Subscribed Plan</span>
+                <span class="kv-val font-bold" id="rdSubPlanName">Free Trial</span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Subscription Status</span>
+                <span class="kv-val" id="rdSubStatusVal"><span class="badge badge-amber">INACTIVE</span></span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Plan Expiry Date</span>
+                <span class="kv-val font-mono" id="rdPlanExpiresVal">--</span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Free Rides Consumed</span>
+                <span class="kv-val font-bold font-mono" id="rdFreeUsedVal">0 / 2 used</span>
+              </div>
+              <div class="kv-item">
+                <span class="kv-label">Trial Eligibility</span>
+                <span class="kv-val" id="rdTrialStatusVal"><span class="badge badge-green">TRIAL AVAILABLE</span></span>
+              </div>
+            </div>
+            <div class="card-footer-note" id="rdTrialWarningBox">
+              <i class="fa-solid fa-shield-halved"></i> 2 free rides default. Once used, rider must buy ₹15, ₹49 plan.
+            </div>
+          </div>
+
+          <!-- Card 3: Platform Acceptance Breakdown -->
+          <div class="inspect-card glass-panel border-accent-green">
+            <div class="card-title">
+              <i class="fa-solid fa-chart-line text-green"></i>
+              <div>
+                <h4>Platform Performance</h4>
+                <small class="text-dim">Porter, Rapido, Ola, Uber orders</small>
+              </div>
+            </div>
+            <div class="platform-mini-breakdown" id="rdPlatformMiniList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Card 4: Live Diagnostic Advice & Driver Mistakes -->
+          <div class="inspect-card glass-panel border-accent-amber">
+            <div class="card-title">
+              <i class="fa-solid fa-triangle-exclamation text-amber"></i>
+              <div>
+                <h4>Forensic Diagnostic Advice</h4>
+                <small class="text-dim">Root cause of driver missed rides</small>
+              </div>
+            </div>
+            <div id="rdDiagnosticAdvices" class="diagnostic-advices-wrap">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Missed & Filtered Rides Forensic Audit Table -->
+        <div class="panel-card glass-panel mt-4">
+          <div class="panel-header">
+            <div>
+              <h3><i class="fa-solid fa-circle-exclamation text-amber"></i> Missed & Filtered Rides Forensic Audit (Why Orders Failed)</h3>
+              <p class="panel-subtitle">Inspection of incoming orders vs driver's filters showing exact reasons for rejections.</p>
+            </div>
+            <span class="badge-count" id="rdMissedCountBadge">0 Missed</span>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Event Time</th>
+                  <th>Service</th>
+                  <th>Order Fare vs Rider Limit</th>
+                  <th>Trip Distance vs Limit</th>
+                  <th>Pickup vs Limit</th>
+                  <th>Root Cause & Diagnostic Breakdown</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="rdMissedRidesTbody">
+                <tr><td colspan="7" class="text-center text-muted">No missed rides recorded for this driver.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section: Successful Accepted Rides Stream Table -->
+        <div class="panel-card glass-panel mt-4">
+          <div class="panel-header">
+            <div>
+              <h3><i class="fa-solid fa-circle-check text-green"></i> Successful Accepted Rides Stream</h3>
+              <p class="panel-subtitle">Hardware auto-accepted rides with touch response latency.</p>
+            </div>
+            <span class="badge-count text-green" id="rdAcceptedCountBadge">0 Accepted</span>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Event Time</th>
+                  <th>Service</th>
+                  <th>Fare Earned</th>
+                  <th>Pickup Distance</th>
+                  <th>Trip Distance</th>
+                  <th>Touch Latency</th>
+                  <th>Order ID</th>
+                </tr>
+              </thead>
+              <tbody id="rdAcceptedRidesTbody">
+                <tr><td colspan="7" class="text-center text-muted">No accepted rides recorded yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section: App Crash History on this Device -->
+        <div class="panel-card glass-panel mt-4">
+          <div class="panel-header">
+            <div>
+              <h3><i class="fa-solid fa-bug text-red"></i> App Crashlytics on this Device</h3>
+              <p class="panel-subtitle">Any unhandled exceptions or app freeze reports from this driver's phone.</p>
+            </div>
+            <span class="badge-count text-red" id="rdCrashCountBadge">0 Crashes</span>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Screen / Route</th>
+                  <th>Error Message</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="rdCrashesTbody">
+                <tr><td colspan="4" class="text-center text-muted">Zero crashes recorded on this device.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Crash Trace Modal -->
+  <div id="crashModal" class="modal-backdrop hidden">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-bug text-red"></i>
+          <div>
+            <h3>Crash Report Details</h3>
+            <span id="modalCrashSubtitle" class="modal-sub">--</span>
+          </div>
+        </div>
+        <button id="modalCrashCloseBtn" class="btn-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Error Message</label>
+          <div id="modalCrashMessage" class="code-block error-block">--</div>
+        </div>
+        <div class="form-group">
+          <label>Stack Trace</label>
+          <pre id="modalCrashStack" class="code-block stack-block">--</pre>
+        </div>
+      </div>
+    </div>
+  <!-- Add Plan Modal -->
+  <div id="addPlanModal" class="modal-backdrop hidden">
+    <div class="modal-card glass-panel" style="max-width: 550px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-tags text-green"></i>
+          <div>
+            <h3>Add New Subscription Plan</h3>
+            <span class="modal-sub">Create a new pricing tier for riders</span>
+          </div>
+        </div>
+        <button id="modalAddPlanCloseBtn" class="btn-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="addPlanForm" class="modal-body tutorial-form">
+        <div class="form-group">
+          <label>Plan Identifier (Unique ID) <span class="text-red">*</span></label>
+          <input type="text" id="newPlanId" class="form-control font-mono" placeholder="e.g. monthly_special or weekend_pass" required>
+        </div>
+        <div class="form-group">
+          <label>Plan Title <span class="text-red">*</span></label>
+          <input type="text" id="newPlanTitle" class="form-control" placeholder="e.g. Weekend Warrior Pass" required>
+        </div>
+        <div class="d-flex gap-2">
+          <div class="form-group flex-1">
+            <label>Price (₹) <span class="text-red">*</span></label>
+            <input type="number" step="0.5" id="newPlanPrice" class="form-control" placeholder="e.g. 49" required>
+          </div>
+          <div class="form-group flex-1">
+            <label>Original / Cut Price (₹)</label>
+            <input type="number" step="0.5" id="newPlanOrigPrice" class="form-control" placeholder="e.g. 99">
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <div class="form-group flex-1">
+            <label>Validity (Days) <span class="text-red">*</span></label>
+            <input type="number" id="newPlanValidity" class="form-control" placeholder="Days (-1 for lifetime)" required>
+          </div>
+          <div class="form-group flex-1">
+            <label>Duration Text <span class="text-red">*</span></label>
+            <input type="text" id="newPlanDurationText" class="form-control" placeholder="e.g. 2 Days Access" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Badge / Tag (Optional)</label>
+          <input type="text" id="newPlanBadge" class="form-control" placeholder="e.g. Limited Offer or VIP">
+        </div>
+        <div class="form-group">
+          <label>Features (One per line)</label>
+          <textarea id="newPlanFeatures" class="form-control" rows="3" placeholder="Full auto-accept access&#10;All 4 apps included&#10;Instant 0ms speed"></textarea>
+        </div>
+        <div class="form-actions mt-3 d-flex justify-end gap-2">
+          <button type="button" id="btnCancelAddPlan" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-success"><i class="fa-solid fa-plus"></i> Create Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
