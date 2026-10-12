@@ -57,16 +57,6 @@ class AppTheme {
     );
   }
 
-  static ThemeData get darkTheme {
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
-        brightness: Brightness.dark,
-        primary: AppColors.primary,
-        secondary: AppColors.accent,
-        error: AppColors.error,
-      ),
-    );
-  }
+  /// Night mode disabled: Always returns lightTheme
+  static ThemeData get darkTheme => lightTheme;
 }

@@ -83,7 +83,8 @@ class RideAutoAcceptApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             locale: Locale(langProvider.currentLanguageCode),
             theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
+            darkTheme: AppTheme.lightTheme,
+            themeMode: ThemeMode.light,
             navigatorObservers: [
               ?analyticsObserver,
             ],
