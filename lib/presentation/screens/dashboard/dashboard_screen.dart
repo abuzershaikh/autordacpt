@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,7 +21,8 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObserver {
+class _DashboardScreenState extends State<DashboardScreen>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   late bool _autoAccept;
   late double _minFare;
   late double _maxFare;
@@ -37,19 +39,104 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
   FreeRidesInfo? _freeRidesInfo;
   final FreeRidesService _freeRidesService = FreeRidesService();
 
+  late AnimationController _popController;
+  late Animation<double> _popScaleAnimation;
+  late Animation<double> _popGlowAnimation;
+  late AnimationController _borderRotateController;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _initSupportPopAnimation();
     _checkAccessibilityStatus();
     _checkBatteryStatus();
     _loadFreeRidesInfo();
   }
 
+  void _initSupportPopAnimation() {
+    _popController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1700),
+    )..repeat();
+
+    _popScaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 1.13).chain(CurveTween(curve: Curves.easeOutCubic)),
+        weight: 18,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.13, end: 0.95).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 16,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.95, end: 1.08).chain(CurveTween(curve: Curves.easeOutQuad)),
+        weight: 16,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.08, end: 1.0).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 16,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(1.0),
+        weight: 34,
+      ),
+    ]).animate(_popController);
+
+    _popGlowAnimation = Tween<double>(begin: 0.25, end: 0.75).animate(
+      CurvedAnimation(
+        parent: _popController,
+        curve: const Interval(0.0, 0.66, curve: Curves.easeInOut),
+      ),
+    );
+
+    _borderRotateController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    )..repeat();
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _popController.dispose();
+    _borderRotateController.dispose();
     super.dispose();
+  }
+
+  Future<void> _openWhatsAppSupport() async {
+    HapticFeedback.mediumImpact();
+    const phone = "919225278035";
+    final message = Uri.encodeComponent("Hello SnapRider Support, I need help with SnapRider app.");
+    final whatsappUrl = "whatsapp://send?phone=$phone&text=$message";
+    final webUrl = "https://wa.me/$phone?text=$message";
+
+    bool success = await AccessibilityService.openUrl(whatsappUrl);
+    if (!success) {
+      success = await AccessibilityService.openUrl(webUrl);
+    }
+
+    if (!success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Row(
+            children: [
+              Icon(Icons.support_agent_rounded, color: Colors.white, size: 20),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'WhatsApp not found. Contact Support: +91 9225278035',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: const Color(0xFF075E54),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
   }
 
   @override
@@ -750,6 +837,8 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                     children: [
                       Text(
                         strings.autoAccept,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Color(0xFFFFEB3B),
                           fontSize: 19,
@@ -785,8 +874,170 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
               ],
             ),
           ),
+
+          // 5. Pulsing 3D Chat Support Button
+          Positioned(
+            right: 14,
+            bottom: 11,
+            child: _buildChatSupportButton(),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildChatSupportButton() {
+    final langCode = context.watch<LanguageProvider>().currentLanguageCode;
+    String supportText = 'Chat Support';
+    switch (langCode) {
+      case 'hi':
+        supportText = 'चैट सपोर्ट';
+        break;
+      case 'mr':
+        supportText = 'चॅट मदत';
+        break;
+      case 'ta':
+        supportText = 'சாட் ஆதரவு';
+        break;
+      case 'ml':
+        supportText = 'ചാറ്റ് സപ്പോർട്ട്';
+        break;
+      case 'kn':
+        supportText = 'ಚಾಟ್ ಬೆಂಬಲ';
+        break;
+    }
+
+    return AnimatedBuilder(
+      animation: Listenable.merge([_popController, _borderRotateController]),
+      builder: (context, _) {
+        return Transform.scale(
+          scale: _popScaleAnimation.value,
+          child: Container(
+            // 1. Moving Red-Orange Animated Outline Border
+            padding: const EdgeInsets.all(2.4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              gradient: SweepGradient(
+                colors: const [
+                  Color(0xFFFF1744), // Vivid Red
+                  Color(0xFFFF5722), // Deep Orange
+                  Color(0xFFFF9100), // Vibrant Amber Orange
+                  Color(0xFFFFEA00), // Bright Gold Spark
+                  Color(0xFFFF3D00), // Hot Red-Orange
+                  Color(0xFFFF1744), // Back to Vivid Red
+                ],
+                transform: GradientRotation(_borderRotateController.value * 2 * math.pi),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFFF3D00).withValues(alpha: _popGlowAnimation.value * 0.85),
+                  blurRadius: 10,
+                  spreadRadius: 1.5,
+                  offset: const Offset(0, 2),
+                ),
+                BoxShadow(
+                  color: const Color(0xFFFF9100).withValues(alpha: _popGlowAnimation.value * 0.55),
+                  blurRadius: 14,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _openWhatsAppSupport,
+                borderRadius: BorderRadius.circular(22),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF25D366), Color(0xFF128C7E)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.85),
+                      width: 1.2,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // 3D Chat Support Image Icon in circular badge
+                      Container(
+                        width: 28,
+                        height: 28,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 3,
+                              offset: Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: Image.asset(
+                            'assets/images/chat_support_icon.jpg',
+                            width: 28,
+                            height: 28,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 7),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            supportText,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 11,
+                              letterSpacing: 0.2,
+                              height: 1.1,
+                            ),
+                          ),
+                          const SizedBox(height: 1.5),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 5,
+                                height: 5,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF69F0AE),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 3.5),
+                              const Text(
+                                'WhatsApp',
+                                style: TextStyle(
+                                  color: Color(0xFFE8F5E9),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 8.5,
+                                  letterSpacing: 0.1,
+                                  height: 1.1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

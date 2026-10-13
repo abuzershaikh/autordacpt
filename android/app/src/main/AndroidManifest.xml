@@ -70,6 +70,8 @@
         <package android:name="com.theporter.android.driverapp" />
         <package android:name="com.olacabs.oladriver" />
         <package android:name="com.olacabs.partner" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>

@@ -12,6 +12,10 @@ import '../../../data/datasources/free_rides_service.dart';
 import '../../../services/accessibility_service.dart';
 import '../auth/login_screen.dart';
 import '../plans/plan_screen.dart';
+import '../legal/privacy_policy_screen.dart';
+import '../legal/terms_conditions_screen.dart';
+import '../legal/contact_us_screen.dart';
+import '../legal/about_us_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -333,6 +337,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
                     // Language Selection Card
                     _buildLanguageSelectorCard(context, strings),
+                    const SizedBox(height: 16),
+
+                    // Legal & Support Menu Card
+                    _buildLegalAndSupportMenu(context, strings),
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -1011,6 +1019,274 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Legal & Support Card linking to Privacy Policy, Terms, Contact Us, and About Us
+  Widget _buildLegalAndSupportMenu(BuildContext context, AppStrings strings) {
+    final langCode = context.watch<LanguageProvider>().currentLanguageCode;
+    String legalTitle = 'Legal & Support';
+    String legalSubtitle = 'Privacy policy, terms & contact information';
+    String privacyText = 'Privacy Policy';
+    String termsText = 'Terms & Conditions';
+    String contactText = 'Contact Us';
+    String aboutText = 'About SnapRider';
+
+    if (langCode == 'hi') {
+      legalTitle = 'कानूनी और सहायता (Legal & Support)';
+      legalSubtitle = 'गोपनीयता नीति, नियम और संपर्क विवरण';
+      privacyText = 'गोपनीयता नीति (Privacy Policy)';
+      termsText = 'नियम और शर्तें (Terms & Conditions)';
+      contactText = 'संपर्क करें (Contact Us)';
+      aboutText = 'हमारे बारे में (About Us)';
+    } else if (langCode == 'mr') {
+      legalTitle = 'कायदेशीर आणि मदत (Legal & Support)';
+      legalSubtitle = 'गोपनीयता धोरण, नियम आणि संपर्क';
+      privacyText = 'गोपनीयता धोरण (Privacy Policy)';
+      termsText = 'नियम आणि अटी (Terms & Conditions)';
+      contactText = 'संपर्क साधा (Contact Us)';
+      aboutText = 'आमच्याबद्दल (About Us)';
+    } else if (langCode == 'ta') {
+      legalTitle = 'சட்டம் மற்றும் ஆதரவு (Legal & Support)';
+      legalSubtitle = 'தனியுரிமைக் கொள்கை, விதிமுறைகள் மற்றும் உதவி';
+      privacyText = 'தனியுரிமைக் கொள்கை (Privacy Policy)';
+      termsText = 'விதிமுறைகள் மற்றும் நிபந்தனைகள்';
+      contactText = 'எங்களைத் தொடர்பு கொள்ளவும்';
+      aboutText = 'எங்களைப் பற்றி (About Us)';
+    } else if (langCode == 'kn') {
+      legalTitle = 'ಕಾನೂನು ಮತ್ತು ಬೆಂಬಲ (Legal & Support)';
+      legalSubtitle = 'ಗೌಪ್ಯತೆ ನೀತಿ, ನಿಯಮಗಳು ಮತ್ತು ಸಂಪರ್ಕ ಮಾಹಿತಿ';
+      privacyText = 'ಗೌಪ್ಯತೆ ನೀತಿ (Privacy Policy)';
+      termsText = 'ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು';
+      contactText = 'ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ (Contact Us)';
+      aboutText = 'ನಮ್ಮ ಬಗ್ಗೆ (About Us)';
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header Row
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF0F172A), Color(0xFF334155)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.policy_rounded, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      legalTitle,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      legalSubtitle,
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // 1. Privacy Policy
+          _buildLegalMenuItem(
+            icon: Icons.shield_rounded,
+            iconColor: const Color(0xFF00A84D),
+            bgColor: const Color(0xFFE8F8F0),
+            title: privacyText,
+            subtitle: 'Data protection & Accessibility disclosures',
+            badge: 'Compliant',
+            badgeColor: const Color(0xFF00A84D),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+              );
+            },
+          ),
+          const Divider(height: 18, thickness: 0.8, color: Color(0xFFF1F5F9)),
+
+          // 2. Terms & Conditions
+          _buildLegalMenuItem(
+            icon: Icons.description_rounded,
+            iconColor: const Color(0xFF1976D2),
+            bgColor: const Color(0xFFE3F2FD),
+            title: termsText,
+            subtitle: 'Driver partner agreement & safe rules',
+            badge: 'Rules',
+            badgeColor: const Color(0xFF1976D2),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const TermsConditionsScreen()),
+              );
+            },
+          ),
+          const Divider(height: 18, thickness: 0.8, color: Color(0xFFF1F5F9)),
+
+          // 3. Contact Us
+          _buildLegalMenuItem(
+            icon: Icons.headset_mic_rounded,
+            iconColor: const Color(0xFF25D366),
+            bgColor: const Color(0xFFDCF8C6),
+            title: contactText,
+            subtitle: 'Direct WhatsApp chat, phone & email',
+            badge: 'WhatsApp 24/7',
+            badgeColor: const Color(0xFF25D366),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ContactUsScreen()),
+              );
+            },
+          ),
+          const Divider(height: 18, thickness: 0.8, color: Color(0xFFF1F5F9)),
+
+          // 4. About Us
+          _buildLegalMenuItem(
+            icon: Icons.info_rounded,
+            iconColor: const Color(0xFFFF6E00),
+            bgColor: const Color(0xFFFFF3E0),
+            title: aboutText,
+            subtitle: 'Mission, v1.0.8 & supported apps',
+            badge: 'v1.0.8',
+            badgeColor: const Color(0xFFFF6E00),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AboutUsScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegalMenuItem({
+    required IconData icon,
+    required Color iconColor,
+    required Color bgColor,
+    required String title,
+    required String subtitle,
+    required String badge,
+    required Color badgeColor,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+          child: Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: iconColor, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF0F172A),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: badgeColor.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            badge,
+                            style: TextStyle(
+                              color: badgeColor,
+                              fontSize: 9.5,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey.shade600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded, color: Color(0xFF94A3B8), size: 20),
+            ],
+          ),
+        ),
       ),
     );
   }
