@@ -190,10 +190,10 @@ class _ServiceSettingsScreenState extends State<ServiceSettingsScreen> {
                               ],
                             ),
                             Slider(
-                              value: filters.minFare.toDouble(),
+                              value: filters.minFare.toDouble().clamp(0.0, 25000.0),
                               min: 0,
-                              max: 500,
-                              divisions: 50,
+                              max: 25000,
+                              divisions: 500,
                               label: '₹${filters.minFare}',
                               activeColor: brandColor,
                               onChanged: (value) {
@@ -265,7 +265,9 @@ class _ServiceSettingsScreenState extends State<ServiceSettingsScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${filters.pickupDistance.toStringAsFixed(1)} km',
+                                  filters.pickupDistance <= 0.0
+                                      ? 'No Limit'
+                                      : '${filters.pickupDistance.toStringAsFixed(1)} km',
                                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: brandColor,
@@ -274,11 +276,13 @@ class _ServiceSettingsScreenState extends State<ServiceSettingsScreen> {
                               ],
                             ),
                             Slider(
-                              value: filters.pickupDistance.clamp(0.5, 50.0),
-                              min: 0.5,
-                              max: 50,
-                              divisions: 99,
-                              label: '${filters.pickupDistance.toStringAsFixed(1)} km',
+                              value: filters.pickupDistance.clamp(0.0, 50.0),
+                              min: 0.0,
+                              max: 50.0,
+                              divisions: 100,
+                              label: filters.pickupDistance <= 0.0
+                                  ? 'No Limit'
+                                  : '${filters.pickupDistance.toStringAsFixed(1)} km',
                               activeColor: brandColor,
                               onChanged: (value) {
                                 setState(() {
@@ -308,7 +312,9 @@ class _ServiceSettingsScreenState extends State<ServiceSettingsScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${filters.tripDistance.toStringAsFixed(1)} km',
+                                  (filters.tripDistance <= 0.0 || filters.tripDistance >= 3000.0)
+                                      ? 'No Limit'
+                                      : '${filters.tripDistance.toInt()} km',
                                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: brandColor,
@@ -317,11 +323,13 @@ class _ServiceSettingsScreenState extends State<ServiceSettingsScreen> {
                               ],
                             ),
                             Slider(
-                              value: filters.tripDistance.clamp(1.0, 3000.0),
-                              min: 1,
-                              max: 3000,
-                              divisions: 2999,
-                              label: '${filters.tripDistance.toStringAsFixed(1)} km',
+                              value: filters.tripDistance.clamp(0.0, 3000.0),
+                              min: 0.0,
+                              max: 3000.0,
+                              divisions: 300,
+                              label: (filters.tripDistance <= 0.0 || filters.tripDistance >= 3000.0)
+                                  ? 'No Limit'
+                                  : '${filters.tripDistance.toInt()} km',
                               activeColor: brandColor,
                               onChanged: (value) {
                                 setState(() {

@@ -141,7 +141,9 @@ class ActiveServiceCard extends StatelessWidget {
                 _buildInfoChip(
                   context,
                   Icons.location_on_outlined,
-                  '${service.settings.rideFilters.pickupDistance.toStringAsFixed(1)} km',
+                  service.settings.rideFilters.pickupDistance <= 0.0
+                      ? 'Any pickup'
+                      : '${service.settings.rideFilters.pickupDistance.toStringAsFixed(1)} km',
                   brandColor,
                 ),
                 _buildInfoChip(

@@ -62,25 +62,34 @@ class _DashboardScreenState extends State<DashboardScreen>
 
     _popScaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.13).chain(CurveTween(curve: Curves.easeOutCubic)),
+        tween: Tween<double>(
+          begin: 1.0,
+          end: 1.13,
+        ).chain(CurveTween(curve: Curves.easeOutCubic)),
         weight: 18,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.13, end: 0.95).chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<double>(
+          begin: 1.13,
+          end: 0.95,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 16,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 0.95, end: 1.08).chain(CurveTween(curve: Curves.easeOutQuad)),
+        tween: Tween<double>(
+          begin: 0.95,
+          end: 1.08,
+        ).chain(CurveTween(curve: Curves.easeOutQuad)),
         weight: 16,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.08, end: 1.0).chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<double>(
+          begin: 1.08,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
         weight: 16,
       ),
-      TweenSequenceItem(
-        tween: ConstantTween<double>(1.0),
-        weight: 34,
-      ),
+      TweenSequenceItem(tween: ConstantTween<double>(1.0), weight: 34),
     ]).animate(_popController);
 
     _popGlowAnimation = Tween<double>(begin: 0.25, end: 0.75).animate(
@@ -107,7 +116,9 @@ class _DashboardScreenState extends State<DashboardScreen>
   Future<void> _openWhatsAppSupport() async {
     HapticFeedback.mediumImpact();
     const phone = "919225278035";
-    final message = Uri.encodeComponent("Hello SnapRider Support, I need help with SnapRider app.");
+    final message = Uri.encodeComponent(
+      "Hello SnapRider Support, I need help with SnapRider app.",
+    );
     final whatsappUrl = "whatsapp://send?phone=$phone&text=$message";
     final webUrl = "https://wa.me/$phone?text=$message";
 
@@ -133,7 +144,9 @@ class _DashboardScreenState extends State<DashboardScreen>
           ),
           backgroundColor: const Color(0xFF075E54),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     }
@@ -150,7 +163,8 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   Future<void> _checkBatteryStatus() async {
     try {
-      final ignored = await VersionCheckService().isBatteryOptimizationIgnored();
+      final ignored = await VersionCheckService()
+          .isBatteryOptimizationIgnored();
       if (mounted && _isBatteryIgnored != ignored) {
         setState(() {
           _isBatteryIgnored = ignored;
@@ -173,9 +187,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   void _openPlanScreen() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const PlanScreen(userPhone: ''),
-      ),
+      MaterialPageRoute(builder: (_) => const PlanScreen(userPhone: '')),
     );
     _loadFreeRidesInfo();
   }
@@ -206,7 +218,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     _minFare = config.minFare.clamp(20.0, 25000.0);
     _maxFare = config.maxFare.clamp(20.0, 25000.0);
     if (_minFare > _maxFare) _minFare = _maxFare;
-    _pickupDistance = config.pickupDistance.clamp(0.5, 50.0);
+    _pickupDistance = config.pickupDistance.clamp(0.0, 50.0);
     _tripDistance = config.tripDistance.clamp(0.0, 3000.0);
     _clickDelayMs = config.clickDelayMs;
     _soundAlert = config.soundAlert;
@@ -244,12 +256,20 @@ class _DashboardScreenState extends State<DashboardScreen>
         SnackBar(
           content: Row(
             children: [
-              const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  customMessage ?? '✓ Settings confirmed & active on all ride apps!',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  customMessage ??
+                      '✓ Settings confirmed & active on all ride apps!',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
                 ),
               ),
             ],
@@ -257,7 +277,9 @@ class _DashboardScreenState extends State<DashboardScreen>
           backgroundColor: const Color(0xFF00A84D),
           duration: const Duration(milliseconds: 1800),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     }
@@ -292,7 +314,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                   width: 150,
                   height: 110,
                   alignment: Alignment.center,
-                  child: const Icon(Icons.verified_rounded, size: 64, color: Color(0xFF00A84D)),
+                  child: const Icon(
+                    Icons.verified_rounded,
+                    size: 64,
+                    color: Color(0xFF00A84D),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -342,26 +368,38 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 8),
-                      child: Divider(height: 1, thickness: 0.8, color: Color(0xFFE2E8F0)),
+                      child: Divider(
+                        height: 1,
+                        thickness: 0.8,
+                        color: Color(0xFFE2E8F0),
+                      ),
                     ),
                     _buildRuleSummaryRow(
                       icon: Icons.near_me_rounded,
                       iconColor: const Color(0xFFFF6E00),
                       bgColor: const Color(0xFFFFF3E0),
                       label: dStrings.pickupLabel,
-                      value: '${_pickupDistance.toStringAsFixed(1)} km',
+                      value: _pickupDistance <= 0.0
+                          ? 'No Limit (Any)'
+                          : '${_pickupDistance.toStringAsFixed(1)} km',
                       isHighlighted: changeType == 'pickup',
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 8),
-                      child: Divider(height: 1, thickness: 0.8, color: Color(0xFFE2E8F0)),
+                      child: Divider(
+                        height: 1,
+                        thickness: 0.8,
+                        color: Color(0xFFE2E8F0),
+                      ),
                     ),
                     _buildRuleSummaryRow(
                       icon: Icons.alt_route_rounded,
                       iconColor: const Color(0xFF2196F3),
                       bgColor: const Color(0xFFE3F2FD),
                       label: dStrings.tripLabel,
-                      value: _tripDistance == 0.0 ? 'No Limit' : '${_tripDistance.toStringAsFixed(1)} km',
+                      value: (_tripDistance <= 0.0 || _tripDistance >= 3000.0)
+                          ? 'No Limit'
+                          : '${_tripDistance.toInt()} km',
                       isHighlighted: changeType == 'trip',
                     ),
                   ],
@@ -373,12 +411,20 @@ class _DashboardScreenState extends State<DashboardScreen>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.shield_rounded, color: Color(0xFF00A84D), size: 16),
+                  const Icon(
+                    Icons.shield_rounded,
+                    color: Color(0xFF00A84D),
+                    size: 16,
+                  ),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       dStrings.note,
-                      style: const TextStyle(fontSize: 11, color: Color(0xFF059669), fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFF059669),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -393,8 +439,13 @@ class _DashboardScreenState extends State<DashboardScreen>
                       onPressed: () => Navigator.pop(ctx, false),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        side: const BorderSide(color: Color(0xFFCBD5E1), width: 1.2),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        side: const BorderSide(
+                          color: Color(0xFFCBD5E1),
+                          width: 1.2,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: Text(
                         dStrings.cancelBtn,
@@ -416,8 +467,12 @@ class _DashboardScreenState extends State<DashboardScreen>
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         elevation: 2,
-                        shadowColor: const Color(0xFF00A84D).withValues(alpha: 0.4),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shadowColor: const Color(
+                          0xFF00A84D,
+                        ).withValues(alpha: 0.4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: Text(
                         dStrings.confirmBtn,
@@ -476,16 +531,22 @@ class _DashboardScreenState extends State<DashboardScreen>
             style: TextStyle(
               fontSize: 12.5,
               fontWeight: isHighlighted ? FontWeight.bold : FontWeight.w600,
-              color: isHighlighted ? const Color(0xFF0F172A) : const Color(0xFF475569),
+              color: isHighlighted
+                  ? const Color(0xFF0F172A)
+                  : const Color(0xFF475569),
             ),
           ),
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
           decoration: BoxDecoration(
-            color: isHighlighted ? iconColor.withValues(alpha: 0.12) : const Color(0xFFF1F5F9),
+            color: isHighlighted
+                ? iconColor.withValues(alpha: 0.12)
+                : const Color(0xFFF1F5F9),
             borderRadius: BorderRadius.circular(8),
-            border: isHighlighted ? Border.all(color: iconColor, width: 1) : null,
+            border: isHighlighted
+                ? Border.all(color: iconColor, width: 1)
+                : null,
           ),
           child: Text(
             value,
@@ -531,7 +592,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                   ]);
                 },
                 child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   children: [
                     // 1. Accessibility Service Warning Banner (Only show when accessibility is NOT enabled)
                     if (!_isAccessibilityEnabled) ...[
@@ -567,25 +631,41 @@ class _DashboardScreenState extends State<DashboardScreen>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF00C853).withValues(alpha: 0.35),
+                              color: const Color(
+                                0xFF00C853,
+                              ).withValues(alpha: 0.35),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
                           ],
                         ),
                         child: ElevatedButton.icon(
-                          onPressed: () => _showSettingsConfirmationDialog(changeType: 'all'),
-                          icon: const Icon(Icons.check_circle_rounded, color: Colors.white, size: 22),
+                          onPressed: () => _showSettingsConfirmationDialog(
+                            changeType: 'all',
+                          ),
+                          icon: const Icon(
+                            Icons.check_circle_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          ),
                           label: Text(
                             DashboardInfoStrings.getConfirmDialogStrings(
-                              context.read<LanguageProvider>().currentLanguageCode,
+                              context
+                                  .read<LanguageProvider>()
+                                  .currentLanguageCode,
                             ).confirmBtn,
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.5),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.5,
+                            ),
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
                           ),
                         ),
                       ),
@@ -602,7 +682,11 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   // ==================== 1. TOP HEADER BANNER ====================
-  Widget _buildTopHeader(bool isServiceActive, ServiceProvider provider, AppStrings strings) {
+  Widget _buildTopHeader(
+    bool isServiceActive,
+    ServiceProvider provider,
+    AppStrings strings,
+  ) {
     final topPadding = MediaQuery.of(context).padding.top;
     final totalHeight = 122.0 + topPadding;
 
@@ -703,7 +787,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    const Icon(Icons.notifications, color: Colors.white, size: 22),
+                    const Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 22,
+                    ),
                     Positioned(
                       right: -3,
                       top: -3,
@@ -713,7 +801,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                           color: Color(0xFFE53935),
                           shape: BoxShape.circle,
                         ),
-                        constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
+                        constraints: const BoxConstraints(
+                          minWidth: 14,
+                          minHeight: 14,
+                        ),
                         child: const Text(
                           '3',
                           style: TextStyle(
@@ -743,7 +834,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.18),
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.35), width: 1),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.35),
+                        width: 1,
+                      ),
                     ),
                     child: const Icon(
                       Icons.accessibility_new_rounded,
@@ -770,12 +864,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                     height: 24,
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
-                      color: isServiceActive ? const Color(0xFF00E676) : Colors.white24,
+                      color: isServiceActive
+                          ? const Color(0xFF00E676)
+                          : Colors.white24,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: AnimatedAlign(
                       duration: const Duration(milliseconds: 200),
-                      alignment: isServiceActive ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment: isServiceActive
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                       child: Container(
                         width: 20,
                         height: 20,
@@ -806,7 +904,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                   height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFFFD54F), width: 1.5),
+                    border: Border.all(
+                      color: const Color(0xFFFFD54F),
+                      width: 1.5,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.15),
@@ -822,7 +923,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                       fit: BoxFit.cover,
                       errorBuilder: (_, _, _) => Container(
                         color: const Color(0xFFFFC107),
-                        child: const Icon(Icons.electric_rickshaw, color: Colors.black87),
+                        child: const Icon(
+                          Icons.electric_rickshaw,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                   ),
@@ -853,7 +957,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                             width: 6,
                             height: 6,
                             decoration: BoxDecoration(
-                              color: isServiceActive ? const Color(0xFF69F0AE) : Colors.white60,
+                              color: isServiceActive
+                                  ? const Color(0xFF69F0AE)
+                                  : Colors.white60,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -876,11 +982,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           ),
 
           // 5. Pulsing 3D Chat Support Button
-          Positioned(
-            right: 14,
-            bottom: 11,
-            child: _buildChatSupportButton(),
-          ),
+          Positioned(right: 14, bottom: 11, child: _buildChatSupportButton()),
         ],
       ),
     );
@@ -926,17 +1028,23 @@ class _DashboardScreenState extends State<DashboardScreen>
                   Color(0xFFFF3D00), // Hot Red-Orange
                   Color(0xFFFF1744), // Back to Vivid Red
                 ],
-                transform: GradientRotation(_borderRotateController.value * 2 * math.pi),
+                transform: GradientRotation(
+                  _borderRotateController.value * 2 * math.pi,
+                ),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFF3D00).withValues(alpha: _popGlowAnimation.value * 0.85),
+                  color: const Color(
+                    0xFFFF3D00,
+                  ).withValues(alpha: _popGlowAnimation.value * 0.85),
                   blurRadius: 10,
                   spreadRadius: 1.5,
                   offset: const Offset(0, 2),
                 ),
                 BoxShadow(
-                  color: const Color(0xFFFF9100).withValues(alpha: _popGlowAnimation.value * 0.55),
+                  color: const Color(
+                    0xFFFF9100,
+                  ).withValues(alpha: _popGlowAnimation.value * 0.55),
                   blurRadius: 14,
                   spreadRadius: 2,
                 ),
@@ -948,7 +1056,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                 onTap: _openWhatsAppSupport,
                 borderRadius: BorderRadius.circular(22),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [Color(0xFF25D366), Color(0xFF128C7E)],
@@ -1063,7 +1174,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                   color: const Color(0xFFFFE8D1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.warning_rounded, color: Color(0xFFFF7A00), size: 22),
+                child: const Icon(
+                  Icons.warning_rounded,
+                  color: Color(0xFFFF7A00),
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 10),
 
@@ -1083,7 +1198,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                     const SizedBox(height: 2),
                     Text(
                       strings.enableAccessibilitySubtitle,
-                      style: const TextStyle(fontSize: 10.5, color: Color(0xFF757575)),
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        color: Color(0xFF757575),
+                      ),
                     ),
                   ],
                 ),
@@ -1099,14 +1217,23 @@ class _DashboardScreenState extends State<DashboardScreen>
                 icon: const Icon(Icons.settings, color: Colors.white, size: 13),
                 label: Text(
                   strings.openSettings,
-                  style: const TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF6E00),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   minimumSize: const Size(0, 32),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   elevation: 0,
                 ),
               ),
@@ -1146,7 +1273,11 @@ class _DashboardScreenState extends State<DashboardScreen>
               color: const Color(0xFFDCFCE7),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.bolt_rounded, color: Color(0xFF16A34A), size: 24),
+            child: const Icon(
+              Icons.bolt_rounded,
+              color: Color(0xFF16A34A),
+              size: 24,
+            ),
           ),
           const SizedBox(width: 10),
           const Expanded(
@@ -1188,7 +1319,11 @@ class _DashboardScreenState extends State<DashboardScreen>
             ),
             child: const Text(
               'Allow',
-              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -1208,7 +1343,10 @@ class _DashboardScreenState extends State<DashboardScreen>
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFF00C853).withValues(alpha: 0.35), width: 1.2),
+          border: Border.all(
+            color: const Color(0xFF00C853).withValues(alpha: 0.35),
+            width: 1.2,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
@@ -1225,7 +1363,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                 color: Color(0xFFE8F5E9),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.verified_rounded, color: Color(0xFF00C853), size: 20),
+              child: const Icon(
+                Icons.verified_rounded,
+                color: Color(0xFF00C853),
+                size: 20,
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -1234,7 +1376,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                 children: [
                   Text(
                     'Active Plan: ${info.activePlanName}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5, color: Color(0xFF1E293B)),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13.5,
+                      color: Color(0xFF1E293B),
+                    ),
                   ),
                   const SizedBox(height: 2),
                   const Text(
@@ -1247,14 +1393,21 @@ class _DashboardScreenState extends State<DashboardScreen>
             InkWell(
               onTap: _openPlanScreen,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF1F5F9),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
                   'Plans',
-                  style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0F172A),
+                  ),
                 ),
               ),
             ),
@@ -1290,7 +1443,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                     color: Color(0xFFFFE082),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.warning_amber_rounded, color: Color(0xFFE65100), size: 20),
+                  child: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Color(0xFFE65100),
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -1308,7 +1465,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                       const SizedBox(height: 2),
                       const Text(
                         'Auto-accept is paused. Buy plan to activate!',
-                        style: TextStyle(fontSize: 11.5, color: Color(0xFF5D4037)),
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: Color(0xFF5D4037),
+                        ),
                       ),
                     ],
                   ),
@@ -1320,7 +1480,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               children: [
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 6,
+                      horizontal: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
@@ -1329,7 +1492,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                     child: const Text(
                       '⚡ 1-Day: ₹15  •  🔥 Weekly: ₹49',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: Color(0xFFE65100)),
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFE65100),
+                      ),
                     ),
                   ),
                 ),
@@ -1338,13 +1505,21 @@ class _DashboardScreenState extends State<DashboardScreen>
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00A84D),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                   onPressed: _openPlanScreen,
-                  child: const Text('Buy Plan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  child: const Text(
+                    'Buy Plan',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
                 ),
               ],
             ),
@@ -1359,7 +1534,10 @@ class _DashboardScreenState extends State<DashboardScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF43A047).withValues(alpha: 0.3), width: 1.0),
+        border: Border.all(
+          color: const Color(0xFF43A047).withValues(alpha: 0.3),
+          width: 1.0,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -1376,7 +1554,11 @@ class _DashboardScreenState extends State<DashboardScreen>
               color: Color(0xFFE8F5E9),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.card_giftcard_rounded, color: Color(0xFF2E7D32), size: 19),
+            child: const Icon(
+              Icons.card_giftcard_rounded,
+              color: Color(0xFF2E7D32),
+              size: 19,
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -1385,12 +1567,19 @@ class _DashboardScreenState extends State<DashboardScreen>
               children: [
                 Text(
                   'Free Trial: ${info.used}/${info.limit} rides used',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF1E293B)),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: Color(0xFF1E293B),
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   '${info.remaining} free ride(s) left • Plans start @ ₹15/day',
-                  style: const TextStyle(fontSize: 11.5, color: Color(0xFF64748B)),
+                  style: const TextStyle(
+                    fontSize: 11.5,
+                    color: Color(0xFF64748B),
+                  ),
                 ),
               ],
             ),
@@ -1405,7 +1594,11 @@ class _DashboardScreenState extends State<DashboardScreen>
               ),
               child: const Text(
                 'Plans (₹15)',
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF2E7D32)),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2E7D32),
+                ),
               ),
             ),
           ),
@@ -1438,7 +1631,11 @@ class _DashboardScreenState extends State<DashboardScreen>
           children: [
             Text(
               'Aapke $limit free trial rides complete ho chuke hain. Auto-accept enable karne ke liye subscription plan select karein:',
-              style: const TextStyle(fontSize: 13.5, height: 1.4, color: Color(0xFF334155)),
+              style: const TextStyle(
+                fontSize: 13.5,
+                height: 1.4,
+                color: Color(0xFF334155),
+              ),
             ),
             const SizedBox(height: 14),
             Container(
@@ -1453,16 +1650,42 @@ class _DashboardScreenState extends State<DashboardScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('⚡ 1-Day Plan (24 Hours):', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                      Text('₹15', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2E7D32), fontSize: 15)),
+                      Text(
+                        '⚡ 1-Day Plan (24 Hours):',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                      Text(
+                        '₹15',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2E7D32),
+                          fontSize: 15,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('🔥 Weekly Plan (7 Days):', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                      Text('₹49', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2E7D32), fontSize: 15)),
+                      Text(
+                        '🔥 Weekly Plan (7 Days):',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                      Text(
+                        '₹49',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2E7D32),
+                          fontSize: 15,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -1479,13 +1702,18 @@ class _DashboardScreenState extends State<DashboardScreen>
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF00A84D),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             onPressed: () {
               Navigator.pop(ctx);
               _openPlanScreen();
             },
-            child: const Text('View Plans (from ₹15)', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: const Text(
+              'View Plans (from ₹15)',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -1507,7 +1735,10 @@ class _DashboardScreenState extends State<DashboardScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: accentColor.withValues(alpha: 0.18), width: 1.2),
+        border: Border.all(
+          color: accentColor.withValues(alpha: 0.18),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
             color: accentColor.withValues(alpha: 0.05),
@@ -1536,7 +1767,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 7,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: accentColor.withValues(alpha: 0.10),
                         borderRadius: BorderRadius.circular(5),
@@ -1682,7 +1916,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded, color: Color(0xFF64748B)),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: Color(0xFF64748B),
+                      ),
                       onPressed: () => Navigator.pop(ctx),
                     ),
                   ],
@@ -1693,16 +1930,21 @@ class _DashboardScreenState extends State<DashboardScreen>
               Expanded(
                 child: ListView(
                   controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   children: [
-                    ...info.cards.map((card) => _buildInfoDetailCard(
-                          icon: card.icon,
-                          accentColor: card.accentColor,
-                          tag: card.tag,
-                          title: card.title,
-                          content: card.content,
-                          example: card.example,
-                        )),
+                    ...info.cards.map(
+                      (card) => _buildInfoDetailCard(
+                        icon: card.icon,
+                        accentColor: card.accentColor,
+                        tag: card.tag,
+                        title: card.title,
+                        content: card.content,
+                        example: card.example,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                   ],
                 ),
@@ -1711,7 +1953,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               SafeArea(
                 top: false,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
@@ -1724,10 +1969,18 @@ class _DashboardScreenState extends State<DashboardScreen>
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF00A84D),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         elevation: 0,
                       ),
-                      child: Text(info.buttonText, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      child: Text(
+                        info.buttonText,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -1810,7 +2063,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded, color: Color(0xFF64748B)),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: Color(0xFF64748B),
+                      ),
                       onPressed: () => Navigator.pop(ctx),
                     ),
                   ],
@@ -1821,16 +2077,21 @@ class _DashboardScreenState extends State<DashboardScreen>
               Expanded(
                 child: ListView(
                   controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   children: [
-                    ...info.cards.map((card) => _buildInfoDetailCard(
-                          icon: card.icon,
-                          accentColor: card.accentColor,
-                          tag: card.tag,
-                          title: card.title,
-                          content: card.content,
-                          example: card.example,
-                        )),
+                    ...info.cards.map(
+                      (card) => _buildInfoDetailCard(
+                        icon: card.icon,
+                        accentColor: card.accentColor,
+                        tag: card.tag,
+                        title: card.title,
+                        content: card.content,
+                        example: card.example,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                   ],
                 ),
@@ -1839,7 +2100,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               SafeArea(
                 top: false,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
@@ -1852,10 +2116,18 @@ class _DashboardScreenState extends State<DashboardScreen>
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFF6E00),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         elevation: 0,
                       ),
-                      child: Text(info.buttonText, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      child: Text(
+                        info.buttonText,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -1863,6 +2135,190 @@ class _DashboardScreenState extends State<DashboardScreen>
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showCustomFareInputDialog({required bool isMinFare}) {
+    final controller = TextEditingController(
+      text: (isMinFare ? _minFare.toInt() : _maxFare.toInt()).toString(),
+    );
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: isMinFare ? const Color(0xFFE8F8F0) : const Color(0xFFE3F2FD),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.edit_rounded,
+                color: isMinFare ? const Color(0xFF00A84D) : const Color(0xFF1976D2),
+                size: 18,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              isMinFare ? 'Set Minimum Fare' : 'Set Maximum Fare',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              isMinFare
+                  ? 'Enter min fare (₹20 to ₹25,000):'
+                  : 'Enter max fare (₹20 to ₹25,000):',
+              style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              autofocus: true,
+              decoration: InputDecoration(
+                prefixText: '₹ ',
+                prefixStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: isMinFare ? const Color(0xFF00A84D) : const Color(0xFF1976D2),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final val = double.tryParse(controller.text.trim());
+              if (val != null) {
+                final clamped = val.clamp(20.0, 25000.0);
+                setState(() {
+                  if (isMinFare) {
+                    _minFare = clamped;
+                    if (_minFare > _maxFare) _maxFare = _minFare;
+                  } else {
+                    _maxFare = clamped;
+                    if (_maxFare < _minFare) _minFare = _maxFare;
+                  }
+                });
+                Navigator.pop(ctx);
+                _showSettingsConfirmationDialog(changeType: 'fare');
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isMinFare ? const Color(0xFF00C853) : const Color(0xFF1976D2),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('Apply', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCustomDistanceInputDialog({required bool isPickup}) {
+    final initialVal = isPickup
+        ? (_pickupDistance <= 0.0 ? '0' : _pickupDistance.toStringAsFixed(1))
+        : ((_tripDistance <= 0.0 || _tripDistance >= 3000.0) ? '0' : _tripDistance.toInt().toString());
+    final controller = TextEditingController(text: initialVal);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: isPickup ? const Color(0xFFFFF3E0) : const Color(0xFFE3F2FD),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                isPickup ? Icons.near_me_rounded : Icons.alt_route_rounded,
+                color: isPickup ? const Color(0xFFFF6E00) : const Color(0xFF1976D2),
+                size: 18,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              isPickup ? 'Max Pickup Distance' : 'Max Trip Distance',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              isPickup
+                  ? 'Enter max pickup distance (0 = No Limit, max 50 km):'
+                  : 'Enter max trip distance (0 or 3000 = No Limit, max 3000 km):',
+              style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: controller,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              autofocus: true,
+              decoration: InputDecoration(
+                suffixText: 'km',
+                suffixStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: isPickup ? const Color(0xFFFF6E00) : const Color(0xFF1976D2),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final val = double.tryParse(controller.text.trim());
+              if (val != null) {
+                setState(() {
+                  if (isPickup) {
+                    _pickupDistance = val.clamp(0.0, 50.0);
+                  } else {
+                    _tripDistance = val <= 0 ? 0.0 : val.clamp(0.0, 3000.0);
+                  }
+                });
+                Navigator.pop(ctx);
+                _showSettingsConfirmationDialog(changeType: isPickup ? 'pickup' : 'trip');
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isPickup ? const Color(0xFFFF6E00) : const Color(0xFF1976D2),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('Apply', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
     );
   }
@@ -1915,7 +2371,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                       children: [
                         Text(
                           strings.fareFilter,
-                          style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(width: 6),
                         GestureDetector(
@@ -1937,7 +2396,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                     Text(
                       strings.fareFilterSubtitle,
-                      style: const TextStyle(fontSize: 10.5, color: Color(0xFF757575)),
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        color: Color(0xFF757575),
+                      ),
                     ),
                   ],
                 ),
@@ -1947,7 +2409,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF00C853),
                       borderRadius: BorderRadius.circular(10),
@@ -1967,7 +2432,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                     width: 28,
                     height: 28,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => const Icon(Icons.monetization_on, color: Colors.amber, size: 24),
+                    errorBuilder: (_, _, _) => const Icon(
+                      Icons.monetization_on,
+                      color: Colors.amber,
+                      size: 24,
+                    ),
                   ),
                 ],
               ),
@@ -1986,20 +2455,41 @@ class _DashboardScreenState extends State<DashboardScreen>
                     Flexible(
                       child: Text(
                         strings.minFare,
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE8F8F0),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        '₹${_minFare.toInt()}',
-                        style: const TextStyle(color: Color(0xFF00A84D), fontWeight: FontWeight.bold, fontSize: 11),
+                    GestureDetector(
+                      onTap: () => _showCustomFareInputDialog(isMinFare: true),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE8F8F0),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFA5D6A7)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '₹${_minFare.toInt()}',
+                              style: const TextStyle(
+                                color: Color(0xFF00A84D),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                              ),
+                            ),
+                            const SizedBox(width: 3),
+                            const Icon(Icons.edit, size: 10, color: Color(0xFF00A84D)),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -2013,20 +2503,41 @@ class _DashboardScreenState extends State<DashboardScreen>
                     Flexible(
                       child: Text(
                         strings.maxFare,
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE3F2FD),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        '₹${_maxFare.toInt()}',
-                        style: const TextStyle(color: Color(0xFF1976D2), fontWeight: FontWeight.bold, fontSize: 11),
+                    GestureDetector(
+                      onTap: () => _showCustomFareInputDialog(isMinFare: false),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE3F2FD),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFF90CAF9)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '₹${_maxFare.toInt()}',
+                              style: const TextStyle(
+                                color: Color(0xFF1976D2),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                              ),
+                            ),
+                            const SizedBox(width: 3),
+                            const Icon(Icons.edit, size: 10, color: Color(0xFF1976D2)),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -2037,7 +2548,10 @@ class _DashboardScreenState extends State<DashboardScreen>
 
           // Range Slider
           RangeSlider(
-            values: RangeValues(_minFare.clamp(20.0, 25000.0), _maxFare.clamp(20.0, 25000.0)),
+            values: RangeValues(
+              _minFare.clamp(20.0, 25000.0),
+              _maxFare.clamp(20.0, 25000.0),
+            ),
             min: 20,
             max: 25000,
             divisions: 499,
@@ -2045,8 +2559,10 @@ class _DashboardScreenState extends State<DashboardScreen>
             inactiveColor: const Color(0xFFE0E0E0),
             onChanged: (values) {
               setState(() {
-                _minFare = values.start;
-                _maxFare = values.end;
+                _minFare = (values.start / 10).round() * 10.0;
+                _maxFare = (values.end / 10).round() * 10.0;
+                if (_minFare < 20.0) _minFare = 20.0;
+                if (_maxFare > 25000.0) _maxFare = 25000.0;
               });
             },
             onChangeEnd: (values) {
@@ -2064,8 +2580,14 @@ class _DashboardScreenState extends State<DashboardScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('₹20', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
-                Text('₹25000', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
+                Text(
+                  '₹20',
+                  style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E)),
+                ),
+                Text(
+                  '₹25000',
+                  style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E)),
+                ),
               ],
             ),
           ),
@@ -2102,7 +2624,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                   color: const Color(0xFFFFF3E0),
                   borderRadius: BorderRadius.circular(9),
                 ),
-                child: const Icon(Icons.location_on, color: Color(0xFFFF6E00), size: 19),
+                child: const Icon(
+                  Icons.location_on,
+                  color: Color(0xFFFF6E00),
+                  size: 19,
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -2113,7 +2639,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                       children: [
                         Text(
                           strings.distanceLimit,
-                          style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(width: 6),
                         GestureDetector(
@@ -2135,7 +2664,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ),
                     Text(
                       strings.distanceLimitSubtitle,
-                      style: const TextStyle(fontSize: 10.5, color: Color(0xFF757575)),
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        color: Color(0xFF757575),
+                      ),
                     ),
                   ],
                 ),
@@ -2162,7 +2694,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                     width: 54,
                     height: 54,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => const Icon(Icons.alt_route, color: Colors.blue, size: 28),
+                    errorBuilder: (_, _, _) => const Icon(
+                      Icons.alt_route,
+                      color: Colors.blue,
+                      size: 28,
+                    ),
                   ),
                 ),
               ),
@@ -2174,16 +2710,39 @@ class _DashboardScreenState extends State<DashboardScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(strings.maxPickupDistance, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF3E0),
-                  borderRadius: BorderRadius.circular(6),
+              Text(
+                strings.maxPickupDistance,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
                 ),
-                child: Text(
-                  '${_pickupDistance.toStringAsFixed(1)} km',
-                  style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 11),
+              ),
+              GestureDetector(
+                onTap: () => _showCustomDistanceInputDialog(isPickup: true),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF3E0),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: const Color(0xFFFFCC80)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _pickupDistance <= 0.0
+                            ? 'No Limit (Any)'
+                            : '${_pickupDistance.toStringAsFixed(1)} km',
+                        style: const TextStyle(
+                          color: Color(0xFFE65100),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                        ),
+                      ),
+                      const SizedBox(width: 3),
+                      const Icon(Icons.edit, size: 10, color: Color(0xFFE65100)),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -2196,7 +2755,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               trackHeight: 3,
             ),
             child: Slider(
-              value: _pickupDistance.clamp(0.5, 50.0),
+              value: _pickupDistance.clamp(0.0, 50.0),
               min: 0.0,
               max: 50.0,
               onChanged: (val) => setState(() => _pickupDistance = val),
@@ -2213,8 +2772,14 @@ class _DashboardScreenState extends State<DashboardScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('0 km', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
-                Text('50 km', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
+                Text(
+                  '0 km (No Limit)',
+                  style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E)),
+                ),
+                Text(
+                  '50 km',
+                  style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E)),
+                ),
               ],
             ),
           ),
@@ -2224,16 +2789,39 @@ class _DashboardScreenState extends State<DashboardScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(strings.maxTripDistance, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE3F2FD),
-                  borderRadius: BorderRadius.circular(6),
+              Text(
+                strings.maxTripDistance,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
                 ),
-                child: Text(
-                  '${_tripDistance.toStringAsFixed(1)} km',
-                  style: const TextStyle(color: Color(0xFF1976D2), fontWeight: FontWeight.bold, fontSize: 11),
+              ),
+              GestureDetector(
+                onTap: () => _showCustomDistanceInputDialog(isPickup: false),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE3F2FD),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: const Color(0xFF90CAF9)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        (_tripDistance <= 0.0 || _tripDistance >= 3000.0)
+                            ? 'No Limit'
+                            : '${_tripDistance.toInt()} km',
+                        style: const TextStyle(
+                          color: Color(0xFF1976D2),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                        ),
+                      ),
+                      const SizedBox(width: 3),
+                      const Icon(Icons.edit, size: 10, color: Color(0xFF1976D2)),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -2249,7 +2837,6 @@ class _DashboardScreenState extends State<DashboardScreen>
               value: _tripDistance.clamp(0.0, 3000.0),
               min: 0.0,
               max: 3000.0,
-              divisions: 3000,
               onChanged: (val) => setState(() => _tripDistance = val),
               onChangeEnd: (val) {
                 final saved = context.read<ServiceProvider>().universalConfig;
@@ -2264,8 +2851,14 @@ class _DashboardScreenState extends State<DashboardScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('0 km', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
-                Text('3000 km', style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E))),
+                Text(
+                  '0 km',
+                  style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E)),
+                ),
+                Text(
+                  '3000 km (No Limit)',
+                  style: TextStyle(fontSize: 10, color: Color(0xFF9E9E9E)),
+                ),
               ],
             ),
           ),
@@ -2273,6 +2866,4 @@ class _DashboardScreenState extends State<DashboardScreen>
       ),
     );
   }
-
-
 }

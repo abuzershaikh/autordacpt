@@ -53,7 +53,7 @@ class StringsMl extends AppStrings {
   @override
   String get openSettings => 'ക്രമീകരണങ്ങൾ തുറക്കുക >';
   @override
-  String get accessibilitySteps => 'ഘട്ടങ്ങൾ: ക്രമീകരണങ്ങൾ → ആക്‌സസിബിലിറ്റി → 🛺 SnapRider → ഓണാക്കുക';
+  String get accessibilitySteps => 'ഘട്ടങ്ങൾ: ക്രമീകരണങ്ങൾ → ആക്‌സസിബിലിറ്റി → AutoRide Accept 🛺 → ഓണാക്കുക';
   @override
   String get fareFilter => 'നിരക്ക് ഫിൽട്ടർ';
   @override

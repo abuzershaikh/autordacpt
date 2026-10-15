@@ -53,7 +53,7 @@ class StringsMr extends AppStrings {
   @override
   String get openSettings => 'सेटिंग्ज उघडा >';
   @override
-  String get accessibilitySteps => 'पायऱ्या: सेटिंग्ज → अ‍ॅक्सेसिबिलिटी → 🛺 SnapRider → सुरू करा';
+  String get accessibilitySteps => 'पायऱ्या: सेटिंग्ज → अ‍ॅक्सेसिबिलिटी → AutoRide Accept 🛺 → सुरू करा';
   @override
   String get fareFilter => 'भाडे फिल्टर';
   @override

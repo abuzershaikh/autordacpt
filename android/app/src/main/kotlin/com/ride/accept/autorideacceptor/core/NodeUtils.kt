@@ -161,59 +161,96 @@ object NodeUtils {
     }
     
     /**
-     * Parse fare from text (₹450, ₹ 450, ₹450.50, Rs. 450, 450/-, etc.)
+     * Parse fare from text (₹450, ₹ 450, ₹1,250, ₹12,500, ₹1,25,000, ₹450.50, Rs. 450, 450/-, etc.)
+     * Handles any number of digits with Indian or standard thousands separators (commas)
+     * and optional decimal paise (.XX).
      */
     fun parseFare(fareText: String): Double {
         if (fareText.isBlank()) return 0.0
         try {
-            // Find currency-adjacent or leading number like ₹ 450 or Rs. 450.50
-            val regex = Regex("""(?:₹|rs\.?|inr)?\s*([0-9]+(?:[.,][0-9]{1,2})?)""", RegexOption.IGNORE_CASE)
-            val match = regex.find(fareText)
-            if (match != null) {
-                val candidate = match.groupValues[1].replace(",", ".")
-                val parsed = candidate.toDoubleOrNull()
+            // Priority 1: Currency symbol (₹, Rs, INR) followed by number with optional thousands commas and decimals
+            // Handles both comma-separated (₹12,500, ₹1,25,000) and plain numbers (₹1200, ₹12500, ₹450.50, etc.)
+            // FIXED: Used + on comma group to prevent 4+ digit plain numbers from truncating to 3 digits!
+            val currencyRegex = Regex(
+                """(?:₹|rs\.?|inr)\s*([0-9]{1,3}(?:,[0-9]{2,3})+(?:\.[0-9]{1,2})?|[0-9]+(?:\.[0-9]{1,2})?)""",
+                RegexOption.IGNORE_CASE
+            )
+            val currencyMatch = currencyRegex.find(fareText)
+            if (currencyMatch != null) {
+                val rawNumber = currencyMatch.groupValues[1].replace(",", "")
+                val parsed = rawNumber.toDoubleOrNull()
                 if (parsed != null && parsed > 0.0) return parsed
             }
-            
-            // Standalone number sequence
-            val fallbackMatch = Regex("""\b([0-9]+(?:\.[0-9]+)?)\b""").find(fareText)
-            if (fallbackMatch != null) {
-                return fallbackMatch.groupValues[1].toDoubleOrNull() ?: 0.0
+
+            // Priority 2: Number followed by /- (e.g. 450/-, 1200/-, 1,250/-, 12500/-)
+            val suffixRegex = Regex("""([0-9]{1,3}(?:,[0-9]{2,3})+(?:\.[0-9]{1,2})?|[0-9]+(?:\.[0-9]{1,2})?)\s*(?:/-)""")
+            val suffixMatch = suffixRegex.find(fareText)
+            if (suffixMatch != null) {
+                val rawNumber = suffixMatch.groupValues[1].replace(",", "")
+                val parsed = rawNumber.toDoubleOrNull()
+                if (parsed != null && parsed > 0.0) return parsed
+            }
+
+            // Priority 3: Standalone number with commas (e.g. "1,250" or "12,500" or "1,25,000")
+            val commaNumberRegex = Regex("""\b([0-9]{1,3}(?:,[0-9]{2,3})+(?:\.[0-9]{1,2})?)\b""")
+            val commaMatch = commaNumberRegex.find(fareText)
+            if (commaMatch != null) {
+                val rawNumber = commaMatch.groupValues[1].replace(",", "")
+                val parsed = rawNumber.toDoubleOrNull()
+                if (parsed != null && parsed > 0.0) return parsed
+            }
+
+            // Priority 4: Plain numeric fallback (excludes distance like 12.5 km or duration like 15 min)
+            val plainRegex = Regex("""\b([0-9]+(?:\.[0-9]{1,2})?)\b(?!\s*(?:km|kms|किमी|m|mtr|meter|min|mins|hr|hour))""", RegexOption.IGNORE_CASE)
+            val plainMatch = plainRegex.find(fareText)
+            if (plainMatch != null) {
+                val parsed = plainMatch.groupValues[1].toDoubleOrNull()
+                if (parsed != null && parsed > 0.0) return parsed
             }
         } catch (_: Exception) {}
         return 0.0
     }
     
     /**
-     * Parse distance from text (2.5 km away, 3.2km, 500 m, 300 m away, etc.)
+     * Parse distance from text (2.5 km away, 3.2km, 3.2 किमी, 500 m, 300 m away, etc.)
      * Returns distance normalized to kilometers (e.g. 500 m -> 0.5 km)
+     * Strictly avoids misinterpreting minutes (15 min) or fares (₹450) as distance!
      */
     fun parseDistance(distanceText: String): Double {
         if (distanceText.isBlank()) return 0.0
         try {
             val lower = distanceText.lowercase().trim()
-            
-            // Check for explicit meters first (e.g. 500 m, 300m away, 800 meter)
-            val meterRegex = Regex("""([0-9]+(?:\.[0-9]+)?)\s*(?:m|mtr|meter|meters)\b""", RegexOption.IGNORE_CASE)
+
+            // 1. Check for kilometers (e.g. 2.5 km, 9.5km, 10 kms, 2,5 km, 3.5 किमी)
+            val kmRegex = Regex("""([0-9]+(?:[.,][0-9]+)?)\s*(?:km|kms|किमी)\b""", RegexOption.IGNORE_CASE)
+            val kmMatch = kmRegex.find(lower)
+            if (kmMatch != null) {
+                val candidate = kmMatch.groupValues[1].replace(",", ".")
+                val parsed = candidate.toDoubleOrNull()
+                if (parsed != null && parsed > 0.0) return parsed
+            }
+
+            // 2. Check for explicit meters (e.g. 500 m, 800 meter, 300 meters, 500 मीटर)
+            // Exclude "min", "mins", "minute", "minutes"
+            val meterRegex = Regex("""([0-9]+(?:\.[0-9]+)?)\s*(?:m|mtr|meter|meters|मीटर)\b(?!\s*(?:in|ute))""", RegexOption.IGNORE_CASE)
             val meterMatch = meterRegex.find(lower)
-            if (meterMatch != null && !lower.contains("km")) {
+            if (meterMatch != null && !lower.contains("min") && !lower.contains("km") && !lower.contains("किमी")) {
                 val meters = meterMatch.groupValues[1].toDoubleOrNull() ?: 0.0
                 if (meters > 0.0) {
                     return meters / 1000.0
                 }
             }
-            
-            // Check for kilometers (e.g. 2.5 km, 9.5km, 10 kms)
-            val kmRegex = Regex("""([0-9]+(?:\.[0-9]+)?)\s*(?:km|kms)\b""", RegexOption.IGNORE_CASE)
-            val kmMatch = kmRegex.find(lower)
-            if (kmMatch != null) {
-                return kmMatch.groupValues[1].toDoubleOrNull() ?: 0.0
-            }
-            
-            // Fallback: raw numeric sequence
-            val fallbackMatch = Regex("""\b([0-9]+(?:\.[0-9]+)?)\b""").find(lower)
-            if (fallbackMatch != null) {
-                return fallbackMatch.groupValues[1].toDoubleOrNull() ?: 0.0
+
+            // 3. Number directly preceding "away" / "दूर" with distance context (e.g. "2.5 away", "2.5 किमी दूर")
+            // Make sure it doesn't say "min away" or "mins away"
+            if (!lower.contains("min")) {
+                val awayRegex = Regex("""([0-9]+(?:[.,][0-9]+)?)\s*(?:km\s*|किमी\s*)?(?:away|दूर)\b""", RegexOption.IGNORE_CASE)
+                val awayMatch = awayRegex.find(lower)
+                if (awayMatch != null) {
+                    val candidate = awayMatch.groupValues[1].replace(",", ".")
+                    val parsed = candidate.toDoubleOrNull()
+                    if (parsed != null && parsed > 0.0) return parsed
+                }
             }
         } catch (_: Exception) {}
         return 0.0

@@ -15,6 +15,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
   final List<String> _filters = ['All Rides', 'Today', 'This Week', 'Auto-Accepted'];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<ServiceProvider>().loadRecentActivities();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final provider = context.watch<ServiceProvider>();
     final realActivities = provider.recentActivities;
@@ -30,6 +40,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
       } else if (_selectedFilterIndex == 2) {
         // This Week
         return now.difference(act.timestamp).inDays <= 7;
+      } else if (_selectedFilterIndex == 3) {
+        // Auto-Accepted only
+        return act.status == RideStatus.accepted;
       }
       return true;
     }).toList();
@@ -51,6 +64,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
         elevation: 0,
         actions: [
           IconButton(
+            icon: const Icon(Icons.refresh, color: Color(0xFF00A84D)),
+            tooltip: 'Refresh',
+            onPressed: () => provider.loadRecentActivities(),
+          ),
+          IconButton(
             icon: const Icon(Icons.delete_outline, color: Colors.grey),
             tooltip: 'Clear History',
             onPressed: () => _confirmClearHistory(context, provider),
@@ -59,8 +77,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await Future.delayed(const Duration(milliseconds: 600));
-          if (context.mounted) provider.loadServices();
+          await provider.loadRecentActivities();
         },
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -253,13 +270,47 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildRealActivityCard(RideActivity activity) {
+    final isAccepted = activity.status == RideStatus.accepted;
+
+    IconData serviceIcon;
+    Color iconBg;
+    Color iconColor;
+    final svcLower = (activity.serviceType.name).toLowerCase();
+    if (svcLower.contains('rapido')) {
+      serviceIcon = Icons.two_wheeler_rounded;
+      iconBg = const Color(0xFFFEF08A);
+      iconColor = const Color(0xFFB45309);
+    } else if (svcLower.contains('porter')) {
+      serviceIcon = Icons.local_shipping_rounded;
+      iconBg = const Color(0xFFDBEAFE);
+      iconColor = const Color(0xFF1D4ED8);
+    } else if (svcLower.contains('ola')) {
+      serviceIcon = Icons.directions_car_rounded;
+      iconBg = const Color(0xFFDCFCE7);
+      iconColor = const Color(0xFF15803D);
+    } else if (svcLower.contains('uber')) {
+      serviceIcon = Icons.local_taxi_rounded;
+      iconBg = const Color(0xFFF1F5F9);
+      iconColor = const Color(0xFF334155);
+    } else {
+      serviceIcon = Icons.electric_rickshaw_rounded;
+      iconBg = const Color(0xFFE8F8F0);
+      iconColor = const Color(0xFF00A84D);
+    }
+
+    final timeStr =
+        '${activity.timestamp.day.toString().padLeft(2, '0')}/${activity.timestamp.month.toString().padLeft(2, '0')} • ${activity.timestamp.hour.toString().padLeft(2, '0')}:${activity.timestamp.minute.toString().padLeft(2, '0')}';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF86EFAC), width: 1.2),
+        border: Border.all(
+          color: isAccepted ? const Color(0xFF86EFAC) : const Color(0xFFFDE68A),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -269,25 +320,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: const Color(0xFFE8F8F0),
+              color: iconBg,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(9),
-              child: Image.asset(
-                'assets/images/app_logo.jpg',
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => const Icon(
-                  Icons.electric_rickshaw,
-                  color: Color(0xFF00A84D),
-                  size: 24,
-                ),
-              ),
+            child: Icon(
+              serviceIcon,
+              color: iconColor,
+              size: 24,
             ),
           ),
           const SizedBox(width: 12),
@@ -308,10 +353,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                     Text(
                       '₹${activity.fare.toInt()}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
-                        color: Color(0xFF00A84D),
+                        color: isAccepted ? const Color(0xFF00A84D) : const Color(0xFFD97706),
                       ),
                     ),
                   ],
@@ -321,27 +366,27 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   activity.rideDetails,
                   style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE8F8F0),
+                        color: isAccepted ? const Color(0xFFE8F8F0) : const Color(0xFFFEF3C7),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Text(
-                        '✓ Auto Accepted',
+                      child: Text(
+                        isAccepted ? '✓ Auto Accepted' : 'Filtered Out',
                         style: TextStyle(
                           fontSize: 9.5,
-                          color: Color(0xFF00A84D),
+                          color: isAccepted ? const Color(0xFF00A84D) : const Color(0xFFD97706),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     Text(
-                      '${activity.timestamp.hour.toString().padLeft(2, '0')}:${activity.timestamp.minute.toString().padLeft(2, '0')}',
+                      timeStr,
                       style: const TextStyle(fontSize: 10, color: Color(0xFF94A3B8)),
                     ),
                   ],

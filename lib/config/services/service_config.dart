@@ -57,9 +57,9 @@ class ServiceConfig {
           autoAccept: true,
           rideFilters: const RideFilters(
             minFare: 50,
-            maxFare: 500,
+            maxFare: 25000,
             pickupDistance: 3.0,
-            tripDistance: 15.0,
+            tripDistance: 3000.0,
           ),
           paymentMethod: PaymentMethod.any,
           vehicleTypes: supportedVehicles,
@@ -70,9 +70,9 @@ class ServiceConfig {
           autoAccept: true,
           rideFilters: const RideFilters(
             minFare: 80,
-            maxFare: 1000,
+            maxFare: 25000,
             pickupDistance: 4.0,
-            tripDistance: 25.0,
+            tripDistance: 3000.0,
           ),
           paymentMethod: PaymentMethod.any,
           vehicleTypes: supportedVehicles,

@@ -113,7 +113,7 @@ class _AccessibilityBannerState extends State<AccessibilityBanner> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Steps: Settings → 🛺 SnapRider → Turn ON',
+            'Steps: Settings → AutoRide Accept 🛺 → Turn ON',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.textHint,
                   fontStyle: FontStyle.italic,

@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/service_provider.dart';
 import '../../../services/accessibility_service.dart';
+import '../../../domain/entities/ride_activity.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -12,8 +15,81 @@ class ActivityScreen extends StatefulWidget {
 
 class _ActivityScreenState extends State<ActivityScreen> {
   final List<Map<String, dynamic>> _diagnosticLogs = [];
-
   bool _isTesting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedLogs();
+  }
+
+  Future<void> _loadSavedLogs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload(); // Reload SharedPreferences from disk
+      final logsString = prefs.getString('diagnostic_activity_logs');
+      final List<Map<String, dynamic>> parsedList = [];
+
+      if (logsString != null && logsString.isNotEmpty) {
+        final List<dynamic> decoded = jsonDecode(logsString);
+        for (final item in decoded) {
+          if (item is Map<String, dynamic>) {
+            final isSuccess = item['type'] == 'success' || item['status'] == 'accepted';
+            parsedList.add({
+              'time': item['time'] ?? '',
+              'type': isSuccess ? 'success' : 'warning',
+              'title': item['title'] ?? 'Ride Order Event',
+              'desc': item['desc'] ?? '',
+              'icon': isSuccess ? Icons.check_circle_rounded : Icons.filter_alt_outlined,
+              'color': isSuccess ? const Color(0xFF00C853) : const Color(0xFFFF9800),
+            });
+          }
+        }
+      }
+
+      // If diagnostic logs are empty, fallback to recentActivities from Provider
+      if (parsedList.isEmpty && mounted) {
+        final activities = context.read<ServiceProvider>().recentActivities;
+        for (final act in activities) {
+          final isSuccess = act.status == RideStatus.accepted;
+          final timeStr =
+              '${act.timestamp.hour.toString().padLeft(2, '0')}:${act.timestamp.minute.toString().padLeft(2, '0')}:${act.timestamp.second.toString().padLeft(2, '0')}';
+          parsedList.add({
+            'time': timeStr,
+            'type': isSuccess ? 'success' : 'warning',
+            'title': isSuccess
+                ? '${act.serviceName} Order Accepted ✓'
+                : '${act.serviceName} Order Filtered Out',
+            'desc': 'Fare ₹${act.fare.toInt()} • ${act.rideDetails}',
+            'icon': isSuccess ? Icons.check_circle_rounded : Icons.filter_alt_outlined,
+            'color': isSuccess ? const Color(0xFF00C853) : const Color(0xFFFF9800),
+          });
+        }
+      }
+
+      if (mounted) {
+        setState(() {
+          _diagnosticLogs.clear();
+          _diagnosticLogs.addAll(parsedList);
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _clearDiagnosticLogs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('diagnostic_activity_logs');
+      setState(() {
+        _diagnosticLogs.clear();
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Activity logs cleared')),
+        );
+      }
+    } catch (_) {}
+  }
 
   void _simulateRideEvent() async {
     setState(() => _isTesting = true);
@@ -72,12 +148,25 @@ class _ActivityScreenState extends State<ActivityScreen> {
           IconButton(
             icon: const Icon(Icons.refresh, color: Color(0xFF00A84D)),
             tooltip: 'Refresh Diagnostics',
-            onPressed: () => setState(() {}),
+            onPressed: () {
+              provider.loadRecentActivities();
+              _loadSavedLogs();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline, color: Colors.grey),
+            tooltip: 'Clear Logs',
+            onPressed: _clearDiagnosticLogs,
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await provider.loadRecentActivities();
+          await _loadSavedLogs();
+        },
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         children: [
           // 1. Live Engine Status Card
           _buildLiveStatusCard(isServiceActive),
@@ -170,8 +259,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
           const SizedBox(height: 20),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildEmptyLogsCard() {
     return Container(
@@ -319,8 +409,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
             children: [
               _buildMetricCard(
                 label: 'Max Pickup',
-                value: '${config.pickupDistance.toStringAsFixed(1)} km',
-                subtitle: 'Nearby orders only',
+                value: config.pickupDistance <= 0.0
+                    ? 'No Limit'
+                    : '${config.pickupDistance.toStringAsFixed(1)} km',
+                subtitle: config.pickupDistance <= 0.0 ? 'Accept any pickup' : 'Nearby orders only',
                 icon: Icons.near_me,
                 iconColor: const Color(0xFFFF6E00),
                 bgColor: const Color(0xFFFFF7ED),

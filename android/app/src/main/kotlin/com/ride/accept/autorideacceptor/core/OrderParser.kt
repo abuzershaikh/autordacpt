@@ -31,7 +31,9 @@ data class OrderData(
     val distance: Double,
     val pickup: String,
     val drop: String,
-    val orderId: String? = null
+    val orderId: String? = null,
+    val pickupDistance: Double = distance,
+    val tripDistance: Double = 0.0
 )
 
 /**

@@ -6,6 +6,7 @@ import android.accessibilityservice.GestureDescription
 import android.content.Context
 import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +14,10 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
+import android.view.Gravity
+import android.view.View
+import android.view.WindowManager
+import android.view.animation.DecelerateInterpolator
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
@@ -24,6 +29,7 @@ import com.ride.accept.autorideacceptor.services.porter.PorterOrderParser
 import com.ride.accept.autorideacceptor.services.rapido.RapidoOrderParser
 import com.ride.accept.autorideacceptor.services.uber.UberOrderParser
 import org.json.JSONObject
+import java.util.concurrent.ConcurrentHashMap
 
 class AutoAcceptAccessibilityService : AccessibilityService() {
 
@@ -35,11 +41,11 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
 
     // Service parsers registry
     private val serviceParsers = mutableMapOf<String, OrderParser>()
-    private val serviceConfigs = mutableMapOf<String, ServiceConfig>()
+    private val serviceConfigs = ConcurrentHashMap<String, ServiceConfig>()
     private var lastClickTimeMs: Long = 0L
     
-    // Universal configuration applied across all apps
-    private var universalConfig = ServiceConfig(
+    // RAM Volatile cached configuration for 0-latency execution (Zero disk I/O on events)
+    @Volatile private var cachedUniversalConfig = ServiceConfig(
         isEnabled = true,
         autoAccept = true,
         minFare = 40.0,
@@ -48,23 +54,47 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
         tripDistance = 3000.0
     )
 
-    // Plan & Free Rides state (Default: 10 free trial rides per user, then paid plan required)
-    private var hasActivePlan: Boolean = false
-    private var freeRidesLimit: Int = 10
-    private var freeRidesUsed: Int = 0
+    // Plan & Free Rides RAM state
+    @Volatile private var cachedHasActivePlan: Boolean = false
+    @Volatile private var cachedFreeRidesLimit: Int = 10
+    @Volatile private var cachedFreeRidesUsed: Int = 0
     private var lastTrialToastTime: Long = 0L
 
     // 24/7 Background execution & Version block control
     private var wakeLock: android.os.PowerManager.WakeLock? = null
-    private var isVersionBlocked: Boolean = false
+    @Volatile private var isVersionBlocked: Boolean = false
+
+    // WindowManager for animated touch ripple overlay
+    private var windowManager: WindowManager? = null
+    private var autoAcceptPrefsListener: android.content.SharedPreferences.OnSharedPreferenceChangeListener? = null
+    private var flutterPrefsListener: android.content.SharedPreferences.OnSharedPreferenceChangeListener? = null
 
     override fun onServiceConnected() {
         super.onServiceConnected()
         isServiceRunning = true
         instance = this
         
+        windowManager = getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+        
         initializeParsers()
         loadSettings()
+
+        // Register SharedPreferences listeners to keep RAM cache synchronized instantly
+        try {
+            val autoAcceptPrefs = getSharedPreferences("AutoAcceptSettings", Context.MODE_PRIVATE)
+            autoAcceptPrefsListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+                loadSettings()
+            }
+            autoAcceptPrefs.registerOnSharedPreferenceChangeListener(autoAcceptPrefsListener)
+
+            val flutterPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            flutterPrefsListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+                loadSettings()
+            }
+            flutterPrefs.registerOnSharedPreferenceChangeListener(flutterPrefsListener)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error registering SharedPreferences listeners", e)
+        }
 
         // Initialize WakeLock for background responsiveness
         try {
@@ -75,7 +105,7 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
         // Launch ongoing background notification
         startForegroundServiceNotification()
         
-        Log.i(TAG, "✓ Accessibility Service Connected successfully & running in background")
+        Log.i(TAG, "✓ Accessibility Service Connected successfully & running in background (RAM Cache Active)")
         
         // Zero-latency configuration for ultra-fast (<= 5ms) event delivery
         val info = serviceInfo ?: AccessibilityServiceInfo()
@@ -98,10 +128,10 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && notificationManager != null) {
                 val channel = android.app.NotificationChannel(
                     channelId,
-                    "🛺 SnapRider Background Engine",
+                    "AutoRide Accept Background Engine 🛺",
                     android.app.NotificationManager.IMPORTANCE_LOW
                 ).apply {
-                    description = "Keeps 🛺 SnapRider active in background for Rapido, Porter, Ola & Uber"
+                    description = "Keeps AutoRide Accept 🛺 active in background for Rapido, Porter, Ola & Uber"
                     setShowBadge(false)
                 }
                 notificationManager.createNotificationChannel(channel)
@@ -124,7 +154,7 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                 android.app.PendingIntent.getActivity(this, 0, appIntent, flags)
             } else null
 
-            builder.setContentTitle("🛺 SnapRider Active")
+            builder.setContentTitle("AutoRide Accept Active 🛺")
                 .setContentText("Monitoring Rapido, Porter, Ola & Uber orders in background.")
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setOngoing(true)
@@ -184,7 +214,7 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Load user settings from SharedPreferences
+     * Load user settings from SharedPreferences into high-speed RAM cache
      */
     private fun loadSettings() {
         try {
@@ -193,17 +223,17 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
             // 0. Version Blocked status
             isVersionBlocked = prefs.getBoolean("version_blocked", false)
 
-            // Plan and Free Rides state (default 10 free rides)
-            hasActivePlan = prefs.getBoolean("has_active_plan", false)
-            freeRidesLimit = prefs.getInt("free_rides_limit", 10)
-            freeRidesUsed = prefs.getInt("free_rides_used", 0)
+            // Plan and Free Rides state (default 10 free rides) cached in RAM
+            cachedHasActivePlan = prefs.getBoolean("has_active_plan", false)
+            cachedFreeRidesLimit = prefs.getInt("free_rides_limit", 10)
+            cachedFreeRidesUsed = prefs.getInt("free_rides_used", 0)
 
             // 1. Universal settings (Applies across all apps)
             val universalJson = prefs.getString("universal_settings", null)
             if (universalJson != null) {
                 val json = JSONObject(universalJson)
                 val rideFilters = json.optJSONObject("rideFilters") ?: json
-                universalConfig = ServiceConfig(
+                cachedUniversalConfig = ServiceConfig(
                     isEnabled = json.optBoolean("isEnabled", true),
                     autoAccept = json.optBoolean("autoAccept", true),
                     minFare = rideFilters.optDouble("minFare", 40.0),
@@ -212,17 +242,17 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                     tripDistance = rideFilters.optDouble("tripDistance", 3000.0)
                 )
                 if (json.has("hasActivePlan")) {
-                    hasActivePlan = json.optBoolean("hasActivePlan", hasActivePlan)
+                    cachedHasActivePlan = json.optBoolean("hasActivePlan", cachedHasActivePlan)
                 }
                 if (json.has("freeRidesLimit")) {
-                    freeRidesLimit = json.optInt("freeRidesLimit", freeRidesLimit)
+                    cachedFreeRidesLimit = json.optInt("freeRidesLimit", cachedFreeRidesLimit)
                 }
                 if (json.has("freeRidesUsed")) {
-                    freeRidesUsed = json.optInt("freeRidesUsed", freeRidesUsed)
+                    cachedFreeRidesUsed = json.optInt("freeRidesUsed", cachedFreeRidesUsed)
                 }
-                Log.i(TAG, "✓ Universal settings loaded: autoAccept=${universalConfig.autoAccept}, minFare=₹${universalConfig.minFare}, maxFare=₹${universalConfig.maxFare}")
+                Log.i(TAG, "✓ Universal RAM Cache loaded: autoAccept=${cachedUniversalConfig.autoAccept}, minFare=₹${cachedUniversalConfig.minFare}, maxFare=₹${cachedUniversalConfig.maxFare}")
             }
-            Log.i(TAG, "✓ Plan & Free Rides loaded: hasActivePlan=$hasActivePlan, used=$freeRidesUsed, limit=$freeRidesLimit")
+            Log.i(TAG, "✓ Plan & Free Rides RAM Cache: hasActivePlan=$cachedHasActivePlan, used=$cachedFreeRidesUsed, limit=$cachedFreeRidesLimit")
 
             // 2. Batch settings JSON
             val allSettingsJson = prefs.getString("all_settings", null)
@@ -348,23 +378,23 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                         else -> "ola"
                     }
                     
-                    val config = if (universalConfig.isEnabled && universalConfig.autoAccept) {
+                    val uConfig = cachedUniversalConfig
+                    val config = if (uConfig.isEnabled && uConfig.autoAccept) {
                         val specific = serviceConfigs[serviceKey]
                         if (specific != null) {
                             specific.copy(isEnabled = true, autoAccept = true)
                         } else {
-                            universalConfig
+                            uConfig
                         }
                     } else {
-                        serviceConfigs[serviceKey] ?: universalConfig
+                        serviceConfigs[serviceKey] ?: uConfig
                     }
                     
                     if (config.isEnabled && config.autoAccept) {
-                        // Check free rides trial vs paid plan
-                        val prefs = getSharedPreferences("AutoAcceptSettings", Context.MODE_PRIVATE)
-                        val isPlanActive = prefs.getBoolean("has_active_plan", hasActivePlan)
-                        val limit = prefs.getInt("free_rides_limit", freeRidesLimit)
-                        val used = prefs.getInt("free_rides_used", freeRidesUsed)
+                        // Check free rides trial vs paid plan directly from RAM cache!
+                        val isPlanActive = cachedHasActivePlan
+                        val limit = cachedFreeRidesLimit
+                        val used = cachedFreeRidesUsed
 
                         if (!isPlanActive && used >= limit) {
                             val trialReason = "Trial Expired ($used/$limit free rides consumed)"
@@ -380,12 +410,15 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                                 dispatchRideTelemetryToVps(serviceKey, "accepted")
                                 if (!isPlanActive) {
                                     val updatedUsed = used + 1
-                                    prefs.edit().putInt("free_rides_used", updatedUsed).apply()
-                                    freeRidesUsed = updatedUsed
-                                    try {
-                                        val flutterPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-                                        flutterPrefs.edit().putInt("flutter.free_rides_used_count", updatedUsed).apply()
-                                    } catch (_: Exception) {}
+                                    cachedFreeRidesUsed = updatedUsed // Immediate RAM update
+                                    Thread {
+                                        try {
+                                            val prefs = getSharedPreferences("AutoAcceptSettings", Context.MODE_PRIVATE)
+                                            prefs.edit().putInt("free_rides_used", updatedUsed).apply()
+                                            val flutterPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+                                            flutterPrefs.edit().putInt("flutter.free_rides_used_count", updatedUsed).apply()
+                                        } catch (_: Exception) {}
+                                    }.start()
                                     Log.i(TAG, "🎁 [FREE RIDE CONSUMED] Count now: $updatedUsed/$limit")
                                     if (updatedUsed >= limit) {
                                         showTrialExpiredToast(updatedUsed, limit)
@@ -446,10 +479,8 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Send asynchronous ride telemetry (Porter, Rapido, Ola, Uber) to the VPS Control Engine
-     */
-    /**
-     * Send asynchronous ride telemetry (Porter, Rapido, Ola, Uber) to the VPS Control Engine
+     * Send asynchronous ride telemetry (Porter, Rapido, Ola, Uber) to VPS AND save locally
+     * to SharedPreferences so that Ride History and Live Activity screens display all details!
      */
     fun dispatchRideTelemetryToVps(
         platform: String,
@@ -460,12 +491,24 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
         responseTimeMs: Int = 0,
         orderId: String? = null,
         reason: String? = null,
-        userMinFare: Double = universalConfig.minFare,
-        userMaxFare: Double = universalConfig.maxFare,
-        userMaxPickup: Double = universalConfig.pickupDistance,
-        userMaxTrip: Double = universalConfig.tripDistance
+        userMinFare: Double = cachedUniversalConfig.minFare,
+        userMaxFare: Double = cachedUniversalConfig.maxFare,
+        userMaxPickup: Double = cachedUniversalConfig.pickupDistance,
+        userMaxTrip: Double = cachedUniversalConfig.tripDistance
     ) {
         Thread {
+            // 1. Immediately persist to Local SharedPreferences for History & Activity screens!
+            saveLocalRideHistoryAndActivity(
+                platform = platform,
+                status = status,
+                fare = fare,
+                distanceKm = distanceKm,
+                pickupDistance = pickupDistance,
+                reason = reason,
+                orderId = orderId
+            )
+
+            // 2. Transmit telemetry to VPS Control Engine
             try {
                 val flutterPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
                 val vpsUrl = flutterPrefs.getString("flutter.vps_base_url", "http://139.84.158.149:5000") ?: "http://139.84.158.149:5000"
@@ -513,18 +556,128 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * ASLI REAL HARDWARE TOUCH CLICK:
-     * Dispatches real physical touch input (MotionEvent ACTION_DOWN -> ACTION_UP)
-     * at the exact screen coordinates of the button/card via Android's dispatchGesture API.
-     * Also supports "Swipe to Accept" / "Slide to Accept" sliders.
-     * Executed with 0ms start latency for sub-frame (<= 5ms) auto-click speed!
+     * Persist ride order event directly into FlutterSharedPreferences
+     * so that Ride History and Live Activity screens display all details instantly!
+     */
+    private fun saveLocalRideHistoryAndActivity(
+        platform: String,
+        status: String,
+        fare: Double,
+        distanceKm: Double,
+        pickupDistance: Double,
+        reason: String?,
+        orderId: String?
+    ) {
+        try {
+            val flutterPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            val uid = flutterPrefs.getString("flutter.firebase_uid", null)
+            val editor = flutterPrefs.edit()
+
+            val platformName = when (platform.lowercase()) {
+                "rapido" -> "Rapido Captain"
+                "porter" -> "Porter Driver"
+                "ola" -> "Ola Driver"
+                "uber" -> "Uber Driver"
+                else -> platform.replaceFirstChar { it.uppercase() } + " Driver"
+            }
+
+            val now = java.util.Date()
+            val isoFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
+                timeZone = java.util.TimeZone.getTimeZone("UTC")
+            }
+            val isoTimestamp = isoFormat.format(now)
+
+            val timeFormat = java.text.SimpleDateFormat("hh:mm:ss a", java.util.Locale.US)
+            val formattedTime = timeFormat.format(now)
+
+            val detailsText = StringBuilder().apply {
+                if (pickupDistance > 0.0) append("Pickup: ${String.format(java.util.Locale.US, "%.1f", pickupDistance)} km")
+                if (distanceKm > 0.0) {
+                    if (isNotEmpty()) append(" • ")
+                    append("Trip: ${String.format(java.util.Locale.US, "%.1f", distanceKm)} km")
+                }
+                if (!reason.isNullOrBlank()) {
+                    if (isNotEmpty()) append(" • ")
+                    append(reason)
+                }
+            }.toString().ifBlank { "Ride Offer: ₹${fare.toInt()}" }
+
+            val rideId = orderId?.takeIf { it.isNotBlank() } ?: "ride_${System.currentTimeMillis()}"
+
+            // 1. Create RideActivity JSON for HistoryScreen
+            val isSuccess = status.equals("accepted", ignoreCase = true)
+            val activityJson = JSONObject().apply {
+                put("id", rideId)
+                put("serviceType", platform.lowercase())
+                put("serviceName", platformName)
+                put("rideDetails", detailsText)
+                put("fare", fare)
+                put("distance", distanceKm)
+                put("timestamp", isoTimestamp)
+                put("status", if (isSuccess) "accepted" else "rejected")
+            }
+
+            fun prependToJsonList(key: String, item: JSONObject, maxItems: Int = 100) {
+                val existingStr = flutterPrefs.getString(key, null)
+                val jsonArray = if (!existingStr.isNullOrBlank()) {
+                    try { org.json.JSONArray(existingStr) } catch (_: Exception) { org.json.JSONArray() }
+                } else org.json.JSONArray()
+
+                val newArray = org.json.JSONArray()
+                newArray.put(item)
+                for (i in 0 until jsonArray.length().coerceAtMost(maxItems - 1)) {
+                    newArray.put(jsonArray.get(i))
+                }
+                editor.putString(key, newArray.toString())
+            }
+
+            // Save to primary history keys for Flutter
+            prependToJsonList("flutter.accepted_rides", activityJson)
+            if (!uid.isNullOrBlank()) {
+                prependToJsonList("flutter.accepted_rides_$uid", activityJson)
+            }
+
+            // 2. Create Diagnostic Log JSON for ActivityScreen (Live Stream)
+            val diagTitle = if (isSuccess) "$platformName Order Accepted ✓" else "$platformName Order Filtered Out"
+            val diagDesc = if (isSuccess) {
+                "Fare ₹${fare.toInt()} | Pickup ${String.format(java.util.Locale.US, "%.1f", pickupDistance)} km | Trip ${String.format(java.util.Locale.US, "%.1f", distanceKm)} km | Real Tap Dispatched"
+            } else {
+                "Fare ₹${fare.toInt()} | ${reason ?: "Filter criteria not matched"}"
+            }
+
+            val diagJson = JSONObject().apply {
+                put("id", "diag_${System.currentTimeMillis()}")
+                put("platform", platform.lowercase())
+                put("title", diagTitle)
+                put("desc", diagDesc)
+                put("time", formattedTime)
+                put("type", if (isSuccess) "success" else "warning")
+                put("timestampMs", System.currentTimeMillis())
+                put("fare", fare)
+                put("status", status)
+            }
+
+            prependToJsonList("flutter.diagnostic_activity_logs", diagJson)
+
+            editor.apply()
+            Log.i(TAG, "💾 Saved ride to local History & Activity: $platform ($status, ₹$fare)")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error saving local ride history", e)
+        }
+    }
+
+    /**
+     * ULTRA-FAST DUAL-STRIKE AUTO-ACCEPT ENGINE:
+     * 1. Reads Plan & Settings from 0-latency Volatile RAM Cache (0ms disk I/O).
+     * 2. Computes randomized human coordinates within 15% inner safe margin.
+     * 3. Projects animated neon green Touch Ripple overlay at tap coordinates.
+     * 4. Fires Dual-Strike: Instant software ACTION_CLICK (0ms) + Real physical hardware touch gesture (35-55ms) in parallel!
      */
     fun performRealHardwareClick(nodeInfo: AccessibilityNodeInfo, sourcePackage: String? = null): Boolean {
-        // 0. Trial Expiration Check: Must have active plan or remaining free rides
-        val prefs = getSharedPreferences("AutoAcceptSettings", Context.MODE_PRIVATE)
-        val isPlanActive = prefs.getBoolean("has_active_plan", hasActivePlan)
-        val limit = prefs.getInt("free_rides_limit", freeRidesLimit)
-        val used = prefs.getInt("free_rides_used", freeRidesUsed)
+        // 0. Trial Expiration Check: Must have active plan or remaining free rides (Read from 0-latency RAM cache)
+        val isPlanActive = cachedHasActivePlan
+        val limit = cachedFreeRidesLimit
+        val used = cachedFreeRidesUsed
         if (!isPlanActive && used >= limit) {
             Log.w(TAG, "⛔ [FREE TRIAL EXPIRED] Real click blocked! $used/$limit free rides used. User must purchase plan.")
             showTrialExpiredToast(used, limit)
@@ -594,14 +747,14 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
         }
         lastClickTimeMs = now
 
-        Log.i(TAG, "⚡ Initiating ASLI REAL CLICK on verified visible target at bounds: $screenBounds...")
+        Log.i(TAG, "⚡ Initiating DUAL-STRIKE ULTRA CLICK on verified visible target at bounds: $screenBounds...")
         
         val targetPkg = (sourcePackage ?: nodeInfo.packageName?.toString() ?: "").lowercase()
         val isOla = targetPkg.contains("ola")
         var gestureDispatched = false
+        var a11yClicked = false
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val centerX = screenBounds.centerX().toFloat()
             val centerY = screenBounds.centerY().toFloat()
             
             // Check if this is a slider ("Slide to accept", "Swipe to accept", "स्वाइप")
@@ -623,21 +776,27 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                 val endX = screenBounds.right - (screenBounds.width() * 0.10f)
                 path.moveTo(startX, centerY)
                 path.lineTo(endX, centerY)
-                duration = (270L..330L).random() // Natural 270-330ms smooth physical swipe
+                duration = (240L..290L).random() // Natural swift physical swipe
+                showTouchRipple(startX, centerY)
                 Log.i(TAG, "👉 Dispatched REAL SWIPE gesture from ($startX, $centerY) to ($endX, $centerY) with duration ${duration}ms")
             } else {
-                // Real physical human-like tap gesture:
-                // 1. Natural micro-jitter in coordinates (±3 to 4 pixels within button bounds)
-                val jitterX = (-4..4).random().toFloat()
-                val jitterY = (-3..3).random().toFloat()
-                val tapX = (centerX + jitterX).coerceIn(screenBounds.left + 5f, screenBounds.right - 5f)
-                val tapY = (centerY + jitterY).coerceIn(screenBounds.top + 5f, screenBounds.bottom - 5f)
+                // Real physical human-like tap within 15% inner safe margin
+                val marginX = (screenBounds.width() * 0.15f).toInt().coerceAtLeast(4)
+                val marginY = (screenBounds.height() * 0.15f).toInt().coerceAtLeast(4)
+                val minX = screenBounds.left + marginX
+                val maxX = (screenBounds.right - marginX).coerceAtLeast(minX)
+                val minY = screenBounds.top + marginY
+                val maxY = (screenBounds.bottom - marginY).coerceAtLeast(minY)
+                val tapX = (minX..maxX).random().toFloat()
+                val tapY = (minY..maxY).random().toFloat()
+
+                // Trigger glowing touch ripple animation on screen at exact tap coordinates
+                showTouchRipple(tapX, tapY)
                 
                 path.moveTo(tapX, tapY)
-                path.lineTo(tapX, tapY + 1f) // CRITICAL: 1px micro-motion finishes gesture in 50ms (avoids Samsung 5-sec hold!)
-                // 2. Randomized human touch hold time between 52ms and 78ms (never a fixed robotic value)
-                duration = (52L..78L).random()
-                Log.i(TAG, "👆 Dispatched HUMAN REAL TAP at ($tapX, $tapY) with natural random duration: ${duration}ms")
+                path.lineTo(tapX, tapY + 1f) // 1px micro-motion finishes gesture fast (avoids Samsung long-press trap)
+                duration = (35L..55L).random() // Ultra-fast human tap (35-55ms)
+                Log.i(TAG, "👆 Dispatched DUAL-STRIKE HARDWARE TAP at ($tapX, $tapY) with natural duration: ${duration}ms")
             }
             
             val stroke = GestureDescription.StrokeDescription(path, 0L, duration)
@@ -646,11 +805,11 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
             gestureDispatched = dispatchGesture(gesture, object : GestureResultCallback() {
                 override fun onCompleted(gestureDescription: GestureDescription?) {
                     super.onCompleted(gestureDescription)
-                    Log.i(TAG, "✅ [SUCCESS] Real hardware touch event completed on screen at ($centerX, $centerY)!")
+                    Log.i(TAG, "✅ [SUCCESS] Real hardware touch event completed on screen!")
                 }
                 override fun onCancelled(gestureDescription: GestureDescription?) {
                     super.onCancelled(gestureDescription)
-                    Log.w(TAG, "⚠️ Real hardware gesture cancelled, trying fallback")
+                    Log.w(TAG, "⚠️ Real hardware gesture cancelled")
                 }
             }, null)
             
@@ -658,21 +817,23 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
             triggerHapticFeedback()
         }
         
-        // 2. Dual Backup: Direct accessibility ACTION_CLICK
+        // 2. DUAL-STRIKE: Direct accessibility ACTION_CLICK in parallel
         // STRICT OLA ANTI-FRAUD RULE: NEVER execute fallback ACTION_CLICK on Ola!
         // Ola's SecureAcceptButton actively checks isTouchEventInProgress == false in performClick()
         // and sends FraudClickPackageLog to Ola's backend security server when ACTION_CLICK is fired.
-        var a11yClicked = false
         if (isOla) {
-            Log.i(TAG, "🛡️ [OLA ANTI-FRAUD SHIELD] Fallback ACTION_CLICK strictly DISABLED for Ola! Relying 100% on real physical touch gesture.")
+            Log.i(TAG, "🛡️ [OLA ANTI-FRAUD SHIELD] Software ACTION_CLICK strictly DISABLED for Ola! Relying 100% on real physical touch gesture.")
         } else {
-            // For non-Ola apps (Rapido, Porter), execute direct ACTION_CLICK as instant dual backup!
+            // For non-Ola apps (Rapido, Porter, Uber), execute direct ACTION_CLICK simultaneously for instant 0ms hit!
             try {
-                if (nodeInfo.isClickable) {
+                if (clickableTarget.isClickable) {
+                    a11yClicked = clickableTarget.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                }
+                if (!a11yClicked && nodeInfo.isClickable) {
                     a11yClicked = nodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                 }
                 if (!a11yClicked) {
-                    var parent = nodeInfo.parent
+                    var parent = clickableTarget.parent ?: nodeInfo.parent
                     var depth = 0
                     while (parent != null && depth < 4) {
                         if (parent.isClickable) {
@@ -684,12 +845,81 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                     }
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Accessibility action fallback error", e)
+                Log.e(TAG, "Accessibility action dual-strike error", e)
             }
         }
         
-        Log.i(TAG, "Click dispatched: realTouchGesture=$gestureDispatched, a11yClicked=$a11yClicked, isOla=$isOla")
+        Log.i(TAG, "Dual-Strike dispatched: gestureDispatched=$gestureDispatched, a11yClicked=$a11yClicked, isOla=$isOla")
         return gestureDispatched || a11yClicked
+    }
+
+    /**
+     * Animated Touch Ripple Overlay:
+     * Displays a neon green pulsing ripple on screen at coordinates (tapX, tapY)
+     * using TYPE_ACCESSIBILITY_OVERLAY without stealing touch focus or blocking touches.
+     */
+    fun showTouchRipple(x: Float, y: Float) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) return
+        Handler(Looper.getMainLooper()).post {
+            try {
+                val wm = windowManager ?: getSystemService(Context.WINDOW_SERVICE) as? WindowManager ?: return@post
+                val density = resources.displayMetrics.density
+                val size = (density * 58).toInt() // 58dp ripple ring
+                val halfSize = size / 2
+
+                val rippleView = View(this).apply {
+                    val drawable = GradientDrawable().apply {
+                        shape = GradientDrawable.OVAL
+                        setColor(android.graphics.Color.parseColor("#4400E676")) // Vibrant neon green glow
+                        setStroke((density * 2.5f).toInt(), android.graphics.Color.parseColor("#FF00E676")) // Solid neon green border
+                    }
+                    background = drawable
+                    scaleX = 0.3f
+                    scaleY = 0.3f
+                    alpha = 0.95f
+                }
+
+                val overlayType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+                } else {
+                    @Suppress("DEPRECATION")
+                    WindowManager.LayoutParams.TYPE_PHONE
+                }
+
+                val params = WindowManager.LayoutParams(
+                    size,
+                    size,
+                    (x - halfSize).toInt(),
+                    (y - halfSize).toInt(),
+                    overlayType,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    android.graphics.PixelFormat.TRANSLUCENT
+                ).apply {
+                    gravity = Gravity.TOP or Gravity.START
+                }
+
+                wm.addView(rippleView, params)
+
+                rippleView.animate()
+                    .scaleX(1.75f)
+                    .scaleY(1.75f)
+                    .alpha(0.0f)
+                    .setDuration(350L)
+                    .setInterpolator(DecelerateInterpolator())
+                    .withEndAction {
+                        try {
+                            if (rippleView.isAttachedToWindow) {
+                                wm.removeView(rippleView)
+                            }
+                        } catch (_: Exception) {}
+                    }
+                    .start()
+            } catch (e: Exception) {
+                Log.e(TAG, "Touch ripple error: ${e.message}")
+            }
+        }
     }
 
     /**
@@ -698,9 +928,10 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
      */
     fun performCoordinatesTap(x: Float, y: Float, durationMs: Long = 50L): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return false
+        showTouchRipple(x, y)
         val path = Path().apply {
             moveTo(x, y)
-            lineTo(x, y)
+            lineTo(x, y + 1f)
         }
         val stroke = GestureDescription.StrokeDescription(path, 0L, durationMs)
         val gesture = GestureDescription.Builder().addStroke(stroke).build()
@@ -746,7 +977,7 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
     /**
      * Show non-intrusive on-screen notification when 2 free rides are consumed
      */
-    private fun showTrialExpiredToast(used: Int = freeRidesUsed, limit: Int = freeRidesLimit) {
+    private fun showTrialExpiredToast(used: Int = cachedFreeRidesUsed, limit: Int = cachedFreeRidesLimit) {
         val now = System.currentTimeMillis()
         if (now - lastTrialToastTime > 12000L) { // Throttle every 12 seconds
             lastTrialToastTime = now
@@ -770,6 +1001,12 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
         instance = null
         serviceParsers.clear()
         serviceConfigs.clear()
+        try {
+            val autoAcceptPrefs = getSharedPreferences("AutoAcceptSettings", Context.MODE_PRIVATE)
+            autoAcceptPrefsListener?.let { autoAcceptPrefs.unregisterOnSharedPreferenceChangeListener(it) }
+            val flutterPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+            flutterPrefsListener?.let { flutterPrefs.unregisterOnSharedPreferenceChangeListener(it) }
+        } catch (_: Exception) {}
         try {
             if (wakeLock?.isHeld == true) {
                 wakeLock?.release()

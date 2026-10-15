@@ -53,7 +53,7 @@ class StringsKn extends AppStrings {
   @override
   String get openSettings => 'ಸೆಟ್ಟಿಂಗ್ಸ್ ತೆರೆಯಿರಿ >';
   @override
-  String get accessibilitySteps => 'ಹಂತಗಳು: ಸೆಟ್ಟಿಂಗ್ಸ್ → ಆಕ್ಸೆಸಿಬಿಲಿಟಿ → 🛺 SnapRider → ಆನ್ ಮಾಡಿ';
+  String get accessibilitySteps => 'ಹಂತಗಳು: ಸೆಟ್ಟಿಂಗ್ಸ್ → ಆಕ್ಸೆಸಿಬಿಲಿಟಿ → AutoRide Accept 🛺 → ಆನ್ ಮಾಡಿ';
   @override
   String get fareFilter => 'ದರ ಫಿಲ್ಟರ್';
   @override

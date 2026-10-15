@@ -53,7 +53,7 @@ class StringsTa extends AppStrings {
   @override
   String get openSettings => 'அமைப்புகளைத் திறக்க >';
   @override
-  String get accessibilitySteps => 'படிகள்: அமைப்புகள் → அணுகல்தன்மை → 🛺 SnapRider → இயக்கு';
+  String get accessibilitySteps => 'படிகள்: அமைப்புகள் → அணுகல்தன்மை → AutoRide Accept 🛺 → இயக்கு';
   @override
   String get fareFilter => 'கட்டண வடிகட்டி';
   @override

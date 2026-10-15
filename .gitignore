@@ -59,4 +59,7 @@ node_modules/
 !*.env.example
 *serviceAccountKey*.json
 
+# Decompiled research files
+research/
+
 

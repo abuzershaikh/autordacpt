@@ -350,8 +350,8 @@ class RapidoOrderParser : OrderParser {
         // If single distance is large (> 4.0 km), driver is not 9.5 km away from rider for an auto/bike ride;
         // it is almost certainly the customer's trip distance!
         return if (single > 4.0) {
-            Log.d(TAG, "Single distance candidate $single km > 4.0 km, classifying as trip distance (pickup nearby)")
-            Pair(0.5, single)
+            Log.d(TAG, "Single distance candidate $single km > 4.0 km, classifying as trip distance (pickup unknown/nearby)")
+            Pair(0.0, single)
         } else {
             Pair(single, 0.0)
         }
@@ -431,16 +431,14 @@ class RapidoOrderParser : OrderParser {
             return false
         }
         
-        if (orderData.pickupDistance > 0 && orderData.pickupDistance > config.pickupDistance) {
+        if (orderData.pickupDistance > 0 && config.pickupDistance > 0 && orderData.pickupDistance > config.pickupDistance) {
             Log.d(TAG, "Pickup too far: ${orderData.pickupDistance}km > ${config.pickupDistance}km")
             return false
         }
         
-        if (orderData.tripDistance > 0 && config.tripDistance > 0) {
-            if (orderData.tripDistance > config.tripDistance) {
-                Log.d(TAG, "Trip too long: ${orderData.tripDistance}km > ${config.tripDistance}km")
-                return false
-            }
+        if (orderData.tripDistance > 0 && config.tripDistance > 0 && orderData.tripDistance > config.tripDistance) {
+            Log.d(TAG, "Trip too long: ${orderData.tripDistance}km > ${config.tripDistance}km")
+            return false
         }
         
         Log.i(TAG, "Order passed all filters ✓ (Fare=₹${orderData.fare})")
@@ -455,7 +453,7 @@ class RapidoOrderParser : OrderParser {
         if (orderData.fare <= 0.0) return "Order fare is ₹0 or unreadable"
         if (orderData.fare < config.minFare) return "Fare ₹${orderData.fare.toInt()} < Rider Min ₹${config.minFare.toInt()}"
         if (orderData.fare > config.maxFare) return "Fare ₹${orderData.fare.toInt()} > Rider Max ₹${config.maxFare.toInt()}"
-        if (orderData.pickupDistance > 0 && orderData.pickupDistance > config.pickupDistance) return "Pickup ${orderData.pickupDistance}km > Rider Max ${config.pickupDistance}km"
+        if (orderData.pickupDistance > 0 && config.pickupDistance > 0 && orderData.pickupDistance > config.pickupDistance) return "Pickup ${orderData.pickupDistance}km > Rider Max ${config.pickupDistance}km"
         if (orderData.tripDistance > 0 && config.tripDistance > 0 && orderData.tripDistance > config.tripDistance) return "Trip ${orderData.tripDistance}km > Rider Max ${config.tripDistance}km"
         return null
     }

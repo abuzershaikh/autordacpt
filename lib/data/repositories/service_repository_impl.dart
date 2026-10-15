@@ -113,6 +113,7 @@ class ServiceRepositoryImpl implements ServiceRepository {
     ServiceType? serviceType,
     int? limit,
   }) async {
+    await _localStorage.reload();
     final userKey = _getUserStorageKey();
     var savedActivities = _localStorage.getJsonList(userKey);
     // Backward compatibility fallback for pre-migration data

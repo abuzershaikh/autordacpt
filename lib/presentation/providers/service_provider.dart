@@ -233,9 +233,20 @@ class ServiceProvider extends ChangeNotifier {
     }
   }
 
-  /// Clear history
-  void clearHistory() {
+  /// Clear history from memory and local storage
+  Future<void> clearHistory() async {
     _recentActivities.clear();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('accepted_rides');
+      await prefs.remove('diagnostic_activity_logs');
+      final uid = prefs.getString('firebase_uid');
+      if (uid != null && uid.isNotEmpty) {
+        await prefs.remove('accepted_rides_$uid');
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error clearing history: $e');
+    }
     notifyListeners();
   }
 

@@ -25,15 +25,22 @@ class RideActivityModel {
 
   // Convert to Entity
   RideActivity toEntity() {
+    DateTime parsedTime;
+    try {
+      parsedTime = DateTime.parse(timestamp);
+    } catch (_) {
+      parsedTime = DateTime.now();
+    }
     return RideActivity(
       id: id,
       serviceType: ServiceType.values.where((e) => e.name == serviceType).firstOrNull ?? ServiceType.service1,
-      serviceName: serviceName,
+      serviceName: serviceName.isNotEmpty ? serviceName : 'Ride Order',
       rideDetails: rideDetails,
       fare: fare,
       distance: distance,
-      timestamp: DateTime.parse(timestamp),
-      status: RideStatus.values.firstWhere((e) => e.name == status),
+      timestamp: parsedTime,
+      status: RideStatus.values.where((e) => e.name == status).firstOrNull ??
+          (status.toLowerCase() == 'accepted' ? RideStatus.accepted : RideStatus.rejected),
     );
   }
 
@@ -54,14 +61,14 @@ class RideActivityModel {
   // From JSON
   factory RideActivityModel.fromJson(Map<String, dynamic> json) {
     return RideActivityModel(
-      id: json['id'] as String,
-      serviceType: json['serviceType'] as String,
-      serviceName: json['serviceName'] as String,
-      rideDetails: json['rideDetails'] as String,
-      fare: (json['fare'] as num).toDouble(),
-      distance: (json['distance'] as num).toDouble(),
-      timestamp: json['timestamp'] as String,
-      status: json['status'] as String,
+      id: (json['id'] ?? 'ride_${DateTime.now().millisecondsSinceEpoch}') as String,
+      serviceType: (json['serviceType'] ?? 'service1') as String,
+      serviceName: (json['serviceName'] ?? 'Ride Order') as String,
+      rideDetails: (json['rideDetails'] ?? '') as String,
+      fare: (json['fare'] as num?)?.toDouble() ?? 0.0,
+      distance: (json['distance'] as num?)?.toDouble() ?? 0.0,
+      timestamp: (json['timestamp'] ?? DateTime.now().toIso8601String()) as String,
+      status: (json['status'] ?? 'accepted') as String,
     );
   }
 

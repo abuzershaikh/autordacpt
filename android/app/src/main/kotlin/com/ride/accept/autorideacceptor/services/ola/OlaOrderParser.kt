@@ -247,8 +247,7 @@ class OlaOrderParser : OrderParser {
         val fare = extractFare(rootNode) ?: return null
         if (fare <= 0.0) return null
 
-        val pickupDistance = extractPickupDistance(rootNode)
-        val tripDistance = extractTripDistance(rootNode)
+        val (pickupDistance, tripDistance) = extractDistances(rootNode)
         val pickupAddress = extractPickupAddress(rootNode)
         val dropAddress = extractDropAddress(rootNode)
 
@@ -288,32 +287,29 @@ class OlaOrderParser : OrderParser {
     }
 
     /**
-     * Extract pickup distance
+     * Extract pickup and trip distances for Ola accurately
+     * Distinguishes driver-to-customer pickup leg from customer-to-destination trip leg!
      */
-    private fun extractPickupDistance(rootNode: AccessibilityNodeInfo): Double {
-        for (id in DISTANCE_IDS) {
-            val node = NodeUtils.findNodeByResourceId(rootNode, id)
-            if (node != null && NodeUtils.isNodeVisible(node)) {
-                val text = node.text?.toString() ?: ""
-                val distance = NodeUtils.parseDistance(text)
-                if (distance > 0) return distance
-            }
-        }
-
+    private fun extractDistances(rootNode: AccessibilityNodeInfo): Pair<Double, Double> {
         val distNodes = NodeUtils.findNodesByText(rootNode, "km")
+        val candidates = mutableListOf<Double>()
         for (dn in distNodes) {
             if (NodeUtils.isNodeVisible(dn)) {
                 val text = dn.text?.toString() ?: ""
-                val distance = NodeUtils.parseDistance(text)
-                if (distance > 0) return distance
+                val dist = NodeUtils.parseDistance(text)
+                if (dist > 0.0) candidates.add(dist)
             }
         }
-
-        return 0.0
-    }
-
-    private fun extractTripDistance(rootNode: AccessibilityNodeInfo): Double {
-        return 0.0
+        val unique = candidates.distinct().sorted()
+        return if (unique.size >= 2) {
+            // Smaller is driver pickup, larger is rider trip
+            Pair(unique.first(), unique.last())
+        } else if (unique.size == 1) {
+            val single = unique.first()
+            if (single > 4.0) Pair(0.0, single) else Pair(single, 0.0)
+        } else {
+            Pair(0.0, 0.0)
+        }
     }
 
     private fun extractPickupAddress(rootNode: AccessibilityNodeInfo): String {
@@ -360,16 +356,14 @@ class OlaOrderParser : OrderParser {
             return false
         }
 
-        if (orderData.pickupDistance > 0 && orderData.pickupDistance > config.pickupDistance) {
+        if (orderData.pickupDistance > 0 && config.pickupDistance > 0 && orderData.pickupDistance > config.pickupDistance) {
             Log.d(TAG, "Pickup too far: ${orderData.pickupDistance}km > ${config.pickupDistance}km")
             return false
         }
 
-        if (orderData.tripDistance > 0 && config.tripDistance > 0) {
-            if (orderData.tripDistance > config.tripDistance) {
-                Log.d(TAG, "Trip too long: ${orderData.tripDistance}km > ${config.tripDistance}km")
-                return false
-            }
+        if (orderData.tripDistance > 0 && config.tripDistance > 0 && orderData.tripDistance > config.tripDistance) {
+            Log.d(TAG, "Trip too long: ${orderData.tripDistance}km > ${config.tripDistance}km")
+            return false
         }
 
         Log.i(TAG, "Ola order passed all filters ✓ (Fare=₹${orderData.fare})")
@@ -384,7 +378,7 @@ class OlaOrderParser : OrderParser {
         if (orderData.fare <= 0.0) return "Order fare is ₹0 or unreadable"
         if (orderData.fare < config.minFare) return "Fare ₹${orderData.fare.toInt()} < Rider Min ₹${config.minFare.toInt()}"
         if (orderData.fare > config.maxFare) return "Fare ₹${orderData.fare.toInt()} > Rider Max ₹${config.maxFare.toInt()}"
-        if (orderData.pickupDistance > 0 && orderData.pickupDistance > config.pickupDistance) return "Pickup ${orderData.pickupDistance}km > Rider Max ${config.pickupDistance}km"
+        if (orderData.pickupDistance > 0 && config.pickupDistance > 0 && orderData.pickupDistance > config.pickupDistance) return "Pickup ${orderData.pickupDistance}km > Rider Max ${config.pickupDistance}km"
         if (orderData.tripDistance > 0 && config.tripDistance > 0 && orderData.tripDistance > config.tripDistance) return "Trip ${orderData.tripDistance}km > Rider Max ${config.tripDistance}km"
         return null
     }

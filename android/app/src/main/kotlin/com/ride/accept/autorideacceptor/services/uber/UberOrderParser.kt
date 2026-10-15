@@ -127,6 +127,44 @@ class UberOrderParser : OrderParser {
                 return
             }
 
+            // 2.5 Extract and verify Distances
+            val (pickupDist, tripDist) = extractDistances(rootNode)
+            if (pickupDist > 0 && config.pickupDistance > 0 && pickupDist > config.pickupDistance) {
+                val reason = "Pickup ${pickupDist}km > Rider Max ${config.pickupDistance}km"
+                Log.w(TAG, "Uber pickup distance rejected: $reason")
+                com.ride.accept.autorideacceptor.AutoAcceptAccessibilityService.instance?.dispatchRideTelemetryToVps(
+                    "uber",
+                    "rejected",
+                    fare = fare,
+                    distanceKm = tripDist,
+                    pickupDistance = pickupDist,
+                    reason = reason,
+                    userMinFare = config.minFare,
+                    userMaxFare = config.maxFare,
+                    userMaxPickup = config.pickupDistance,
+                    userMaxTrip = config.tripDistance
+                )
+                return
+            }
+
+            if (tripDist > 0 && config.tripDistance > 0 && tripDist > config.tripDistance) {
+                val reason = "Trip ${tripDist}km > Rider Max ${config.tripDistance}km"
+                Log.w(TAG, "Uber trip distance rejected: $reason")
+                com.ride.accept.autorideacceptor.AutoAcceptAccessibilityService.instance?.dispatchRideTelemetryToVps(
+                    "uber",
+                    "rejected",
+                    fare = fare,
+                    distanceKm = tripDist,
+                    pickupDistance = pickupDist,
+                    reason = reason,
+                    userMinFare = config.minFare,
+                    userMaxFare = config.maxFare,
+                    userMaxPickup = config.pickupDistance,
+                    userMaxTrip = config.tripDistance
+                )
+                return
+            }
+
             // 3. Dispatch Click
             Log.i(TAG, "🎯 Uber Order detected! Fare: ₹$fare. Triggering click...")
             val clicked = clickHandler(acceptButton)
@@ -135,6 +173,8 @@ class UberOrderParser : OrderParser {
                     "uber",
                     "accepted",
                     fare = fare,
+                    distanceKm = tripDist,
+                    pickupDistance = pickupDist,
                     userMinFare = config.minFare,
                     userMaxFare = config.maxFare,
                     userMaxPickup = config.pickupDistance,
@@ -145,6 +185,8 @@ class UberOrderParser : OrderParser {
                     "uber",
                     "missed",
                     fare = fare,
+                    distanceKm = tripDist,
+                    pickupDistance = pickupDist,
                     reason = "Click failed or button not responsive",
                     userMinFare = config.minFare,
                     userMaxFare = config.maxFare,
@@ -155,6 +197,27 @@ class UberOrderParser : OrderParser {
 
         } catch (e: Exception) {
             Log.e(TAG, "Error in UberOrderParser", e)
+        }
+    }
+
+    private fun extractDistances(rootNode: AccessibilityNodeInfo): Pair<Double, Double> {
+        val distNodes = NodeUtils.findNodesByText(rootNode, "km")
+        val candidates = mutableListOf<Double>()
+        for (dn in distNodes) {
+            if (NodeUtils.isNodeVisible(dn)) {
+                val text = dn.text?.toString() ?: ""
+                val dist = NodeUtils.parseDistance(text)
+                if (dist > 0.0) candidates.add(dist)
+            }
+        }
+        val unique = candidates.distinct().sorted()
+        return if (unique.size >= 2) {
+            Pair(unique.first(), unique.last())
+        } else if (unique.size == 1) {
+            val single = unique.first()
+            if (single > 4.0) Pair(0.0, single) else Pair(single, 0.0)
+        } else {
+            Pair(0.0, 0.0)
         }
     }
 
@@ -171,9 +234,6 @@ class UberOrderParser : OrderParser {
     }
 
     private fun parseFare(text: String): Double {
-        val clean = text.replace("₹", "").replace("Rs", "").replace(",", "").trim()
-        val regex = Regex("""\d+(\.\d+)?""")
-        val match = regex.find(clean)
-        return match?.value?.toDoubleOrNull() ?: 0.0
+        return NodeUtils.parseFare(text)
     }
 }

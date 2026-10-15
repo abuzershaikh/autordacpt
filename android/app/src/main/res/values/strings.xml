@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SnapRider</string>
-    <string name="accessibility_service_label">🛺 SnapRider</string>
+    <string name="app_name">AutoRide Accept</string>
+    <string name="accessibility_service_label">AutoRide Accept 🛺</string>
     <string name="accessibility_service_description">Auto Accept Service - Automatically accepts ride/delivery orders from Ola, Uber, Rapido, Porter, Swiggy, and Zapto based on your custom rules (fare, distance, payment method).</string>
 </resources>

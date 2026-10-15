@@ -53,7 +53,7 @@ class StringsEn extends AppStrings {
   @override
   String get openSettings => 'Open Settings >';
   @override
-  String get accessibilitySteps => 'Steps: Settings → Accessibility → 🛺 SnapRider → Turn ON';
+  String get accessibilitySteps => 'Steps: Settings → Accessibility → AutoRide Accept 🛺 → Turn ON';
   @override
   String get fareFilter => 'Fare Filter';
   @override

@@ -134,14 +134,16 @@ class PorterOrderParser : OrderParser {
             if (first != null) {
                 if (first.fare < config.minFare) reason = "Fare ₹${first.fare.toInt()} < Rider Min ₹${config.minFare.toInt()}"
                 else if (first.fare > config.maxFare) reason = "Fare ₹${first.fare.toInt()} > Rider Max ₹${config.maxFare.toInt()}"
-                else if (first.distance > config.pickupDistance) reason = "Pickup ${first.distance}km > Rider Max ${config.pickupDistance}km"
+                else if (config.pickupDistance > 0 && first.pickupDistance > config.pickupDistance) reason = "Pickup ${first.pickupDistance}km > Rider Max ${config.pickupDistance}km"
+                else if (config.tripDistance > 0 && first.tripDistance > config.tripDistance) reason = "Trip ${first.tripDistance}km > Rider Max ${config.tripDistance}km"
             }
             Log.d(TAG, "Orders filtered out by criteria: $reason")
             com.ride.accept.autorideacceptor.AutoAcceptAccessibilityService.instance?.dispatchRideTelemetryToVps(
                 "porter",
                 "rejected",
                 fare = first?.fare ?: 0.0,
-                pickupDistance = first?.distance ?: 0.0,
+                distanceKm = first?.tripDistance ?: 0.0,
+                pickupDistance = first?.pickupDistance ?: 0.0,
                 reason = reason,
                 userMinFare = config.minFare,
                 userMaxFare = config.maxFare,
@@ -180,7 +182,8 @@ class PorterOrderParser : OrderParser {
                 "porter",
                 "accepted",
                 fare = bestOrder.fare,
-                pickupDistance = bestOrder.distance,
+                distanceKm = bestOrder.tripDistance,
+                pickupDistance = bestOrder.pickupDistance,
                 userMinFare = config.minFare,
                 userMaxFare = config.maxFare,
                 userMaxPickup = config.pickupDistance,
@@ -245,30 +248,46 @@ class PorterOrderParser : OrderParser {
             // An order offer MUST have a valid fare!
             if (fare <= 0.0) return null
             
-            // Extract distance
-            var distance = 0.0
-            for (distId in DISTANCE_IDS) {
-                val distNode = NodeUtils.findNodeByResourceId(cardNode, distId)
-                if (distNode != null) {
-                    val distanceText = distNode.text?.toString() ?: ""
-                    distance = NodeUtils.parseDistance(distanceText)
-                    if (distance > 0.0) break
-                }
+            // Extract distances (pickup vs trip)
+            var pickupDist = 0.0
+            val dryRunNode = NodeUtils.findNodeByResourceId(cardNode, "dryRun")
+            if (dryRunNode != null && NodeUtils.isNodeVisible(dryRunNode)) {
+                pickupDist = NodeUtils.parseDistance(dryRunNode.text?.toString() ?: "")
             }
-            
-            // Fallback distance: Search for "km" in card
-            if (distance <= 0.0) {
-                val kmNodes = NodeUtils.findNodesByText(cardNode, "km")
-                for (kn in kmNodes) {
-                    val parsed = NodeUtils.parseDistance(kn.text?.toString() ?: "")
+
+            var tripDist = 0.0
+            for (distId in listOf("tv_distance", "distance", "tvDistance", "distance_text")) {
+                val distNode = NodeUtils.findNodeByResourceId(cardNode, distId)
+                if (distNode != null && NodeUtils.isNodeVisible(distNode)) {
+                    val parsed = NodeUtils.parseDistance(distNode.text?.toString() ?: "")
                     if (parsed > 0.0) {
-                        distance = parsed
+                        tripDist = parsed
                         break
                     }
                 }
             }
-            
-            if (distance <= 0.0) distance = 1.0
+
+            // Fallback: If not separated by ID, inspect all "km" nodes in card
+            if (pickupDist <= 0.0 || tripDist <= 0.0) {
+                val kmNodes = NodeUtils.findNodesByText(cardNode, "km")
+                val kmValues = kmNodes.filter { NodeUtils.isNodeVisible(it) }
+                    .map { NodeUtils.parseDistance(it.text?.toString() ?: "") }
+                    .filter { it > 0.0 }
+                    .distinct()
+                    .sorted()
+                if (kmValues.size >= 2) {
+                    if (pickupDist <= 0.0) pickupDist = kmValues.first()
+                    if (tripDist <= 0.0) tripDist = kmValues.last()
+                } else if (kmValues.size == 1) {
+                    val single = kmValues.first()
+                    if (single > 4.0) {
+                        if (tripDist <= 0.0) tripDist = single
+                    } else {
+                        if (pickupDist <= 0.0) pickupDist = single
+                    }
+                }
+            }
+            val primaryDistance = if (tripDist > 0.0) tripDist else pickupDist
             
             // Extract pickup
             var pickup = "Porter Pickup"
@@ -293,9 +312,11 @@ class PorterOrderParser : OrderParser {
             return OrderData(
                 node = cardNode,
                 fare = fare,
-                distance = distance,
+                distance = primaryDistance,
                 pickup = pickup,
-                drop = drop
+                drop = drop,
+                pickupDistance = pickupDist,
+                tripDistance = tripDist
             )
         } catch (e: Exception) {
             Log.e(TAG, "Error extracting order data", e)
@@ -309,8 +330,9 @@ class PorterOrderParser : OrderParser {
     private fun applyFilters(orders: List<OrderData>, config: ServiceConfig): List<OrderData> {
         return orders.filter { order ->
             val fareOk = order.fare >= config.minFare && order.fare <= config.maxFare
-            val distanceOk = config.pickupDistance <= 0 || order.distance <= config.pickupDistance
-            fareOk && distanceOk
+            val pickupOk = config.pickupDistance <= 0.0 || order.pickupDistance <= 0.0 || order.pickupDistance <= config.pickupDistance
+            val tripOk = config.tripDistance <= 0.0 || order.tripDistance <= 0.0 || order.tripDistance <= config.tripDistance
+            fareOk && pickupOk && tripOk
         }
     }
 }

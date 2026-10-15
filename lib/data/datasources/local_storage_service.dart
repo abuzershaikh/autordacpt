@@ -7,6 +7,13 @@ class LocalStorageService {
 
   LocalStorageService(this._prefs);
 
+  /// Reload shared preferences from disk to catch native background writes
+  Future<void> reload() async {
+    try {
+      await _prefs.reload();
+    } catch (_) {}
+  }
+
   /// Save JSON data
   Future<bool> saveJson(String key, Map<String, dynamic> data) async {
     final jsonString = jsonEncode(data);
