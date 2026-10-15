@@ -161,16 +161,65 @@ object NodeUtils {
     }
     
     /**
+     * Checks if text belongs to driver earnings, wallet balance, incentive, or address labels.
+     * Prevents daily earnings (e.g. ₹1,200) or wallet balance from being mistaken as the current order fare!
+     */
+    fun isEarningsOrWalletText(text: String): Boolean {
+        if (text.isBlank()) return false
+        val lower = text.lowercase()
+        val keywords = listOf(
+            "today",
+            "earning",
+            "earnings",
+            "wallet",
+            "balance",
+            "incentive",
+            "target",
+            "bonus",
+            "penalty",
+            "payout",
+            "kamai",
+            "kamayi",
+            "कमाई",
+            "बैलेंस",
+            "इंसेंटिव",
+            "order #",
+            "order no",
+            "sector",
+            "street",
+            "road",
+            "flat",
+            "floor"
+        )
+        return keywords.any { lower.contains(it) }
+    }
+
+    /**
+     * Checks if node is positioned in the topmost status bar/header area of the screen (top 260px)
+     * where persistent daily earnings or wallet balance icons are displayed.
+     */
+    fun isTopBarHeaderNode(node: AccessibilityNodeInfo): Boolean {
+        return try {
+            val rect = android.graphics.Rect()
+            node.getBoundsInScreen(rect)
+            rect.bottom in 1..260
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /**
      * Parse fare from text (₹450, ₹ 450, ₹1,250, ₹12,500, ₹1,25,000, ₹450.50, Rs. 450, 450/-, etc.)
      * Handles any number of digits with Indian or standard thousands separators (commas)
      * and optional decimal paise (.XX).
+     * STRICT: Rejects earnings/wallet balances and random address numbers!
      */
     fun parseFare(fareText: String): Double {
         if (fareText.isBlank()) return 0.0
+        if (isEarningsOrWalletText(fareText)) return 0.0
         try {
             // Priority 1: Currency symbol (₹, Rs, INR) followed by number with optional thousands commas and decimals
             // Handles both comma-separated (₹12,500, ₹1,25,000) and plain numbers (₹1200, ₹12500, ₹450.50, etc.)
-            // FIXED: Used + on comma group to prevent 4+ digit plain numbers from truncating to 3 digits!
             val currencyRegex = Regex(
                 """(?:₹|rs\.?|inr)\s*([0-9]{1,3}(?:,[0-9]{2,3})+(?:\.[0-9]{1,2})?|[0-9]+(?:\.[0-9]{1,2})?)""",
                 RegexOption.IGNORE_CASE
@@ -200,11 +249,13 @@ object NodeUtils {
                 if (parsed != null && parsed > 0.0) return parsed
             }
 
-            // Priority 4: Plain numeric fallback (excludes distance like 12.5 km or duration like 15 min)
-            val plainRegex = Regex("""\b([0-9]+(?:\.[0-9]{1,2})?)\b(?!\s*(?:km|kms|किमी|m|mtr|meter|min|mins|hr|hour))""", RegexOption.IGNORE_CASE)
-            val plainMatch = plainRegex.find(fareText)
-            if (plainMatch != null) {
-                val parsed = plainMatch.groupValues[1].toDoubleOrNull()
+            // Priority 4: Pure numeric text (the node itself is strictly just digits, e.g. "45" or "120.50")
+            // Rejects sentences and addresses like "Sector 40, Street 2" or "Order 15"
+            val trimmed = fareText.trim()
+            val pureNumericRegex = Regex("""^([0-9]{1,5}(?:\.[0-9]{1,2})?)$""")
+            val pureMatch = pureNumericRegex.find(trimmed)
+            if (pureMatch != null) {
+                val parsed = pureMatch.groupValues[1].toDoubleOrNull()
                 if (parsed != null && parsed > 0.0) return parsed
             }
         } catch (_: Exception) {}

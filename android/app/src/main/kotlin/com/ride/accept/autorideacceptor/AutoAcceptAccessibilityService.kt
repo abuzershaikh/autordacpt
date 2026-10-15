@@ -379,16 +379,31 @@ class AutoAcceptAccessibilityService : AccessibilityService() {
                     }
                     
                     val uConfig = cachedUniversalConfig
+                    val specific = serviceConfigs[serviceKey]
+
                     val config = if (uConfig.isEnabled && uConfig.autoAccept) {
-                        val specific = serviceConfigs[serviceKey]
-                        if (specific != null) {
-                            specific.copy(isEnabled = true, autoAccept = true)
-                        } else {
-                            uConfig
-                        }
+                        // When Universal Engine is Active, ALWAYS enforce Universal filters as master rules!
+                        // Never allow a lower stale default minFare from specific service to downgrade user's minFare!
+                        val effectiveMinFare = maxOf(uConfig.minFare, specific?.minFare ?: uConfig.minFare)
+                        val effectiveMaxFare = if (uConfig.maxFare > 0.0) uConfig.maxFare else (specific?.maxFare ?: 25000.0)
+                        val effectivePickup = if (uConfig.pickupDistance > 0.0) uConfig.pickupDistance else (specific?.pickupDistance ?: 5.0)
+                        val effectiveTrip = if (uConfig.tripDistance > 0.0) uConfig.tripDistance else (specific?.tripDistance ?: 3000.0)
+
+                        ServiceConfig(
+                            isEnabled = specific?.isEnabled ?: uConfig.isEnabled,
+                            autoAccept = true,
+                            minFare = effectiveMinFare,
+                            maxFare = effectiveMaxFare,
+                            pickupDistance = effectivePickup,
+                            tripDistance = effectiveTrip
+                        )
+                    } else if (specific != null && specific.isEnabled && specific.autoAccept) {
+                        specific
                     } else {
-                        serviceConfigs[serviceKey] ?: uConfig
+                        uConfig
                     }
+
+                    Log.d(TAG, "🔍 [$serviceKey Order Check] Active Filter: MinFare=₹${config.minFare}, MaxFare=₹${config.maxFare}, MaxPickup=${config.pickupDistance}km, MaxTrip=${config.tripDistance}km")
                     
                     if (config.isEnabled && config.autoAccept) {
                         // Check free rides trial vs paid plan directly from RAM cache!

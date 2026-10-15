@@ -104,11 +104,11 @@ class UberOrderParser : OrderParser {
 
             if (acceptButton == null) return
 
-            // 2. Extract Fare
-            var fare = extractFare(rootNode)
+            // 2. Extract Fare (Must be real and > 0.0)
+            val fare = extractFare(rootNode)
             if (fare <= 0.0) {
-                // If fare is not parsed, use default minimum pass if configured
-                fare = 50.0
+                Log.d(TAG, "Uber order card detected but fare is unreadable or not loaded yet. Skipping.")
+                return
             }
 
             if (fare < config.minFare || fare > config.maxFare) {
@@ -225,11 +225,29 @@ class UberOrderParser : OrderParser {
         for (id in FARE_IDS) {
             val nodes = NodeUtils.findNodesByResourceId(rootNode, id)
             for (n in nodes) {
-                val text = n.text?.toString() ?: ""
-                val parsed = parseFare(text)
-                if (parsed > 0.0) return parsed
+                if (NodeUtils.isNodeVisible(n) && !NodeUtils.isTopBarHeaderNode(n)) {
+                    val text = n.text?.toString() ?: ""
+                    if (!NodeUtils.isEarningsOrWalletText(text)) {
+                        val parsed = parseFare(text)
+                        if (parsed > 0.0) return parsed
+                    }
+                }
             }
         }
+
+        // Fallback: search for ₹ symbol, excluding top bar and wallet
+        val rupeeNodes = NodeUtils.findNodesByText(rootNode, "₹")
+        for (rn in rupeeNodes) {
+            if (NodeUtils.isNodeVisible(rn) && !NodeUtils.isTopBarHeaderNode(rn)) {
+                val text = rn.text?.toString() ?: ""
+                val parentText = rn.parent?.text?.toString() ?: ""
+                if (!NodeUtils.isEarningsOrWalletText(text) && !NodeUtils.isEarningsOrWalletText(parentText)) {
+                    val parsed = parseFare(text)
+                    if (parsed > 0.0) return parsed
+                }
+            }
+        }
+
         return 0.0
     }
 

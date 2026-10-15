@@ -210,14 +210,19 @@ class PorterOrderParser : OrderParser {
      */
     private fun extractOrderData(cardNode: AccessibilityNodeInfo, rootNode: AccessibilityNodeInfo): OrderData? {
         try {
-            // Extract fare
+            // Extract fare strictly from card and avoid earnings/wallet/top-bar
             var fare = 0.0
             for (fareId in FARE_IDS) {
                 val fareNode = NodeUtils.findNodeByResourceId(cardNode, fareId)
-                if (fareNode != null) {
+                if (fareNode != null && NodeUtils.isNodeVisible(fareNode) && !NodeUtils.isTopBarHeaderNode(fareNode)) {
                     val fareText = fareNode.text?.toString() ?: ""
-                    fare = NodeUtils.parseFare(fareText)
-                    if (fare > 0.0) break
+                    if (!NodeUtils.isEarningsOrWalletText(fareText)) {
+                        val parsed = NodeUtils.parseFare(fareText)
+                        if (parsed > 0.0) {
+                            fare = parsed
+                            break
+                        }
+                    }
                 }
             }
             
@@ -225,22 +230,34 @@ class PorterOrderParser : OrderParser {
             if (fare <= 0.0) {
                 val rupeeNodes = NodeUtils.findNodesByText(cardNode, "₹")
                 for (rn in rupeeNodes) {
-                    val parsed = NodeUtils.parseFare(rn.text?.toString() ?: "")
-                    if (parsed > 0.0) {
-                        fare = parsed
-                        break
+                    if (NodeUtils.isNodeVisible(rn) && !NodeUtils.isTopBarHeaderNode(rn)) {
+                        val text = rn.text?.toString() ?: ""
+                        val parentText = rn.parent?.text?.toString() ?: ""
+                        if (!NodeUtils.isEarningsOrWalletText(text) && !NodeUtils.isEarningsOrWalletText(parentText)) {
+                            val parsed = NodeUtils.parseFare(text)
+                            if (parsed > 0.0) {
+                                fare = parsed
+                                break
+                            }
+                        }
                     }
                 }
             }
             
-            // Fallback: If not in card, search root for ₹
+            // Fallback: If not in card, search root for ₹ strictly skipping top-bar & wallet
             if (fare <= 0.0) {
                 val rupeeNodes = NodeUtils.findNodesByText(rootNode, "₹")
                 for (rn in rupeeNodes) {
-                    val parsed = NodeUtils.parseFare(rn.text?.toString() ?: "")
-                    if (parsed > 0.0) {
-                        fare = parsed
-                        break
+                    if (NodeUtils.isNodeVisible(rn) && !NodeUtils.isTopBarHeaderNode(rn)) {
+                        val text = rn.text?.toString() ?: ""
+                        val parentText = rn.parent?.text?.toString() ?: ""
+                        if (!NodeUtils.isEarningsOrWalletText(text) && !NodeUtils.isEarningsOrWalletText(parentText)) {
+                            val parsed = NodeUtils.parseFare(text)
+                            if (parsed > 0.0) {
+                                fare = parsed
+                                break
+                            }
+                        }
                     }
                 }
             }

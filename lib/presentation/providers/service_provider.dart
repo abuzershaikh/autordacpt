@@ -78,6 +78,25 @@ class ServiceProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('universal_config', jsonEncode(config.toMap()));
       await _settingsBridge.syncUniversalSettings(config.toMap());
+
+      // Keep individual services in sync with universal filters
+      for (int i = 0; i < _services.length; i++) {
+        final s = _services[i];
+        final updatedFilters = s.settings.rideFilters.copyWith(
+          minFare: config.minFare.toInt(),
+          maxFare: config.maxFare.toInt(),
+          pickupDistance: config.pickupDistance,
+          tripDistance: config.tripDistance,
+        );
+        final updatedSettings = s.settings.copyWith(
+          autoAccept: config.autoAccept,
+          rideFilters: updatedFilters,
+        );
+        _services[i] = s.copyWith(settings: updatedSettings);
+        await _repository.updateServiceSettings(s.type, updatedSettings);
+      }
+      await _syncSettingsToAndroid();
+
       notifyListeners();
     } catch (e) {
       _error = e.toString();

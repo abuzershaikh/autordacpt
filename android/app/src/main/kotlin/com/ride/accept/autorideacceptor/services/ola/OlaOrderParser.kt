@@ -241,10 +241,11 @@ class OlaOrderParser : OrderParser {
 
     /**
      * Extract order data from accessibility nodes
-     * Strictly returns null if fare is 0.0 or not found
+     * STRICT: returns null if fare is 0.0 or not found
      */
     private fun extractOrderData(rootNode: AccessibilityNodeInfo): OrderData? {
-        val fare = extractFare(rootNode) ?: return null
+        val orderCard = findOrderCard(rootNode)
+        val fare = extractFare(orderCard, rootNode) ?: return null
         if (fare <= 0.0) return null
 
         val (pickupDistance, tripDistance) = extractDistances(rootNode)
@@ -262,24 +263,43 @@ class OlaOrderParser : OrderParser {
 
     /**
      * Extract fare amount from order card
+     * Strictly avoids daily earnings, wallet balance, and top-bar headers!
      */
-    private fun extractFare(rootNode: AccessibilityNodeInfo): Double? {
-        for (id in FARE_IDS) {
-            val node = NodeUtils.findNodeByResourceId(rootNode, id)
-            if (node != null && NodeUtils.isNodeVisible(node)) {
-                val text = node.text?.toString() ?: ""
-                val fare = NodeUtils.parseFare(text)
-                if (fare > 0.0) return fare
+    private fun extractFare(orderCard: AccessibilityNodeInfo?, rootNode: AccessibilityNodeInfo): Double? {
+        val searchScopes = listOfNotNull(orderCard, rootNode)
+
+        // 1. Try explicit Ola resource IDs
+        for (scope in searchScopes) {
+            for (id in FARE_IDS) {
+                val node = NodeUtils.findNodeByResourceId(scope, id)
+                if (node != null && NodeUtils.isNodeVisible(node) && !NodeUtils.isTopBarHeaderNode(node)) {
+                    val text = node.text?.toString() ?: ""
+                    if (!NodeUtils.isEarningsOrWalletText(text)) {
+                        val fare = NodeUtils.parseFare(text)
+                        if (fare > 0.0) {
+                            Log.d(TAG, "✓ Matched Ola fare by ID '$id': ₹$fare (from '$text')")
+                            return fare
+                        }
+                    }
+                }
             }
         }
 
-        // Fallback: Find by ₹ or Rs symbol
-        val fareNodes = NodeUtils.findNodesByText(rootNode, "₹")
-        for (fn in fareNodes) {
-            if (NodeUtils.isNodeVisible(fn)) {
-                val text = fn.text?.toString() ?: ""
-                val fare = NodeUtils.parseFare(text)
-                if (fare > 0.0) return fare
+        // 2. Fallback: Find by ₹ or Rs symbol, strictly skipping wallet/today's earnings and top-bar nodes
+        for (scope in searchScopes) {
+            val fareNodes = NodeUtils.findNodesByText(scope, "₹")
+            for (fn in fareNodes) {
+                if (NodeUtils.isNodeVisible(fn) && !NodeUtils.isTopBarHeaderNode(fn)) {
+                    val text = fn.text?.toString() ?: ""
+                    val parentText = fn.parent?.text?.toString() ?: ""
+                    if (!NodeUtils.isEarningsOrWalletText(text) && !NodeUtils.isEarningsOrWalletText(parentText)) {
+                        val fare = NodeUtils.parseFare(text)
+                        if (fare > 0.0) {
+                            Log.d(TAG, "✓ Matched Ola fare by ₹ text: ₹$fare (from '$text')")
+                            return fare
+                        }
+                    }
+                }
             }
         }
 
